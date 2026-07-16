@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Select Test — IELTS Academic Simulation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:100%}
+  :root{
+    --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
+    --paper:#faf9f7;--paper2:#f2f0ec;--paper3:#e8e5df;
+    --blue:#002f5f;--blue2:#1a5fa8;--gold:#c8a84b;
+    --green:#2e7d4f;--red:#c0392b;--border:rgba(0,0,0,0.1);
+  }
+  body.dark-mode{
+    --ink:#e8e8f0;--ink2:#b8b8d0;--ink3:#8888aa;
+    --paper:#1c1d2b;--paper2:#23243a;--paper3:#33344a;
+    --blue:#1a5fa8;--blue2:#3a7fd8;--gold:#d8b85f;
+    --green:#4caf6e;--red:#e05858;--border:rgba(255,255,255,0.1);
+  }
+  body.dark-mode{background:#15161f}
+  body.dark-mode .test-card{background:var(--paper)}
+
+  .font-size-ctrl{display:flex;gap:2px;align-items:center}
+  .fs-btn{padding:5px 11px;border:1px solid rgba(255,255,255,0.25);border-radius:5px;color:rgba(255,255,255,0.85);background:transparent;font-size:0.75rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;line-height:1}
+  .fs-btn:hover{background:rgba(255,255,255,0.12)}
+  .fs-btn:first-child{border-radius:5px 0 0 5px}
+  .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
+
+  .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;border-bottom:3px solid var(--gold)}
+  .hdr-left{display:flex;align-items:center;gap:14px}
+  .hdr-logo{font-family:'Source Serif 4',serif;font-size:1.1rem;font-weight:600}.hdr-logo span{color:var(--gold)}
+  .hdr-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:3px 10px;font-size:0.75rem;color:rgba(255,255,255,0.8)}
+  .candidate-info{font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:16px}
+  .candidate-info b{color:#fff}
+  .btn-hdr{padding:5px 14px;border:1px solid rgba(255,255,255,0.3);border-radius:5px;color:rgba(255,255,255,0.85);background:transparent;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+  .btn-hdr:hover{background:rgba(255,255,255,0.12)}
+
+  .page{max-width:760px;margin:0 auto;padding:36px 20px;width:100%;flex:1}
+  .page-title{font-family:'Source Serif 4',serif;font-size:1.5rem;font-weight:600;color:var(--blue);margin-bottom:6px}
+  .page-desc{font-size:0.88rem;color:var(--ink3);margin-bottom:28px}
+
+  .test-card{background:var(--paper);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px;display:flex;align-items:center;gap:18px;transition:all 0.2s;cursor:pointer}
+  .test-card:hover{border-color:var(--blue2);box-shadow:0 4px 16px rgba(0,47,95,0.08);transform:translateY(-1px)}
+  .test-icon{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--blue2));display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;color:var(--gold)}
+  .test-info{flex:1;min-width:0}
+  .test-name{font-family:'Source Serif 4',serif;font-size:1.05rem;font-weight:600;color:var(--blue);margin-bottom:3px}
+  .test-desc{font-size:0.82rem;color:var(--ink3);margin-bottom:6px}
+  .test-meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .test-date{font-size:0.75rem;color:var(--ink3);display:flex;align-items:center;gap:4px}
+  .test-status{font-size:0.68rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:2px 9px;border-radius:4px}
+  .status-active{background:#e8f5e9;color:var(--green)}
+  .status-taken{background:#fff9e6;color:#7a5f1a}
+  .btn-start{padding:9px 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
+  .btn-start:hover{background:var(--blue2)}
+  .btn-start.taken{background:var(--paper3);color:var(--ink2)}
+
+  .empty-state{text-align:center;padding:60px 20px;color:var(--ink3)}
+  .empty-icon{font-size:3rem;margin-bottom:14px;opacity:0.5}
+  .empty-title{font-family:'Source Serif 4',serif;font-size:1.1rem;color:var(--ink2);margin-bottom:6px}
+  .empty-desc{font-size:0.85rem}
+
+  .loading-state{text-align:center;padding:60px 20px;color:var(--ink3)}
+  .spinner{width:32px;height:32px;border:3px solid var(--paper3);border-top-color:var(--blue);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  .section-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin:24px 0 12px}
+  .section-label:first-of-type{margin-top:0}
+
+  /* TWO-COLUMN LAYOUT */
+  .tests-layout{display:grid;grid-template-columns:210px 1fr 260px;gap:20px;max-width:1100px;margin:0 auto;padding:28px 20px;width:100%;flex:1}
+  @media(max-width:900px){.tests-layout{grid-template-columns:180px 1fr}}
+  @media(max-width:640px){.tests-layout{grid-template-columns:1fr;gap:14px}}
+
+  /* LEFT SIDEBAR - TEST TYPES */
+  .type-sidebar{background:var(--paper);border:1px solid var(--border);border-radius:14px;padding:16px;height:fit-content;position:sticky;top:20px}
+  .type-sidebar-title{font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--paper3)}
+  .type-btn{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border:none;border-radius:8px;background:transparent;color:var(--ink2);font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:500;cursor:pointer;text-align:left;transition:all 0.15s;border-left:3px solid transparent;margin-bottom:2px}
+  .type-btn:hover{background:var(--paper2);color:var(--ink)}
+  .type-btn.active{background:rgba(0,47,95,0.07);color:var(--blue);border-left-color:var(--gold);font-weight:700}
+  .type-btn .type-icon{font-size:1rem;width:22px;text-align:center;flex-shrink:0}
+  .type-count{margin-left:auto;background:var(--paper3);border-radius:10px;padding:1px 7px;font-size:0.68rem;font-weight:700;color:var(--ink3)}
+  .type-btn.active .type-count{background:rgba(0,47,95,0.1);color:var(--blue)}
+  .type-divider{height:1px;background:var(--paper3);margin:10px 0}
+
+  /* RIGHT PANEL - LATEST TEST */
+  .latest-panel{height:fit-content;position:sticky;top:20px}
+  @media(max-width:900px){.latest-panel{display:none}}
+  .latest-card{background:var(--paper);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+  .latest-hdr{background:linear-gradient(135deg,var(--blue) 0%,var(--blue2) 100%);padding:16px;color:#fff}
+  .latest-hdr-label{font-size:0.65rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--gold);margin-bottom:4px}
+  .latest-hdr-title{font-family:'Source Serif 4',serif;font-size:1rem;font-weight:600;line-height:1.3}
+  .latest-hdr-desc{font-size:0.75rem;color:rgba(255,255,255,0.65);margin-top:4px}
+  .latest-body{padding:14px}
+  .latest-meta-row{display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--ink3);margin-bottom:7px}
+  .latest-stat{background:var(--paper2);border-radius:6px;padding:8px 10px;text-align:center;margin-bottom:8px}
+  .latest-stat-val{font-family:'Source Serif 4',serif;font-size:1.3rem;font-weight:600;color:var(--blue)}
+  .latest-stat-lbl{font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3)}
+  .latest-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+  .btn-latest-start{width:100%;padding:10px;background:var(--gold);color:var(--blue);border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;transition:all 0.15s}
+  .btn-latest-start:hover{opacity:0.88}
+  .latest-empty{padding:28px 16px;text-align:center;color:var(--ink3);font-size:0.82rem}
+  .latest-empty span{display:block;font-size:1.8rem;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo">IELTS <span>Academic</span></div>
+    <div class="hdr-badge">Select Test</div>
+  </div>
+  <div class="candidate-info">
+    <span>Candidate: <b id="disp-name">Guest</b></span>
+    <div class="font-size-ctrl">
+      <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
+      <button class="fs-btn" onclick="changeFontSize(1)">A+</button>
+    </div>
+    <button class="btn-hdr" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+    <button class="btn-hdr" onclick="window.location.href='profile.html'">👤 My Profile</button>
+    <button class="btn-hdr" onclick="logout()">Logout</button>
+  </div>
+</div>
+
+<div class="tests-layout">
+
+  <!-- LEFT: Test Type Filter -->
+  <div class="type-sidebar">
+    <div class="type-sidebar-title">Test Type</div>
+    <button class="type-btn active" data-type="all" onclick="filterByType('all',this)">
+      <span class="type-icon">📋</span> All Tests
+      <span class="type-count" id="cnt-all">0</span>
+    </button>
+    <div class="type-divider"></div>
+    <button class="type-btn" data-type="IELTS" onclick="filterByType('IELTS',this)">
+      <span class="type-icon">🎓</span> IELTS Academic
+      <span class="type-count" id="cnt-IELTS">0</span>
+    </button>
+    <button class="type-btn" data-type="TOEIC" onclick="filterByType('TOEIC',this)">
+      <span class="type-icon">💼</span> TOEIC
+      <span class="type-count" id="cnt-TOEIC">0</span>
+    </button>
+    <button class="type-btn" data-type="TOEFL" onclick="filterByType('TOEFL',this)">
+      <span class="type-icon">🌐</span> TOEFL
+      <span class="type-count" id="cnt-TOEFL">0</span>
+    </button>
+    <div class="type-divider"></div>
+    <button class="type-btn" data-type="Placement" onclick="filterByType('Placement',this)">
+      <span class="type-icon">📍</span> Placement Test
+      <span class="type-count" id="cnt-Placement">0</span>
+    </button>
+    <button class="type-btn" data-type="Level-Up" onclick="filterByType('Level-Up',this)">
+      <span class="type-icon">⬆️</span> Level-Up Test
+      <span class="type-count" id="cnt-Level-Up">0</span>
+    </button>
+  </div>
+
+  <!-- CENTER: Test List -->
+  <div>
+    <div style="margin-bottom:20px">
+      <div class="page-title" id="filter-heading">Available Tests</div>
+      <div class="page-desc" id="filter-desc">Select a test set to begin. Tests are listed by date.</div>
+    </div>
+    <div id="tests-wrap">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        Loading available tests...
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT: Latest Test -->
+  <div class="latest-panel">
+    <div class="latest-card">
+      <div class="latest-hdr">
+        <div class="latest-hdr-label">⚡ Latest Available</div>
+        <div class="latest-hdr-title" id="latest-name">—</div>
+        <div class="latest-hdr-desc" id="latest-desc"></div>
+      </div>
+      <div class="latest-body" id="latest-body">
+        <div class="latest-empty"><span>📋</span>Loading...</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOWjeZlhj3HWA9C7W8j7GVh9OlVunuMgp6cvGfCFAW_RSZlsjpHvL4Ihqpbo0huwfdSg/exec';
+const API_KEY = 'ielts-sim-x7k2m9-change-me'; // must match API_SECRET in Code.gs
+
+let candidateData = {};
+let myTakenSets = [];
+
+// ══════════════════════════════════════
+// ACCESSIBILITY — FONT SIZE & DARK MODE
+// Shared preference keys across the whole site.
+// ══════════════════════════════════════
+const FONT_SCALE_STEPS = [85, 100, 115, 130, 145];
+let fontScaleIndex = 1;
+
+function initAccessibilityPrefs() {
+  const savedScale = parseInt(localStorage.getItem('ielts_font_scale'));
+  if (!isNaN(savedScale)) {
+    const idx = FONT_SCALE_STEPS.indexOf(savedScale);
+    fontScaleIndex = idx >= 0 ? idx : 1;
+  }
+  applyFontScale();
+  const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
+  if (darkOn) {
+    document.body.classList.add('dark-mode');
+    const btn = document.getElementById('dark-mode-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+}
+function applyFontScale() {
+  document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
+  localStorage.setItem('ielts_font_scale', FONT_SCALE_STEPS[fontScaleIndex]);
+}
+function changeFontSize(direction) {
+  const newIndex = fontScaleIndex + direction;
+  if (newIndex < 0 || newIndex >= FONT_SCALE_STEPS.length) return;
+  fontScaleIndex = newIndex;
+  applyFontScale();
+}
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('ielts_dark_mode', isDark ? '1' : '0');
+  const btn = document.getElementById('dark-mode-toggle');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+
+function callSheetsOnce(payload, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const cb = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const t  = setTimeout(() => { delete window[cb]; reject(new Error('TIMEOUT')); }, timeoutMs);
+    window[cb] = (d) => { clearTimeout(t); delete window[cb]; resolve(d); };
+    const s  = document.createElement('script');
+    s.src    = APPS_SCRIPT_URL + '?' + new URLSearchParams({...payload, key: API_KEY, callback:cb});
+    s.onerror = () => { clearTimeout(t); delete window[cb]; reject(new Error('NETWORK_ERROR')); };
+    document.head.appendChild(s);
+    setTimeout(() => { try { document.head.removeChild(s); } catch(e){} }, timeoutMs + 5000);
+  });
+}
+
+// Mobile networks can be slow on the first request — retry once with a
+// longer timeout before surfacing an error.
+async function callSheets(payload) {
+  try {
+    return await callSheetsOnce(payload, 25000);
+  } catch (e) {
+    if (e.message === 'TIMEOUT' || e.message === 'NETWORK_ERROR') {
+      try {
+        return await callSheetsOnce(payload, 25000);
+      } catch (e2) {
+        throw new Error('Could not reach the server after 2 attempts. Please check your internet connection and try again.');
+      }
+    }
+    throw e;
+  }
+}
+
+window.onload = async () => {
+  initAccessibilityPrefs();
+  const raw = sessionStorage.getItem('candidateData');
+  if (!raw) { window.location.href = 'index.html'; return; }
+  candidateData = JSON.parse(raw);
+  document.getElementById('disp-name').textContent = candidateData.fullName || 'Guest';
+
+  await loadTests();
+};
+
+async function loadTests() {
+  const wrap = document.getElementById('tests-wrap');
+  let sets = [];
+  let source = 'sheets';
+
+  // Try Google Sheets first
+  try {
+    const data = await callSheets({ action: 'getTestSets' });
+    if (data.success && data.sets) sets = data.sets;
+  } catch(e) { /* fall through to localStorage */ }
+
+  // Fallback to localStorage (set by admin's Publish panel)
+  if (!sets.length) {
+    sets = JSON.parse(localStorage.getItem('ielts_test_sets') || '[]');
+    source = 'local';
+  }
+
+  // Only show Active sets
+  const activeSets = sets.filter(s => s.status === 'Active' && s.configURL);
+
+  // Sort by date, newest first
+  activeSets.sort((a,b) => new Date(b.createdAt||0) - new Date(a.createdAt||0));
+
+  // Get candidate's taken tests (from their own score history)
+  try {
+    const scoresData = await callSheets({ action:'getCandidateScores', candidateID: candidateData.candidateID });
+    if (scoresData.success && scoresData.rows) {
+      myTakenSets = scoresData.rows.map(r => r[4]); // testSetID column
+    }
+  } catch(e) { /* optional */ }
+
+  allActiveSets = activeSets;
+  updateCounts();
+  renderLatestPanel(activeSets);
+  renderTests(activeSets);
+}
+
+let allActiveSets = [];
+let currentFilter = 'all';
+
+// Infer test type from set name/description
+function inferType(s) {
+  const text = ((s.setName||'') + ' ' + (s.description||'')).toLowerCase();
+  if (text.includes('toeic')) return 'TOEIC';
+  if (text.includes('toefl')) return 'TOEFL';
+  if (text.includes('placement')) return 'Placement';
+  if (text.includes('level-up') || text.includes('level up') || text.includes('levelup')) return 'Level-Up';
+  if (text.includes('ielts')) return 'IELTS';
+  return 'IELTS'; // default
+}
+
+function filterByType(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  const typeLabels = {
+    'all': ['Available Tests', 'Select a test set to begin. Tests are listed by date.'],
+    'IELTS': ['IELTS Academic', 'Full simulation tests for IELTS Academic module.'],
+    'TOEIC': ['TOEIC Tests', 'Test of English for International Communication.'],
+    'TOEFL': ['TOEFL Tests', 'Test of English as a Foreign Language.'],
+    'Placement': ['Placement Tests', 'Determine your current English proficiency level.'],
+    'Level-Up': ['Level-Up Tests', 'Challenge tests to advance to a higher level.'],
+  };
+  const [heading, desc] = typeLabels[type] || ['Available Tests', ''];
+  document.getElementById('filter-heading').textContent = heading;
+  document.getElementById('filter-desc').textContent = desc;
+
+  const filtered = type === 'all' ? allActiveSets : allActiveSets.filter(s => inferType(s) === type);
+  renderTests(filtered);
+}
+
+function updateCounts() {
+  const types = ['IELTS','TOEIC','TOEFL','Placement','Level-Up'];
+  document.getElementById('cnt-all').textContent = allActiveSets.length;
+  types.forEach(t => {
+    const el = document.getElementById('cnt-' + t);
+    if (el) el.textContent = allActiveSets.filter(s => inferType(s) === t).length;
+  });
+}
+
+function renderLatestPanel(sets) {
+  const body = document.getElementById('latest-body');
+  const nameEl = document.getElementById('latest-name');
+  const descEl = document.getElementById('latest-desc');
+
+  const notTaken = sets.filter(s => !myTakenSets.includes(s.setID));
+  const latest = notTaken[0] || sets[0];
+
+  if (!latest) {
+    nameEl.textContent = 'No tests available';
+    descEl.textContent = '';
+    body.innerHTML = '<div class="latest-empty"><span>📋</span>No tests available right now.</div>';
+    return;
+  }
+
+  nameEl.textContent = latest.setName;
+  descEl.textContent = latest.description || '';
+
+  const taken = myTakenSets.includes(latest.setID);
+  const dateStr = formatDate(latest.createdAt);
+  const type = inferType(latest);
+
+  body.innerHTML = `
+    <div class="latest-meta-row">📅 ${dateStr}</div>
+    <div class="latest-stats-grid">
+      <div class="latest-stat">
+        <div class="latest-stat-val">${type}</div>
+        <div class="latest-stat-lbl">Test Type</div>
+      </div>
+      <div class="latest-stat">
+        <div class="latest-stat-val" style="font-size:0.9rem;color:${taken?'var(--gold)':'var(--green)'}">${taken?'Taken':'New'}</div>
+        <div class="latest-stat-lbl">Status</div>
+      </div>
+    </div>
+    <button class="btn-latest-start" onclick="startTest('${escH(latest.setID)}','${escH(latest.setName)}','${escH(latest.configURL)}')">
+      ${taken ? '🔄 Retake Test' : '▶ Start Now'}
+    </button>
+    <div style="font-size:0.72rem;color:var(--ink3);text-align:center;margin-top:8px">Most recently added test</div>
+  `;
+}
+
+function renderTests(sets) {
+  const wrap = document.getElementById('tests-wrap');
+
+  if (!sets.length) {
+    wrap.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">📋</div>
+      <div class="empty-title">No tests available right now</div>
+      <div class="empty-desc">Please check back later or contact your administrator.</div>
+    </div>`;
+    return;
+  }
+
+  let html = '';
+  sets.forEach(s => {
+    const taken = myTakenSets.includes(s.setID);
+    const dateStr = formatDate(s.createdAt);
+    const type = inferType(s);
+    const typeIcons = {IELTS:'🎓',TOEIC:'💼',TOEFL:'🌐',Placement:'📍','Level-Up':'⬆️'};
+    html += `<div class="test-card" data-setid="${escH(s.setID)}" data-setname="${escH(s.setName)}" data-configurl="${escH(s.configURL)}" data-taken="${taken?'1':'0'}" onclick="handleCardClick(this)">
+      <div class="test-icon">${typeIcons[type]||'📝'}</div>
+      <div class="test-info">
+        <div class="test-name">${escH(s.setName)}</div>
+        ${s.description?`<div class="test-desc">${escH(s.description)}</div>`:''}
+        <div class="test-meta">
+          <span class="test-date">📅 ${dateStr}</span>
+          <span class="test-status ${taken?'status-taken':'status-active'}">${taken?'Already Taken':'Available'}</span>
+          <span style="font-size:0.68rem;background:rgba(0,47,95,0.07);color:var(--blue);padding:2px 7px;border-radius:4px;font-weight:700">${type}</span>
+        </div>
+      </div>
+      <button class="btn-start ${taken?'taken':''}" onclick="event.stopPropagation();handleButtonClick(this.closest('.test-card'))">
+        ${taken?'Retake':'Start →'}
+      </button>
+    </div>`;
+  });
+
+  wrap.innerHTML = html;
+}
+
+function handleCardClick(card) {
+  if (card.dataset.taken === '1') return; // taken — only the Retake button should act
+  startTest(card.dataset.setid, card.dataset.setname, card.dataset.configurl);
+}
+
+function handleButtonClick(card) {
+  const setID     = card.dataset.setid;
+  const setName   = card.dataset.setname;
+  const configURL = card.dataset.configurl;
+  if (card.dataset.taken === '1') retakeConfirm(setID, setName, configURL);
+  else startTest(setID, setName, configURL);
+}
+
+function startTest(setID, setName, configURL) {
+  sessionStorage.setItem('selectedTestSet', JSON.stringify({ setID, setName, configURL }));
+  window.location.href = 'simulation.html';
+}
+
+function retakeConfirm(setID, setName, configURL) {
+  if (confirm(`You've already taken "${setName}". Start a new attempt?`)) {
+    startTest(setID, setName, configURL);
+  }
+}
+
+function logout() {
+  if (confirm('Logout? You will need to sign in again.')) {
+    sessionStorage.clear();
+    window.location.href = 'index.html';
+  }
+}
+
+function formatDate(val) {
+  if (!val) return 'No date';
+  try { return new Date(val).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}); }
+  catch(e){ return String(val); }
+}
+function escH(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escAttr(s){ return String(s||'').replace(/'/g,"\\'").replace(/"/g,'&quot;'); }
+</script>
+</body>
+</html>

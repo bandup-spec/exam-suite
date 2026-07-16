@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IELTS Academic Simulation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://www.youtube.com/iframe_api"></script>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:100%} /* base for rem scaling — adjusted by JS via font-size adjuster */
+  :root{
+    --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
+    --paper:#faf9f7;--paper2:#f2f0ec;--paper3:#e8e5df;
+    --blue:#002f5f;--blue2:#1a5fa8;--gold:#c8a84b;
+    --green:#2e7d4f;--red:#c0392b;--border:rgba(0,0,0,0.1);
+    --input-focus:#fff9c4;
+  }
+  body.dark-mode{
+    --ink:#e8e8f0;--ink2:#b8b8d0;--ink3:#8888aa;
+    --paper:#1c1d2b;--paper2:#23243a;--paper3:#33344a;
+    --blue:#1a5fa8;--blue2:#3a7fd8;--gold:#d8b85f;
+    --green:#4caf6e;--red:#e05858;--border:rgba(255,255,255,0.1);
+    --input-focus:#3a3a1c;
+  }
+  body.dark-mode{background:#15161f}
+  body.dark-mode .q-input,body.dark-mode .fc-inline-input,body.dark-mode .writing-textarea{background:#23243a;color:var(--ink)}
+  body.dark-mode .mc-opt{background:#23243a}
+  body.dark-mode .timer{background:#2a2a3a;color:#ff8080}
+  body.dark-mode .passage{color:var(--ink)}
+
+  /* FONT SIZE CONTROL */
+  .font-size-ctrl{display:flex;gap:2px;align-items:center}
+  .fs-btn{padding:4px 9px;border:1px solid rgba(255,255,255,0.3);border-radius:5px;color:rgba(255,255,255,0.85);background:transparent;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;line-height:1}
+  .fs-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.5)}
+  .fs-btn:first-child{border-radius:5px 0 0 5px}
+  .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
+  body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);height:100dvh;overflow:hidden;display:flex;flex-direction:column}
+  @media (max-width:900px){
+    body{height:auto;min-height:100dvh;overflow:auto}
+    .main{min-height:0;height:calc(100dvh - 56px - 52px)}
+  }
+  .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0}
+  .hdr-logo{font-family:'Source Serif 4',serif;font-size:1.1rem;font-weight:600}.hdr-logo span{color:var(--gold)}
+  .hdr-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:3px 10px;font-size:0.75rem;color:rgba(255,255,255,0.8)}
+  .hdr-left{display:flex;align-items:center;gap:14px}
+  .candidate-info{font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:16px}.candidate-info b{color:#fff}
+  .btn-profile{padding:5px 14px;border:1px solid rgba(255,255,255,0.3);border-radius:5px;color:rgba(255,255,255,0.85);background:transparent;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;line-height:1;transition:all 0.15s}
+  .btn-profile:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.5)}
+  .timer{background:#fff;color:var(--red);border-radius:6px;padding:6px 16px;font-family:monospace;font-size:1.1rem;font-weight:700;letter-spacing:0.05em}
+  .timer.warn{background:var(--red);color:#fff;animation:pulse 1s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.85}}
+  .main{display:flex;flex:1;overflow:hidden}
+  .panel-left{flex:1;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
+  .panel-right{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
+  .right-tab-bar{background:var(--blue);border-bottom:3px solid var(--gold);display:flex;flex-shrink:0}
+  .rtab{padding:10px 24px;border:none;background:transparent;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;position:relative;transition:color 0.2s}
+  .rtab:hover{color:rgba(255,255,255,0.9)}.rtab.active{color:#fff}
+  .rtab.active::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--gold)}
+  .inner-tabs{background:var(--paper2);border-bottom:1px solid var(--border);display:flex;padding:0 16px;flex-shrink:0}
+  .inner-tab{padding:9px 16px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s}
+  .inner-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .scroll{flex:1;overflow-y:auto;padding:24px}
+  .scroll::-webkit-scrollbar{width:4px}.scroll::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:2px}
+  .audio-card{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:32px 24px;text-align:center;max-width:440px;margin:0 auto}
+  .audio-label{font-family:'Source Serif 4',serif;font-size:0.9rem;color:var(--ink2);margin-bottom:20px}
+  .audio-img{max-width:350%;max-height:440px;border-radius:8px;margin-bottom:16px;display:none}
+  .play-ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--blue);background:transparent;color:var(--blue);font-size:1.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s}
+  .play-ring:hover:not(:disabled){background:var(--blue);color:#fff;transform:scale(1.05)}
+  .play-ring:disabled{border-color:var(--border);color:var(--ink3);cursor:not-allowed}
+  .audio-status{margin-top:14px;font-size:0.82rem;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:0.08em}
+  .progress-bar{width:100%;height:3px;background:var(--paper3);border-radius:2px;margin-top:16px;overflow:hidden;pointer-events:none}
+  .progress-fill{height:100%;background:var(--blue2);width:0%;transition:width 0.3s}
+  .passage{font-family:'Source Serif 4',serif;font-size:0.95rem;line-height:1.9;color:var(--ink);padding-bottom:40px}
+  .passage h2{font-size:1.15rem;font-weight:600;margin-bottom:14px;color:var(--blue);padding-bottom:10px;border-bottom:1px solid var(--border)}
+  .passage p{margin-bottom:14px}
+  .prompt-card{background:var(--paper);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px}
+  .prompt-card h3{font-family:'Source Serif 4',serif;font-size:1rem;font-weight:600;color:var(--blue);margin-bottom:10px}
+  .prompt-card p{font-size:0.88rem;line-height:1.7;color:var(--ink2)}
+  .q-section-label{font-size:0.72rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink3);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--paper3)}
+  .q-block{margin-bottom:12px;padding:13px 15px;border-radius:8px;background:var(--paper);border:1px solid var(--border);transition:border-color 0.2s}
+  .q-block:focus-within{border-color:var(--blue2);background:var(--paper2)}
+  .q-num{display:inline-block;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:0.72rem;font-weight:700;text-align:center;line-height:22px;margin-right:8px;flex-shrink:0}
+  .q-text{font-size:0.88rem;color:var(--ink);line-height:1.5;display:flex;align-items:flex-start;margin-bottom:8px}
+  .q-input{width:100%;padding:7px 12px;border:1px solid var(--paper3);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--ink);background:var(--paper);transition:all 0.15s}
+  .q-input:focus{outline:none;border-color:var(--blue2);background:#f5f9ff}
+  .q-input.filled{border-color:var(--green);background:#f5fbf7}
+  .mc-opts{display:flex;flex-direction:column;gap:5px;margin-top:6px}
+  .mc-opt{display:flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid var(--paper3);border-radius:6px;cursor:pointer;font-size:0.86rem;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+  .mc-opt:hover{background:var(--paper);border-color:var(--blue2)}
+  .mc-opt.sel{background:#f0f5ff;border-color:var(--blue2);color:var(--blue)}
+  .mc-opt input{accent-color:var(--blue)}
+  .writing-wrap{display:flex;flex-direction:column;height:100%;padding:20px;gap:12px}
+  .writing-textarea{flex:1;resize:none;border:1px solid var(--border);border-radius:10px;padding:16px;font-family:'Source Serif 4',serif;font-size:0.98rem;line-height:1.8;color:var(--ink);background:var(--paper);transition:border-color 0.2s;width:100%}
+  .writing-textarea:focus{outline:none;border-color:var(--blue2)}
+  .wc-badge{font-size:0.8rem;font-weight:600;color:var(--ink3)}.wc-badge b{color:var(--ink)}
+  .wc-progress{width:140px;height:4px;background:var(--paper3);border-radius:2px;overflow:hidden}
+  .wc-fill{height:100%;background:var(--blue2);transition:width 0.3s;border-radius:2px}
+  .nav-footer{background:var(--blue);padding:8px 16px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0;position:sticky;bottom:0;z-index:10}
+  .nav-lbl{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-right:4px}
+  .nav-sq{width:26px;height:26px;border-radius:4px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
+  .nav-sq.done{background:var(--green);border-color:var(--green);color:#fff}
+  .section-header{font-size:0.8rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--blue);margin-bottom:16px}
+  .instructions-box{margin-top:20px;padding:14px 16px;background:var(--paper2);border-radius:8px;font-size:0.82rem;color:var(--ink3);line-height:1.6;border:1px solid var(--border)}
+  .fc-image-wrap{margin-bottom:16px;text-align:center}
+  .fc-image-wrap img{max-width:100%;border-radius:8px;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+  .fc-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+  .fc-input-row{display:flex;align-items:center;gap:8px}
+  .fc-input-row .q-num{flex-shrink:0}
+  .fc-input-row input{flex:1;padding:7px 10px;border:1px solid var(--paper3);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.88rem;color:var(--ink);background:var(--paper);transition:all 0.15s}
+  .fc-input-row input:focus{outline:none;border-color:var(--blue2);background:#f5f9ff}
+  .fc-input-row input.filled{border-color:var(--green);background:#f5fbf7}
+  .matching-options-box{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;background:var(--paper2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:0.85rem;color:var(--ink2)}
+  .submit-btn{margin:0 16px 16px;padding:11px;background:var(--green);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;width:calc(100% - 32px);transition:all 0.15s}
+  .submit-btn:hover{opacity:0.9}
+  .hidden{display:none!important}
+  .content-pre{white-space:pre-wrap;font-family:inherit}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo">IELTS <span>Academic</span></div>
+    <div class="hdr-badge" id="hdr-badge">Simulation Test</div>
+  </div>
+  <div class="candidate-info">
+    <span>Candidate: <b id="disp-name">Guest</b></span>
+    <span>ID: <b id="disp-id">N/A</b></span>
+    <div class="font-size-ctrl" title="Adjust text size">
+      <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
+      <button class="fs-btn" onclick="changeFontSize(1)">A+</button>
+    </div>
+    <button class="btn-profile" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
+    <button class="btn-profile" onclick="window.location.href='tests.html'">← Tests</button>
+    <button class="btn-profile" onclick="window.location.href='profile.html'">👤 My Profile</button>
+  </div>
+  <div class="timer" id="timer">2:45:00</div>
+</div>
+
+<div class="main">
+  <!-- LEFT PANEL -->
+  <div class="panel-left">
+    <!-- LISTENING -->
+    <div id="L-left" class="scroll">
+      <div class="audio-card">
+        <div class="audio-label" id="L-section-label">Section Audio</div>
+        <img id="audio-img" class="audio-img" src="" alt="">
+        <br>
+        <button class="play-ring" id="play-btn" disabled onclick="playAudio()">&#9654;</button>
+        <div class="audio-status" id="audio-status">Loading...</div>
+        <div class="progress-bar"><div class="progress-fill" id="audio-prog"></div></div>
+        <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" oncontextmenu="return false" style="display:none"></audio>
+        <div id="yt-player-target" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden"></div>
+        <div style="margin-top:14px;font-size:0.78rem;color:var(--ink3);text-align:center">
+          Use the section tabs on the right to navigate.
+        </div>
+      </div>
+      <div class="instructions-box"><b style="color:var(--ink2)">Instructions:</b> You will hear each recording once only. Write no more than three words and/or a number for each answer.</div>
+    </div>
+    <!-- READING -->
+    <div id="R-left" class="hidden" style="display:flex;flex-direction:column;height:100%">
+      <div class="inner-tabs">
+        <button class="inner-tab active" id="lp1" onclick="syncPassage(1)">Passage 1</button>
+        <button class="inner-tab" id="lp2" onclick="syncPassage(2)">Passage 2</button>
+        <button class="inner-tab" id="lp3" onclick="syncPassage(3)">Passage 3</button>
+      </div>
+      <div class="scroll" style="background:var(--paper);line-height:1.8">
+        <div id="pass1" class="passage">Loading...</div>
+        <div id="pass2" class="passage hidden">Loading...</div>
+        <div id="pass3" class="passage hidden">Loading...</div>
+      </div>
+    </div>
+    <!-- WRITING -->
+    <div id="W-left" class="hidden scroll" style="background:var(--paper)">
+      <div id="w-prompt-1" class="prompt-card">
+        <h3>Writing Task 1</h3>
+        <div id="prompt-text-1" class="content-pre" style="font-size:0.88rem;line-height:1.7;color:var(--ink2)">Loading...</div>
+        <img id="W-img-1" style="max-width:250%;max-height:500px;margin-top:12px;border-radius:8px;display:none"> <!-- mao ni ang original display:none-->
+      </div>
+      <div id="w-prompt-2" class="prompt-card hidden">
+        <h3>Writing Task 2</h3>
+        <div id="prompt-text-2" class="content-pre" style="font-size:0.88rem;line-height:1.7;color:var(--ink2)">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="panel-right">
+    <div class="right-tab-bar">
+      <button class="rtab active" id="tab-L" onclick="switchSection('L')">Listening</button>
+      <button class="rtab" id="tab-R" onclick="switchSection('R')">Reading</button>
+      <button class="rtab" id="tab-W" onclick="switchSection('W')">Writing</button>
+    </div>
+    <!-- LISTENING QS -->
+    <div id="L-right" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+      <div class="inner-tabs" id="L-sec-tabs">
+        <button class="inner-tab active" id="lst1" onclick="switchLSection(1)">Sec 1</button>
+        <button class="inner-tab" id="lst2" onclick="switchLSection(2)">Sec 2</button>
+        <button class="inner-tab" id="lst3" onclick="switchLSection(3)">Sec 3</button>
+        <button class="inner-tab" id="lst4" onclick="switchLSection(4)">Sec 4</button>
+      </div>
+      <div class="scroll">
+        <div class="section-header" id="L-q-head">Questions 1–10</div>
+        <div id="L-qs-1"></div>
+        <div id="L-qs-2" class="hidden"></div>
+        <div id="L-qs-3" class="hidden"></div>
+        <div id="L-qs-4" class="hidden"></div>
+      </div>
+    </div>
+    <!-- READING QS -->
+    <div id="R-right" class="hidden" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
+      <div class="inner-tabs">
+        <button class="inner-tab active" id="rp1" onclick="syncPassage(1)">Q 1–13</button>
+        <button class="inner-tab" id="rp2" onclick="syncPassage(2)">Q 14–26</button>
+        <button class="inner-tab" id="rp3" onclick="syncPassage(3)">Q 27–40</button>
+      </div>
+      <div class="scroll">
+        <div class="section-header" id="r-q-head">Questions 1–13</div>
+        <div id="R-qs"></div>
+      </div>
+    </div>
+    <!-- WRITING -->
+    <div id="W-right" class="hidden writing-wrap">
+      <div class="inner-tabs" style="margin:-20px -20px 0;padding:0 16px">
+        <button class="inner-tab active" id="wt1-tab" onclick="switchWriting(1)">Task 1</button>
+        <button class="inner-tab" id="wt2-tab" onclick="switchWriting(2)">Task 2</button>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px">
+        <div class="section-header" style="margin:0">Your Response</div>
+        <div class="wc-badge">Words: <b id="wc">0</b> / <span id="wc-min">150</span></div>
+      </div>
+      <textarea class="writing-textarea" id="w-textarea" placeholder="Begin writing your response here..." oninput="updateWC()"></textarea>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="wc-badge" style="font-size:0.75rem;color:var(--ink3)">Review before finishing</div>
+        <div class="wc-progress"><div class="wc-fill" id="wc-bar"></div></div>
+      </div>
+    </div>
+    <!-- SUBMIT -->
+    <button class="submit-btn" id="submit-btn" onclick="submitTest()" style="display:none">Submit &amp; Save Answers</button>
+  </div>
+</div>
+
+<div class="nav-footer">
+  <span class="nav-lbl">Progress</span>
+  <div id="nav-squares" style="display:flex;flex-wrap:wrap;gap:4px"></div>
+</div>
+
+<script>
+let cur='L', curLSec=1;
+let audioPlayed=[false,false,false,false];
+let writingVals={1:'',2:''};
+let curWriting=1;
+let answered={L:{},R:{}};
+let lAnswers={}, rAnswers={};
+let timeLeft=9900;
+let config={};
+let activeTestSet={ setID:'', setName:'' };
+
+// ══════════════════════════════════════
+// ACCESSIBILITY — FONT SIZE & DARK MODE
+// Preferences persist across the whole site via localStorage so they
+// carry over between index/profile/tests/simulation pages.
+// ══════════════════════════════════════
+const FONT_SCALE_STEPS = [85, 100, 115, 130, 145]; // percent
+let fontScaleIndex = 1; // default = 100%
+
+function initAccessibilityPrefs() {
+  // Font size
+  const savedScale = parseInt(localStorage.getItem('ielts_font_scale'));
+  if (!isNaN(savedScale)) {
+    const idx = FONT_SCALE_STEPS.indexOf(savedScale);
+    fontScaleIndex = idx >= 0 ? idx : 1;
+  }
+  applyFontScale();
+
+  // Dark mode
+  const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
+  if (darkOn) {
+    document.body.classList.add('dark-mode');
+    const btn = document.getElementById('dark-mode-toggle');
+    if (btn) btn.textContent = '☀️';
+  }
+}
+
+function applyFontScale() {
+  document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
+  localStorage.setItem('ielts_font_scale', FONT_SCALE_STEPS[fontScaleIndex]);
+}
+
+function changeFontSize(direction) {
+  const newIndex = fontScaleIndex + direction;
+  if (newIndex < 0 || newIndex >= FONT_SCALE_STEPS.length) return; // already at min/max
+  fontScaleIndex = newIndex;
+  applyFontScale();
+}
+
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark-mode');
+  localStorage.setItem('ielts_dark_mode', isDark ? '1' : '0');
+  const btn = document.getElementById('dark-mode-toggle');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+}
+
+// ══════════════════════════════════════
+// UNIFIED AUDIO PLAYER
+// Both YouTube and direct MP3 audio go through this single custom
+// player — no native controls are ever exposed, so candidates can't
+// drag/click the seek bar to skip or replay parts of the recording.
+// ══════════════════════════════════════
+let ytPlayer = null;
+let ytReady = false;
+let ytPendingVideoId = null;
+let currentAudioMode = 'none'; // 'none' | 'file' | 'youtube'
+let progressInterval = null;
+let isSingleContinuousAudio = false; // true when all 4 sections share the same audio URL
+
+function onYouTubeIframeAPIReady() {
+  ytReady = true;
+  ytPlayer = new YT.Player('yt-player-target', {
+    height: '1', width: '1',
+    playerVars: { controls: 0, disablekb: 1, fs: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
+    events: {
+      onReady: () => { if (ytPendingVideoId) { ytPlayer.cueVideoById(ytPendingVideoId); ytPendingVideoId = null; } },
+      onStateChange: onYTStateChange
+    }
+  });
+}
+
+function onYTStateChange(e) {
+  if (e.data === YT.PlayerState.ENDED) {
+    onAudioEnd();
+  }
+}
+
+function extractYouTubeId(url) {
+  if (!url) return null;
+  let id = null;
+  if (url.includes('watch?v=')) id = url.split('watch?v=')[1].split('&')[0];
+  else if (url.includes('youtu.be/')) id = url.split('youtu.be/')[1].split('?')[0];
+  else if (url.includes('/embed/')) id = url.split('/embed/')[1].split('?')[0];
+  return id;
+}
+
+// Load config from localStorage (set by admin)
+// ══════════════════════════════════════
+// CONFIG LOADER — tries Google Drive first, falls back to localStorage
+// ══════════════════════════════════════
+async function loadConfig() {
+  // Priority 1: Test set selected on tests.html (this session)
+  const selected = sessionStorage.getItem('selectedTestSet');
+  let driveURL = '';
+  if (selected) {
+    try {
+      const sel = JSON.parse(selected);
+      driveURL = sel.configURL || '';
+      activeTestSet = { setID: sel.setID || '', setName: sel.setName || '' };
+    } catch(e) {}
+  }
+
+  // Load cached config from localStorage first (instant, avoids blank screen)
+  const local = localStorage.getItem('ielts_admin_config');
+  if (local) { try { config = JSON.parse(local); } catch(e){ config={}; } }
+
+  // Priority 2: fall back to previously-active Drive URL if nothing selected
+  if (!driveURL) {
+    driveURL = (config && config._driveURL) || localStorage.getItem('ielts_drive_url') || '';
+  }
+
+  if (!driveURL) return; // No URL available — use cached config
+
+  try {
+    showLoadingOverlay('Loading test configuration...');
+    const fresh = await fetchDriveConfig(driveURL);
+    if (fresh) {
+      config = fresh;
+      localStorage.setItem('ielts_admin_config', JSON.stringify(config));
+      if (config._driveURL) localStorage.setItem('ielts_drive_url', config._driveURL);
+    }
+  } catch(e) {
+    console.warn('Config fetch failed, using cached config:', e.message);
+  } finally {
+    hideLoadingOverlay();
+  }
+}
+
+function convertDriveURL(url) {
+  if (!url) return '';
+  if (url.includes('export=download') || url.includes('uc?id=')) return url;
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  if (match) return `https://drive.google.com/uc?export=download&id=${match[1]}`;
+  return url;
+}
+
+async function fetchDriveConfig(url) {
+  // GitHub raw URLs & most direct JSON URLs work fine with fetch (no CORS)
+  try {
+    const res = await fetch(url, { cache:'no-cache' });
+    if (res.ok) {
+      const text = await res.text();
+      return JSON.parse(text);
+    }
+    throw new Error('HTTP ' + res.status);
+  } catch(e) {
+    // Only fall back to Apps Script proxy if direct fetch fails (e.g. Google Drive)
+    if (APPS_SCRIPT_URL && APPS_SCRIPT_URL !== 'YOUR_APPS_SCRIPT_URL_HERE') {
+      return new Promise((resolve, reject) => {
+        const cb = 'cfg_' + Date.now();
+        const t  = setTimeout(() => { delete window[cb]; reject(new Error('Proxy timeout')); }, 12000);
+        window[cb] = (d) => {
+          clearTimeout(t); delete window[cb];
+          d && d.success ? resolve(d.config) : reject(new Error((d && d.message) || 'Proxy failed'));
+        };
+        const s   = document.createElement('script');
+        s.src     = APPS_SCRIPT_URL + '?' + new URLSearchParams({ action:'getConfig', configURL: url, callback: cb });
+        s.onerror = () => { clearTimeout(t); delete window[cb]; reject(new Error('Proxy error')); };
+        document.head.appendChild(s);
+        setTimeout(() => { try { document.head.removeChild(s); } catch(e){} }, 15000);
+      });
+    }
+    throw e;
+  }
+}
+
+function showLoadingOverlay(msg) {
+  let ov = document.getElementById('load-overlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'load-overlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(0,47,95,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-family:"DM Sans",sans-serif;gap:14px';
+    ov.innerHTML = `
+      <div style="width:44px;height:44px;border:3px solid rgba(255,255,255,0.25);border-top-color:#c8a84b;border-radius:50%;animation:spin 0.7s linear infinite"></div>
+      <div style="font-family:'Source Serif 4',serif;font-size:1.3rem;font-weight:600;color:#c8a84b">IELTS Academic</div>
+      <div id="load-msg" style="font-size:0.85rem;opacity:0.75;letter-spacing:0.03em"></div>
+      <style>@keyframes spin{to{transform:rotate(360deg)}}</style>`;
+    document.body.appendChild(ov);
+  }
+  document.getElementById('load-msg').textContent = msg;
+  ov.style.display = 'flex';
+}
+function hideLoadingOverlay() {
+  const ov = document.getElementById('load-overlay');
+  if (ov) ov.style.display = 'none';
+}
+
+function initUser() {
+  // Try candidateData object first (most complete), fallback to individual keys
+  let name = sessionStorage.getItem('candidateName') || '';
+  let id   = sessionStorage.getItem('candidateID')   || '';
+  const raw = sessionStorage.getItem('candidateData');
+  if (raw) {
+    try {
+      const cd = JSON.parse(raw);
+      name = cd.fullName    || name;
+      id   = cd.candidateID || id;
+      // Re-set to ensure consistency
+      sessionStorage.setItem('candidateName', name);
+      sessionStorage.setItem('candidateID',   id);
+    } catch(e) {}
+  }
+  document.getElementById('disp-name').innerText = name || 'Guest';
+  document.getElementById('disp-id').innerText   = id   || 'N/A';
+}
+
+// ══════════════════════════════════════
+// PERSISTENT TIMER — survives refresh/logout
+// Stores the actual end timestamp (not just a counter), so the
+// remaining time is recalculated from the wall clock every time
+// the page loads, instead of resetting to the full duration.
+// ══════════════════════════════════════
+const TEST_DURATION_SECONDS = 9900; // 2:45:00
+
+function getTimerStorageKey() {
+  const cid = sessionStorage.getItem('candidateID') || 'guest';
+  const sid = (activeTestSet && activeTestSet.setID) || 'default';
+  return `ielts_timer_end_${cid}_${sid}`;
+}
+
+function initTimer() {
+  const key = getTimerStorageKey();
+  let endTime = localStorage.getItem(key);
+
+  if (!endTime) {
+    // First time opening this test — start the clock now
+    endTime = Date.now() + TEST_DURATION_SECONDS * 1000;
+    localStorage.setItem(key, String(endTime));
+  } else {
+    endTime = parseInt(endTime);
+  }
+
+  timeLeft = Math.max(0, Math.round((endTime - Date.now()) / 1000));
+
+  // Render immediately so display isn't stale on first tick
+  const timerEl = document.getElementById('timer');
+  function renderTimer() {
+    let h=Math.floor(timeLeft/3600),m=Math.floor((timeLeft%3600)/60),s=timeLeft%60;
+    timerEl.innerText=`${h}:${m<10?'0':''}${m}:${s<10?'0':''}${s}`;
+    if(timeLeft<=600)timerEl.className='timer warn';
+  }
+  renderTimer();
+
+  setInterval(()=>{
+    if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); return; }
+    timeLeft--;
+    renderTimer();
+    if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); }
+  },1000);
+}
+
+function clearTimerStorage() {
+  try { localStorage.removeItem(getTimerStorageKey()); } catch(e) {}
+}
+
+function autoSubmitOnTimeUp() {
+  if (window._timeUpHandled) return;
+  window._timeUpHandled = true;
+  alert('⏰ Time is up! Your test will be submitted automatically.');
+  submitTest(true);
+}
+
+function switchSection(s) {
+  cur=s;
+  ['L','R','W'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('active',x===s));
+  document.getElementById('L-left').classList.toggle('hidden',s!=='L');
+  document.getElementById('R-left').classList.toggle('hidden',s!=='R');
+  document.getElementById('W-left').classList.toggle('hidden',s!=='W');
+  document.getElementById('L-right').classList.toggle('hidden',s!=='L');
+  document.getElementById('R-right').classList.toggle('hidden',s!=='R');
+  document.getElementById('W-right').classList.toggle('hidden',s!=='W');
+  document.getElementById('submit-btn').style.display = s==='W' ? 'block' : 'none';
+  buildNav(s);
+  if(s==='R')syncPassage(1);
+  if(s==='W')switchWriting(curWriting,true);
+}
+
+function switchLSection(n) {
+  curLSec=n;
+  for(let i=1;i<=4;i++) document.getElementById('lst'+i).classList.toggle('active',i===n);
+  for(let i=1;i<=4;i++) document.getElementById('L-qs-'+i).classList.toggle('hidden', i!==n);
+  const ranges=['1–10','11–20','21–30','31–40'];
+  document.getElementById('L-q-head').innerText='Questions '+ranges[n-1];
+  buildLQs(n);
+  const sec=config.listening&&config.listening.sections&&config.listening.sections[n-1];
+  const img=document.getElementById('audio-img');
+  document.getElementById('L-section-label').innerText = isSingleContinuousAudio ? 'Section Audio (continuous)' : `Section ${n} Audio`;
+
+  // Image is independent of whether audio exists for this section
+  if (sec && sec.imgURL) { img.src = sec.imgURL; img.style.display = 'block'; }
+  else if (sec && sec.imgData) { img.src = sec.imgData; img.style.display = 'block'; }
+  else { img.src = ''; img.style.display = 'none'; }
+
+  // If audio is shared across all 4 sections, don't touch the player at
+  // all when switching tabs — let it keep playing uninterrupted.
+  if (isSingleContinuousAudio) return;
+
+  loadAudioForSection(sec, n);
+}
+
+function loadAudioForSection(sec, n) {
+  const btn    = document.getElementById('play-btn');
+  const status = document.getElementById('audio-status');
+
+  stopAndResetPlayer();
+
+  if (sec && sec.audioURL) {
+    const ytId = extractYouTubeId(sec.audioURL);
+    if (ytId) {
+      currentAudioMode = 'youtube';
+      btn.disabled = audioPlayed[n-1];
+      status.innerText = audioPlayed[n-1] ? 'Recording finished' : 'Ready to play';
+      if (ytReady && ytPlayer && ytPlayer.cueVideoById) ytPlayer.cueVideoById(ytId);
+      else ytPendingVideoId = ytId;
+    } else {
+      // Direct audio URL (mp3 etc.) — still routed through our custom button
+      currentAudioMode = 'file';
+      const el = document.getElementById('audio-el');
+      el.src = sec.audioURL;
+      btn.disabled = audioPlayed[n-1];
+      status.innerText = audioPlayed[n-1] ? 'Recording finished' : 'Ready to play';
+    }
+  } else if (sec && sec.audioData) {
+    currentAudioMode = 'file';
+    const el = document.getElementById('audio-el');
+    el.src = sec.audioData;
+    btn.disabled = audioPlayed[n-1];
+    status.innerText = audioPlayed[n-1] ? 'Recording finished' : 'Ready to play';
+  } else {
+    currentAudioMode = 'none';
+    btn.disabled = true;
+    status.innerText = 'No audio for this section';
+  }
+  document.getElementById('audio-prog').style.width = '0%';
+}
+
+function stopAndResetPlayer() {
+  if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+  const el = document.getElementById('audio-el');
+  el.pause(); el.removeAttribute('src'); el.load();
+  if (ytReady && ytPlayer && ytPlayer.stopVideo) { try { ytPlayer.stopVideo(); } catch(e){} }
+}
+
+// Detect once on load: if every section with audio shares the exact same
+// URL, treat it as one continuous recording instead of 4 separate clips.
+function detectSingleContinuousAudio() {
+  const sections = (config.listening && config.listening.sections) || [];
+  const urls = sections.map(s => s && (s.audioURL || s.audioData)).filter(Boolean);
+  isSingleContinuousAudio = urls.length >= 2 && urls.every(u => u === urls[0]);
+}
+
+function syncPassage(n){
+  for(let i=1;i<=3;i++){
+    document.getElementById('pass'+i).classList.toggle('hidden',i!==n);
+    const lp=document.getElementById('lp'+i);if(lp)lp.classList.toggle('active',i===n);
+    const rp=document.getElementById('rp'+i);if(rp)rp.classList.toggle('active',i===n);
+  }
+  const ranges=['1–13','14–26','27–40'];
+  document.getElementById('r-q-head').innerText='Questions '+ranges[n-1];
+  document.querySelectorAll('.r-q-group').forEach((g,i)=>g.classList.toggle('hidden',i!==n-1));
+}
+
+function markQ(sec,n,el){
+  const val=el.type==='radio'?el.checked:el.value.trim()!=='';
+  answered[sec][n]=val;
+  const rawVal=el.type==='radio'?(el.checked?el.value:''):(el.value.trim());
+  if(sec==='L')lAnswers[n]=rawVal; else rAnswers[n]=rawVal;
+  if(el.type==='text')el.classList.toggle('filled',val);
+  if(el.type==='radio'){
+    document.querySelectorAll(`[name="${el.name}"]`).forEach(r=>r.closest('.mc-opt').classList.remove('sel'));
+    if(el.checked)el.closest('.mc-opt').classList.add('sel');
+  }
+  buildNav(cur);
+}
+
+function buildNav(s){
+  const wrap=document.getElementById('nav-squares');
+  wrap.innerHTML='';
+  if(s==='W')return;
+  const ans=answered[s]||{};
+  for(let i=1;i<=40;i++){
+    const d=document.createElement('div');
+    d.className='nav-sq'+(ans[i]?' done':'');
+    d.innerText=i; wrap.appendChild(d);
+  }
+}
+
+function playAudio(){
+  // For single continuous audio, "already played" is tracked globally
+  // (index 0) instead of per-section, since it's really one recording.
+  const playedIdx = isSingleContinuousAudio ? 0 : curLSec-1;
+  if(audioPlayed[playedIdx])return;
+
+  document.getElementById('play-btn').disabled=true;
+  document.getElementById('audio-status').innerText='Playing — listen carefully';
+  audioPlayed[playedIdx]=true;
+  if (isSingleContinuousAudio) audioPlayed=[true,true,true,true]; // mark all sections played
+
+  if (currentAudioMode === 'youtube' && ytReady && ytPlayer && ytPlayer.playVideo) {
+    ytPlayer.playVideo();
+    progressInterval = setInterval(updateProgress, 400);
+  } else if (currentAudioMode === 'file') {
+    const el = document.getElementById('audio-el');
+    el.play();
+    progressInterval = setInterval(updateProgress, 400);
+  }
+}
+
+function onAudioEnd(){
+  document.getElementById('audio-status').innerText='Recording finished';
+  if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+  document.getElementById('audio-prog').style.width='100%';
+}
+
+function updateProgress(){
+  let pct = 0;
+  if (currentAudioMode === 'youtube' && ytReady && ytPlayer && ytPlayer.getDuration) {
+    const dur = ytPlayer.getDuration();
+    if (dur > 0) pct = (ytPlayer.getCurrentTime() / dur) * 100;
+  } else if (currentAudioMode === 'file') {
+    const el = document.getElementById('audio-el');
+    if (el.duration) pct = (el.currentTime / el.duration) * 100;
+  }
+  document.getElementById('audio-prog').style.width = Math.min(100, pct) + '%';
+}
+
+function switchWriting(n,skipSave){
+  if(!skipSave)writingVals[curWriting]=document.getElementById('w-textarea').value;
+  curWriting=n;
+  document.getElementById('wt1-tab').classList.toggle('active',n===1);
+  document.getElementById('wt2-tab').classList.toggle('active',n===2);
+  document.getElementById('w-prompt-1').classList.toggle('hidden',n!==1);
+  document.getElementById('w-prompt-2').classList.toggle('hidden',n!==2);
+  document.getElementById('w-textarea').value=writingVals[n];
+  const minWords=(config.writing&&config.writing.tasks&&config.writing.tasks[n]&&config.writing.tasks[n].minWords)||(n===1?150:250);
+  document.getElementById('wc-min').innerText=minWords;
+  updateWC();
+}
+function updateWC(){
+  const txt=document.getElementById('w-textarea').value.trim();
+  const wc=txt?txt.split(/\s+/).length:0;
+  document.getElementById('wc').innerText=wc;
+  const min=parseInt(document.getElementById('wc-min').innerText)||150;
+  const bar=document.getElementById('wc-bar');
+  bar.style.width=Math.min((wc/min)*100,100)+'%';
+  bar.style.background=wc>=min?'var(--green)':'var(--blue2)';
+}
+
+// Build Q from config
+// ─── Read questions from qBlocks (new format) or questions (legacy) ───
+function getQBlocks(sec, secIdx) {
+  const store = sec==='L'
+    ? (config.listening  && config.listening.qBlocks)
+    : (config.reading    && config.reading.qBlocks);
+  if (!store) return null;
+  // Try direct key (e.g. "1", "11", "21", "31" for L sections)
+  if (store[secIdx]) return store[secIdx];
+  // Also try section number (1,2,3,4) for L or (1,2,3) for R
+  const secNumMap = sec==='L'
+    ? { 1:1, 11:2, 21:3, 31:4 }
+    : { 1:1, 14:2, 27:3 };
+  const secNum = secNumMap[secIdx];
+  if (secNum && store[secNum]) return store[secNum];
+  // Try string versions
+  if (store[String(secIdx)]) return store[String(secIdx)];
+  if (secNum && store[String(secNum)]) return store[String(secNum)];
+  return null;
+}
+
+function getQs(sec) {
+  if(sec==='L') return (config.listening && config.listening.questions)||{};
+  return (config.reading && config.reading.questions)||{};
+}
+
+// ─── Render a qBlocks array into HTML ───
+function renderQBlocksHTML(sec, blocks, sectionLabel) {
+  if (!blocks || !blocks.length) return `<div class="q-section-label">${sectionLabel}</div><div style="color:var(--ink3);font-size:0.85rem;padding:12px 0">No questions set for this section.</div>`;
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let html = `<div class="q-section-label">${sectionLabel}</div>`;
+
+  blocks.forEach((b, bi) => {
+
+    // INSTRUCTIONS block
+    if (b.type === 'instructions') {
+      html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:14px;font-size:0.88rem;color:var(--ink2);line-height:1.6">${escH(b.text||b.instr||'')}</div>`;
+      return;
+    }
+
+    // FORM COMPLETION block
+    if (b.type === 'fc') {
+      if (b.instr) html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2)">${escH(b.instr)}</div>`;
+
+      // Show image
+      if (b.fcImgURL) html += `<div style="margin-bottom:12px"><img src="${escH(b.fcImgURL)}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)"></div>`;
+      if (b.imgData)  html += `<div style="margin-bottom:12px"><img src="${b.imgData}" style="max-width:100%;border-radius:8px;border:1px solid var(--border)"></div>`;
+
+      // fcLines mode — Visual Line Builder output
+      if (b.fcLines && b.fcLines.length) {
+        html += `<div class="fc-render" style="font-family:'Source Serif 4',serif;font-size:0.92rem;line-height:2.2">`;
+        b.fcLines.forEach(line => {
+          const segsHTML = line.segments.map(s => {
+            if (s.stype === 'blank') {
+              return `<input type="text" id="fc-inp-${sec}-${s.num}" value="" class="fc-inline-input" oninput="markFCQ('${sec}',${s.num},this)" style="display:inline-block;border:none;border-bottom:2px solid var(--blue);background:var(--input-focus,#fff9c4);width:100px;padding:1px 4px;font-family:inherit;font-size:inherit;text-align:center;outline:none;color:var(--ink);border-radius:0;vertical-align:middle">`;
+            }
+            return `<span>${escH(s.text||'')}</span>`;
+          }).join(' ');
+
+          if (line.ltype === 'heading')         html += `<h3 style="font-family:'Source Serif 4',serif;font-size:1rem;font-weight:600;color:var(--blue);margin:14px 0 6px">${segsHTML}</h3>`;
+          else if (line.ltype === 'subheading') html += `<h4 style="font-family:'Source Serif 4',serif;font-size:0.92rem;font-weight:600;color:var(--blue2);margin:10px 0 4px">${segsHTML}</h4>`;
+          else if (line.ltype === 'bullet')     html += `<div style="padding-left:18px;margin:1px 0">• ${segsHTML}</div>`;
+          else                                   html += `<div style="margin:1px 0">${segsHTML}</div>`;
+        });
+        html += `</div>`;
+        return;
+      }
+
+      // fcHtml template mode (legacy)
+      if (b.fcHtml) {
+        const rendered = b.fcHtml.replace(/\{\{(\d+)\}\}/g, (_, n) =>
+          `<input type="text" value="" class="fc-inline-input" id="fc-inp-${sec}-${n}" oninput="markFCQ('${sec}',${n},this)" style="display:inline-block;border:none;border-bottom:2px solid var(--blue);background:var(--input-focus,#fff9c4);width:100px;padding:1px 4px;font-family:inherit;font-size:inherit;text-align:center;outline:none;color:var(--ink);border-radius:0;vertical-align:middle">`
+        );
+        html += `<div class="fc-render" style="font-family:'Source Serif 4',serif;font-size:0.92rem;line-height:2.2">${rendered}</div>`;
+        return;
+      }
+
+      // Blanks array fallback
+      if (b.blanks && b.blanks.length) {
+        html += `<div class="fc-inputs">`;
+        b.blanks.forEach(blank => {
+          html += `<div class="fc-input-row"><span class="q-num">${blank.num}</span><input type="text" placeholder="..." oninput="markFCQ('${sec}',${blank.num},this)"></div>`;
+        });
+        html += `</div>`;
+      } else {
+        const from=b.fcFrom||1, to=b.fcTo||10;
+        html += `<div class="fc-inputs">`;
+        for (let i=from;i<=to;i++) html+=`<div class="fc-input-row"><span class="q-num">${i}</span><input type="text" placeholder="..." oninput="markFCQ('${sec}',${i},this)"></div>`;
+        html += `</div>`;
+      }
+      return;
+    }
+
+    // MATCHING block
+    if (b.type === 'matching') {
+      const nums  = b.numbers || (b.qNums) || [];
+      const opts  = b.options || [];
+      if (b.instr||b.text) html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2)">${escH(b.instr||b.text)}</div>`;
+      // Options box
+      if (opts.length) {
+        html += `<div class="matching-options-box">`;
+        opts.forEach(o => {
+          const letter = o.letter||o;
+          const text   = o.text||'';
+          html += `<div><strong>${escH(letter)}</strong> ${escH(text)}</div>`;
+        });
+        html += `</div>`;
+      }
+      // Question rows
+      nums.forEach(n => {
+        const label = b.labels && b.labels[n] ? b.labels[n] : `Question ${n}`;
+        html += `<div class="q-block"><div class="q-text"><span class="q-num">${n}</span>${escH(label)}</div>
+          <input class="q-input" type="text" maxlength="2" placeholder="e.g. A" style="text-transform:uppercase;width:80px" oninput="markQ('${sec}',${n},this)"></div>`;
+      });
+      return;
+    }
+
+    // CHOOSE LETTERS (grouped) — e.g. Q14 and Q15
+    if (b.type === 'cl' || b.type === 'choose-letters') {
+      const nums    = b.numbers || (b.qNums) || (b.qNum?[b.qNum]:[]);
+      const opts    = b.options || [];
+      const choose  = b.choose  || b.clPick || 2;
+      const numOpts = b.clCount || opts.length || 5;
+      const qLabel  = nums.length > 1
+        ? `Questions ${nums.join(' and ')}`
+        : `Question ${nums[0]||''}`;
+      if (b.instr||b.text) html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2)">${escH(b.instr||b.text)}</div>`;
+      const groupName = `cl_${sec}_${bi}`;
+      html += `<div class="q-block">
+        <div class="q-text" style="margin-bottom:8px"><span style="font-size:0.8rem;font-weight:700;color:var(--blue)">${qLabel}</span></div>
+        <div style="font-size:0.8rem;color:var(--ink3);margin-bottom:8px">Choose <b>${choose}</b> letter(s). <span style="color:var(--red);font-size:0.75rem">✗ if you tick more than ${choose}</span></div>
+        <div class="mc-opts">`;
+      for (let i=0; i<numOpts; i++) {
+        const letter = letters[i];
+        const optText = opts[i] || '';
+        html += `<label class="mc-opt"><input type="checkbox" name="${groupName}" value="${letter}" onchange="markGroupedCL('${sec}',${JSON.stringify(nums)},this,${choose},'${groupName}')"> <span><b>${letter}</b>${optText?' — '+escH(optText):''}</span></label>`;
+      }
+      html += `</div></div>`;
+      return;
+    }
+
+    // CHOOSE TWO (ct2) — qFrom/qTo range, shared options
+    if (b.type === 'ct2') {
+      const qFrom   = b.qFrom || 21;
+      const qTo     = b.qTo   || 22;
+      const pick    = b.pick  || 2;
+      const opts    = b.options || [];
+      const nums    = [];
+      for (let i=qFrom; i<=qTo; i++) nums.push(i);
+      const groupName = `ct2_${sec}_${bi}`;
+      const qLabel  = nums.length > 1 ? `Questions ${qFrom} and ${qTo}` : `Question ${qFrom}`;
+
+      // Show instr only if different from previous block
+      if (b.instr && (bi===0 || blocks[bi-1]?.instr !== b.instr)) {
+        html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2);white-space:pre-line">${escH(b.instr)}</div>`;
+      }
+      html += `<div class="q-block">
+        <div class="q-text" style="margin-bottom:6px;font-weight:600;color:var(--blue)">${qLabel}</div>
+        <div style="font-size:0.85rem;color:var(--ink2);margin-bottom:8px;font-style:italic">${escH(b.qText||'')}</div>
+        <div style="font-size:0.8rem;color:var(--ink3);margin-bottom:8px">Choose <b>${pick}</b> letters. <span style="color:var(--red);font-size:0.75rem">(Max ${pick})</span></div>
+        <div class="mc-opts">`;
+      opts.forEach((opt, i) => {
+        html += `<label class="mc-opt"><input type="checkbox" name="${groupName}" value="${letters[i]}" onchange="markGroupedCL('${sec}',${JSON.stringify(nums)},this,${pick},'${groupName}')"> <span><b>${letters[i]}</b> — ${escH(opt)}</span></label>`;
+      });
+      html += `</div></div>`;
+      return;
+    }
+
+    // MATCH type — matchChoices + matchItems
+    if (b.type === 'match') {
+      const choices  = b.matchChoices || [];
+      const items    = b.matchItems   || [];
+      const prompt   = b.matchPrompt  || b.instr || '';
+
+      if (b.instr && (bi===0 || blocks[bi-1]?.instr !== b.instr)) {
+        html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2);white-space:pre-line">${escH(b.instr)}</div>`;
+      }
+
+      // Options box
+      if (prompt) html += `<div style="font-size:0.88rem;color:var(--ink2);margin-bottom:10px;line-height:1.6">${prompt.replace(/\n/g,'<br>')}</div>`;
+      if (choices.length) {
+        html += `<div class="matching-options-box" style="margin-bottom:14px">`;
+        choices.forEach((c, i) => {
+          html += `<div><strong>${letters[i]}</strong> &nbsp; ${escH(c)}</div>`;
+        });
+        html += `</div>`;
+      }
+      // Question rows
+      items.forEach(item => {
+        const n = parseInt(item.num)||0;
+        html += `<div class="q-block">
+          <div class="q-text"><span class="q-num">${item.num}</span>${escH(item.label||'')}</div>
+          <input class="q-input" type="text" maxlength="2" placeholder="A–${letters[choices.length-1]||'H'}" style="text-transform:uppercase;width:80px" oninput="markQ('${sec}',${n},this)">
+        </div>`;
+      });
+      return;
+    }
+
+    // SINGLE QUESTION (short, mc, tfng, yntg)
+    const n    = b.qNum || (b.numbers&&b.numbers[0]) || 0;
+    const text = b.qText || b.text || '';
+    const type = b.type;
+
+    if (!n) return;
+
+    // Show instr only if different from previous block's instr
+    if (b.instr && (bi===0 || blocks[bi-1]?.instr !== b.instr)) {
+      html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2);white-space:pre-line">${escH(b.instr)}</div>`;
+    }
+
+    let inner = '';
+    if (type==='mc') {
+      const opts    = b.options||[];
+      const mcCount = b.mcCount||opts.length||4;
+      inner = '<div class="mc-opts">';
+      for (let i=0;i<mcCount;i++) {
+        inner += `<label class="mc-opt"><input type="radio" name="q${sec}${n}" value="${letters[i]}" onchange="markQ('${sec}',${n},this)"> <span><b>${letters[i]}</b>${opts[i]?' — '+escH(opts[i]):''}</span></label>`;
+      }
+      inner += '</div>';
+    } else if (type==='tfng') {
+      inner = '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">'+
+        ['TRUE','FALSE','NOT GIVEN'].map(v=>`<label style="display:flex;align-items:center;gap:4px;font-size:0.82rem;cursor:pointer;padding:5px 10px;border:1px solid var(--paper3);border-radius:5px"><input type="radio" name="q${sec}${n}" value="${v}" onchange="markQ('${sec}',${n},this)"> ${v}</label>`).join('') + '</div>';
+    } else if (type==='yntg') {
+      inner = '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">'+
+        ['YES','NO','NOT GIVEN'].map(v=>`<label style="display:flex;align-items:center;gap:4px;font-size:0.82rem;cursor:pointer;padding:5px 10px;border:1px solid var(--paper3);border-radius:5px"><input type="radio" name="q${sec}${n}" value="${v}" onchange="markQ('${sec}',${n},this)"> ${v}</label>`).join('') + '</div>';
+    } else {
+      // short answer
+      inner = `<input class="q-input" type="text" placeholder="Write answer..." oninput="markQ('${sec}',${n},this)">`;
+    }
+    html += `<div class="q-block"><div class="q-text"><span class="q-num">${n}</span>${escH(text)}</div>${inner}</div>`;
+  });
+
+  return html;
+}
+
+function markGroupedCL(sec, nums, el, maxPick, groupName) {
+  const checked = [...document.querySelectorAll(`[name="${groupName}"]:checked`)];
+  if (checked.length > maxPick) { el.checked=false; return; }
+  const val = checked.map(c=>c.value).join(', ');
+  // Assign to each question number in the group
+  nums.forEach((n,i) => {
+    answered[sec][n] = checked.length > i;
+    const v = checked[i] ? checked[i].value : '';
+    if (sec==='L') lAnswers[n]=v; else rAnswers[n]=v;
+  });
+  buildNav(cur);
+}
+
+function buildQBlock(sec,n){
+  const qs=getQs(sec);
+  const q=qs[n]||{text:'Question '+n,type:'short',options:['','',''],answer:''};
+  let inner='';
+  const letters='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+  if(q.type==='mc'){
+    const opts=q.options||['','',''];
+    inner='<div class="mc-opts">'+['A','B','C'].map((l,i)=>
+      `<label class="mc-opt"><input type="radio" name="q${sec}${n}" value="${l}" onchange="markQ('${sec}',${n},this)"> <span>${l} &nbsp; ${escH(opts[i]||'Option '+l)}</span></label>`
+    ).join('')+'</div>';
+
+  } else if(q.type==='cl'){
+    const numOpts=q.clCount||5;
+    const numPick=q.clPick||2;
+    const opts=q.options||[];
+    inner=`<div style="font-size:0.8rem;color:var(--ink3);margin-bottom:6px">Choose <b>${numPick}</b> letter(s).</div>
+    <div class="mc-opts">`;
+    for(let i=0;i<numOpts;i++){
+      const letter=letters[i];
+      inner+=`<label class="mc-opt"><input type="checkbox" name="qcl${sec}${n}" value="${letter}" onchange="markCLQ('${sec}',${n},this,${numPick})"> <span>${letter} &nbsp; ${escH(opts[i]||'Option '+letter)}</span></label>`;
+    }
+    inner+=`</div>`;
+
+  } else if(q.type==='tfng'){
+    inner='<div class="mc-opts"><div style="display:flex;gap:8px;margin-top:6px">'+
+      ['TRUE','FALSE','NOT GIVEN'].map(v=>
+        `<label style="display:flex;align-items:center;gap:4px;font-size:0.82rem;cursor:pointer"><input type="radio" name="q${sec}${n}" value="${v}" onchange="markQ('${sec}',${n},this)"> ${v}</label>`
+      ).join('')+'</div></div>';
+
+  } else {
+    inner=`<input class="q-input" type="text" placeholder="Write answer..." oninput="markQ('${sec}',${n},this)">`;
+  }
+  return `<div class="q-block"><div class="q-text"><span class="q-num">${n}</span>${escH(q.text||'Question '+n)}</div>${inner}</div>`;
+}
+
+function markCLQ(sec,n,el,maxPick){
+  const checked=[...document.querySelectorAll(`[name="qcl${sec}${n}"]:checked`)];
+  // Enforce max pick
+  if(checked.length>maxPick){ el.checked=false; return; }
+  const val=checked.map(c=>c.value).join(', ');
+  answered[sec][n]=checked.length>0;
+  if(sec==='L')lAnswers[n]=val; else rAnswers[n]=val;
+  buildNav(cur);
+}
+
+let _lSectionsBuilt = {};
+
+function buildLQs(n){
+  // If already built once, don't rebuild — rebuilding destroys input values.
+  // Just leave the cached DOM in place; switchLSection() handles show/hide.
+  if (_lSectionsBuilt[n]) return;
+  _lSectionsBuilt[n] = true;
+
+  const c=document.getElementById('L-qs-'+n);
+  const fromMap=[1,11,21,31];
+  const from=fromMap[n-1];
+  const labels=['Section 1 — Questions 1–10','Section 2 — Questions 11–20','Section 3 — Questions 21–30','Section 4 — Questions 31–40'];
+  const secCfg=config.listening&&config.listening.sections&&config.listening.sections[n-1];
+
+  // Try qBlocks first (new format)
+  const blocks = getQBlocks('L', from);
+  if (blocks) {
+    c.innerHTML = renderQBlocksHTML('L', blocks, labels[n-1]);
+    restoreSavedAnswers('L');
+    return;
+  }
+
+  // Fallback: old format with FC image
+  let html=`<div class="q-section-label">${labels[n-1]}</div>`;
+  if(secCfg&&secCfg.formCompletion&&secCfg.fcImgData){
+    const fcFrom=secCfg.fcFrom||from, fcTo=secCfg.fcTo||from+9;
+    html+=`<div class="fc-image-wrap"><img src="${secCfg.fcImgData}" alt="Form worksheet"></div>`;
+    html+=`<div style="font-size:0.82rem;color:var(--ink3);margin-bottom:10px">Fill in blanks <b>${fcFrom}–${fcTo}</b>.</div>`;
+    html+=`<div class="fc-inputs">`;
+    for(let i=fcFrom;i<=fcTo;i++) html+=`<div class="fc-input-row"><span class="q-num">${i}</span><input type="text" placeholder="..." oninput="markFCQ('L',${i},this)"></div>`;
+    html+=`</div>`;
+  } else {
+    const to=from+9;
+    for(let i=from;i<=to;i++) html+=buildQBlock('L',i);
+  }
+  c.innerHTML=html;
+  restoreSavedAnswers('L');
+}
+
+// After (re)rendering question inputs, fill them back in from the in-memory
+// answers object. Needed because rebuilding HTML wipes typed-in values —
+// this restores them so switching tabs/sections never loses an answer.
+function restoreSavedAnswers(sec) {
+  const answers = sec==='L' ? lAnswers : rAnswers;
+  Object.keys(answers).forEach(numStr => {
+    const n = parseInt(numStr);
+    const val = answers[numStr];
+    if (val === undefined || val === '') return;
+
+    // Text-style inputs (short answer, FC inline, matching, choose-letters comma list)
+    const textInput = document.getElementById(`fc-inp-${sec}-${n}`) ||
+                       document.querySelector(`.q-block input[type="text"][oninput*="markQ('${sec}',${n}"]`) ||
+                       document.querySelector(`input[type="text"][oninput*="markFCQ('${sec}',${n}"]`);
+    if (textInput && textInput.value === '') {
+      textInput.value = val;
+      textInput.classList.add('filled');
+      if (textInput.style) { textInput.style.background = '#e8f5e9'; }
+    }
+
+    // Radio-style inputs (MC, TFNG, YNTG)
+    const radio = document.querySelector(`input[type="radio"][name="q${sec}${n}"][value="${CSS.escape(String(val))}"]`);
+    if (radio && !radio.checked) {
+      radio.checked = true;
+      const opt = radio.closest('.mc-opt');
+      if (opt) opt.classList.add('sel');
+    }
+
+    // Checkbox-style inputs (grouped choose-letters) — val is a comma-separated list
+    if (typeof val === 'string' && val.includes(',')) {
+      const letters = val.split(',').map(s=>s.trim());
+      letters.forEach(letter => {
+        const cb = document.querySelector(`input[type="checkbox"][name^="cl_${sec}_"][value="${CSS.escape(letter)}"]:not(:checked)`);
+        if (cb) cb.checked = true;
+      });
+    }
+  });
+}
+
+function markFCQ(sec,n,el){
+  const val=el.value.trim();
+  answered[sec][n]=val!=='';
+  if(sec==='L')lAnswers[n]=val; else rAnswers[n]=val;
+  // Highlight filled inline inputs
+  el.style.background = val ? '#e8f5e9' : 'var(--input-focus,#fff9c4)';
+  el.style.borderBottomColor = val ? 'var(--green)' : 'var(--blue)';
+  buildNav(cur);
+}
+
+function buildRQs(){
+  const c=document.getElementById('R-qs');
+  const groups=[{p:1,from:1,to:13},{p:2,from:14,to:26},{p:3,from:27,to:40}];
+  const labels=['Passage 1 — Questions 1–13','Passage 2 — Questions 14–26','Passage 3 — Questions 27–40'];
+  let html='';
+  groups.forEach((g,gi)=>{
+    html+=`<div class="r-q-group${gi>0?' hidden':''}">`;
+    // Try qBlocks first
+    const blocks=getQBlocks('R', g.from);
+    if(blocks){
+      html+=renderQBlocksHTML('R',blocks,labels[gi]);
+    } else {
+      // Fallback legacy
+      const pfc=config.reading&&config.reading.passages_fc&&config.reading.passages_fc[g.p];
+      html+=`<div class="q-section-label">${labels[gi]}</div>`;
+      if(pfc&&pfc.formCompletion&&pfc.fcImgData){
+        const fcFrom=pfc.fcFrom||g.from, fcTo=pfc.fcTo||g.to;
+        html+=`<div class="fc-image-wrap"><img src="${pfc.fcImgData}" alt="Form"></div>`;
+        html+=`<div class="fc-inputs">`;
+        for(let i=fcFrom;i<=fcTo;i++) html+=`<div class="fc-input-row"><span class="q-num">${i}</span><input type="text" placeholder="..." oninput="markFCQ('R',${i},this)"></div>`;
+        html+=`</div>`;
+      } else {
+        for(let i=g.from;i<=g.to;i++) html+=buildQBlock('R',i);
+      }
+    }
+    html+='</div>';
+  });
+  c.innerHTML=html;
+}
+
+function loadPassages(){
+  [1,2,3].forEach(i=>{
+    const el=document.getElementById('pass'+i);
+    const text=config.reading&&config.reading.passages&&config.reading.passages[i];
+    el.innerHTML=text?`<h2>Passage ${i}</h2><p>${escH(text).replace(/\n\n/g,'</p><p>')}</p>`:`<p style="color:var(--ink3)">No passage loaded for Passage ${i}.</p>`;
+  });
+}
+
+function loadWritingPrompts(){
+  [1,2].forEach(i=>{
+    const t=config.writing&&config.writing.tasks&&config.writing.tasks[i];
+    document.getElementById('prompt-text-'+i).textContent=(t&&t.prompt)||'No prompt loaded.';
+    const img=document.getElementById('W-img-'+i);
+    if(t&&t.imgURL){ img.src=t.imgURL; img.style.display='block'; }
+    else if(t&&t.imgData){ img.src=t.imgData; img.style.display='block'; }
+    else img.style.display='none';
+  });
+}
+
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOWjeZlhj3HWA9C7W8j7GVh9OlVunuMgp6cvGfCFAW_RSZlsjpHvL4Ihqpbo0huwfdSg/exec';
+const API_KEY = 'ielts-sim-x7k2m9-change-me'; // must match API_SECRET in Code.gs
+
+function callSheetsOnce(payload, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const timeout = setTimeout(() => { delete window[cbName]; reject(new Error('TIMEOUT')); }, timeoutMs);
+    window[cbName] = (data) => { clearTimeout(timeout); delete window[cbName]; resolve(data); };
+    const params = new URLSearchParams({ ...payload, key: API_KEY, callback: cbName });
+    const script = document.createElement('script');
+    script.src = APPS_SCRIPT_URL + '?' + params.toString();
+    script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('NETWORK_ERROR')); };
+    document.head.appendChild(script);
+    setTimeout(() => { try { document.head.removeChild(script); } catch(e){} }, timeoutMs + 5000);
+  });
+}
+
+// Mobile networks can be slow on the first request — retry once with a
+// longer timeout before surfacing an error, so one slow lookup doesn't
+// block the whole flow.
+async function callSheets(payload) {
+  try {
+    return await callSheetsOnce(payload, 25000);
+  } catch (e) {
+    if (e.message === 'TIMEOUT' || e.message === 'NETWORK_ERROR') {
+      try {
+        return await callSheetsOnce(payload, 25000);
+      } catch (e2) {
+        throw new Error('Could not reach the server after 2 attempts. Please check your internet connection and try again.');
+      }
+    }
+    throw e;
+  }
+}
+
+function scoreToBand(score){
+  if(score>=39)return 9.0; if(score>=37)return 8.5; if(score>=35)return 8.0;
+  if(score>=33)return 7.5; if(score>=30)return 7.0; if(score>=27)return 6.5;
+  if(score>=23)return 6.0; if(score>=20)return 5.5; if(score>=16)return 5.0;
+  if(score>=13)return 4.5; if(score>=10)return 4.0; return 3.5;
+}
+
+function autoCheckScore(){
+  const answerKey = config.answerKey || {L:{},R:{}};
+  let lScore=0, rScore=0;
+  for(let i=1;i<=40;i++){
+    const key=(answerKey.L[i]||'').toString().trim().toLowerCase();
+    const given=(lAnswers[i]||'').toString().trim().toLowerCase();
+    if(key&&given===key)lScore++;
+  }
+  for(let i=1;i<=40;i++){
+    const key=(answerKey.R[i]||'').toString().trim().toLowerCase();
+    const given=(rAnswers[i]||'').toString().trim().toLowerCase();
+    if(key&&given===key)rScore++;
+  }
+  return {lScore,rScore,lBand:scoreToBand(lScore),rBand:scoreToBand(rScore)};
+}
+
+async function submitTest(autoSubmit){
+  if(!autoSubmit && !confirm('Submit your answers? You will not be able to make changes after this.'))return;
+  writingVals[curWriting]=document.getElementById('w-textarea').value;
+
+  const candidateData=JSON.parse(sessionStorage.getItem('candidateData')||'{}');
+  const wc1 = (writingVals[1]||'').trim().split(/\s+/).filter(Boolean).length;
+  const wc2 = (writingVals[2]||'').trim().split(/\s+/).filter(Boolean).length;
+
+  const submission={
+    ...candidateData,
+    submitTime: new Date().toISOString(),
+    testSetID:   activeTestSet.setID   || '',
+    testSetName: activeTestSet.setName || '',
+    listening: lAnswers,
+    reading: rAnswers,
+    writing: { task1: writingVals[1], task2: writingVals[2] }
+  };
+
+  // Download JSON backup
+  const blob=new Blob([JSON.stringify(submission,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download=`response_${candidateData.candidateID||'unknown'}_${Date.now()}.json`;a.click();
+
+  // Save to Google Sheets — raw answers only, no auto-scoring
+  const btn=document.getElementById('submit-btn');
+  btn.textContent='Saving...'; btn.disabled=true;
+  try {
+    await callSheets({
+      action:'saveScore',
+      candidateID:   candidateData.candidateID||'',
+      fullName:      candidateData.fullName||sessionStorage.getItem('candidateName')||'',
+      testSetID:     activeTestSet.setID   || '',
+      testSetName:   activeTestSet.setName || '',
+      listeningAnswers: JSON.stringify(lAnswers),
+      readingAnswers:   JSON.stringify(rAnswers),
+      writingTask1WC:wc1, writingTask2WC:wc2,
+      writingTask1:  (writingVals[1]||'').substring(0,2000),
+      writingTask2:  (writingVals[2]||'').substring(0,2000)
+    });
+  } catch(e){
+    // Sheets save optional — JSON backup already downloaded
+  } finally {
+    btn.textContent='Submitted ✓'; btn.disabled=true;
+  }
+
+  clearTimerStorage(); // test is done — don't resume this timer if they revisit
+
+  if (!autoSubmit) {
+    alert('✅ Answers submitted.\n\nYour test has been recorded. Your results will be reviewed and made available on your profile.');
+  }
+}
+
+function escH(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+window.onload = async () => {
+  initAccessibilityPrefs(); // apply saved font size / dark mode before anything else renders
+
+  const hasSession = sessionStorage.getItem('candidateName') || sessionStorage.getItem('candidateData');
+  if(!hasSession){ window.location.href='index.html'; return; }
+
+  // Must have selected a test from tests.html
+  if (!sessionStorage.getItem('selectedTestSet')) {
+    window.location.href = 'tests.html'; return;
+  }
+
+  await loadConfig();
+  if (activeTestSet.setName) document.getElementById('hdr-badge').textContent = activeTestSet.setName;
+  initTimer();
+  detectSingleContinuousAudio();
+
+  initUser();
+  buildLQs(1);
+  buildRQs();
+  loadPassages();
+  loadWritingPrompts();
+  switchLSection(1);
+  if (isSingleContinuousAudio) {
+    const firstSec = config.listening && config.listening.sections && config.listening.sections[0];
+    loadAudioForSection(firstSec, 1);
+  }
+  switchSection('L');
+};
+</script>
+</body>
+</html>

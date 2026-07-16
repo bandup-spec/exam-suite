@@ -1,2 +1,2 @@
-# exam-suite
-This is a just a test
+# ielts-sim
+This is just a test.
