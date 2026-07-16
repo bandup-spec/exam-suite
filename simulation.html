@@ -1178,6 +1178,10 @@ function scoreToBand(score){
   if(score>=13)return 4.5; if(score>=10)return 4.0; return 3.5;
 }
 
+// NOTE: unused/deprecated. Do NOT call this from the candidate-facing UI —
+// config.answerKey is intentionally blank in the public config file now.
+// Real grading happens server-side in Code.gs's saveScore(), using the
+// protected AnswerKeys sheet, so answers are never exposed to the browser.
 function autoCheckScore(){
   const answerKey = config.answerKey || {L:{},R:{}};
   let lScore=0, rScore=0;
