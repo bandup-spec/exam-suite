@@ -296,6 +296,7 @@
     <input type="file" id="f-load-config" class="hidden" accept=".json" onchange="loadConfig(this)">
     <button class="btn-hdr btn-load" onclick="document.getElementById('f-load-config').click()">📂 Load Config</button>
     <button class="btn-hdr btn-save-all" onclick="saveAllConfig()">💾 Save Config</button>
+    <button class="btn-hdr" style="background:#8a1c1c;color:#fff" onclick="sendAnswerKeyToSheet()">🔑 Send Answer Key</button>
     <button class="btn-hdr btn-logout" onclick="if(confirm('Logout?')){window.location.href='index.html'}">Logout</button>
   </div>
 </div>
@@ -1641,12 +1642,19 @@ function saveAllConfig() {
   // Save Drive URL into config so simulation can read it
   const driveURL = localStorage.getItem('ielts_drive_url') || '';
   config._driveURL = driveURL;
+  // Keep the FULL config (with real answers) only in this browser's localStorage
   localStorage.setItem('ielts_admin_config', JSON.stringify(config));
-  // Download JSON
-  const blob = new Blob([JSON.stringify(config, null, 2)], {type:'application/json'});
+
+  // The downloadable/uploadable file must NOT contain real answers —
+  // this file is meant for a public GitHub repo. Answers go via
+  // "Send Answer Key to Sheet" -> Google Sheets (protected by API key) instead.
+  const publicConfig = JSON.parse(JSON.stringify(config));
+  publicConfig.answerKey = { L: {}, R: {}, _note: 'Answer key withheld — stored separately in Google Sheets, not in this public file.' };
+
+  const blob = new Blob([JSON.stringify(publicConfig, null, 2)], {type:'application/json'});
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
   a.download = 'ielts_config.json'; a.click();
-  toast('✅ Config saved! Now upload ielts_config.json to Google Drive.');
+  toast('✅ Config saved (answers withheld from file)! Upload ielts_config.json to Google Drive/GitHub, then use "Send Answer Key" to store the real answers safely.');
 }
 
 
@@ -1663,6 +1671,74 @@ function loadConfig(input) {
     } catch(err) { alert('Invalid config file.'); }
   };
   reader.readAsText(input.files[0]);
+}
+
+
+// ═══════════════════════════════════════
+// SEND ANSWER KEY TO GOOGLE SHEETS (protected backend)
+// ═══════════════════════════════════════
+function getBackendSettings_() {
+  let gasUrl   = localStorage.getItem('ielts_gas_url')   || '';
+  let apiKey   = localStorage.getItem('ielts_gas_key')   || '';
+  let testSetID = localStorage.getItem('ielts_active_setid') || '';
+
+  if (!gasUrl) {
+    gasUrl = prompt('Paste your Google Apps Script Web App URL (from Deploy > Manage deployments):', gasUrl || '');
+    if (!gasUrl) return null;
+    localStorage.setItem('ielts_gas_url', gasUrl.trim());
+  }
+  if (!apiKey) {
+    apiKey = prompt('Paste your API_SECRET (from Code.gs):', apiKey || '');
+    if (!apiKey) return null;
+    localStorage.setItem('ielts_gas_key', apiKey.trim());
+  }
+  if (!testSetID) {
+    testSetID = prompt('Enter the TestSetID this answer key belongs to (see TestSets sheet):', testSetID || '');
+    if (!testSetID) return null;
+    localStorage.setItem('ielts_active_setid', testSetID.trim());
+  }
+
+  return {
+    gasUrl: localStorage.getItem('ielts_gas_url'),
+    apiKey: localStorage.getItem('ielts_gas_key'),
+    testSetID: localStorage.getItem('ielts_active_setid')
+  };
+}
+
+async function sendAnswerKeyToSheet() {
+  collectConfig(); // make sure config.answerKey reflects current questions in the UI
+
+  const listeningKey = config.answerKey.L || {};
+  const readingKey = config.answerKey.R || {};
+
+  if (Object.keys(listeningKey).length === 0 && Object.keys(readingKey).length === 0) {
+    if (!confirm('The answer key looks empty right now. Send anyway?')) return;
+  }
+
+  const backend = getBackendSettings_();
+  if (!backend) { toast('⚠️ Cancelled — backend settings needed to send the answer key.'); return; }
+
+  const params = new URLSearchParams({
+    action: 'saveAnswerKey',
+    key: backend.apiKey,
+    testSetID: backend.testSetID,
+    listeningKey: JSON.stringify(listeningKey),
+    readingKey: JSON.stringify(readingKey),
+    updatedBy: 'question-maker'
+  });
+
+  try {
+    toast('⏳ Sending answer key...');
+    const res = await fetch(backend.gasUrl + '?' + params.toString());
+    const data = await res.json();
+    if (data.success) {
+      toast('✅ Answer key saved to Google Sheets for ' + backend.testSetID + '!');
+    } else {
+      alert('Failed to save answer key: ' + (data.message || 'Unknown error'));
+    }
+  } catch (err) {
+    alert('Could not reach the backend. Check the Web App URL and your internet connection.\n\n' + err.message);
+  }
 }
 
 
