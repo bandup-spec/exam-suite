@@ -1274,12 +1274,13 @@ async function loadTestSets() {
     return;
   }
 
-  let html = '<div style="overflow-x:auto"><table class="sheets-table"><thead><tr><th>Set Name</th><th>Status</th><th>Config URL</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
+  let html = '<div style="overflow-x:auto"><table class="sheets-table"><thead><tr><th>Set Name</th><th>Status</th><th>Answer Key</th><th>Config URL</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
   sets.forEach(s => {
     const isActive = s.setID === activeID || s.status === 'Active';
     html += `<tr>
       <td><b>${escH(s.setName)}</b>${s.description?`<br><span style="font-size:0.75rem;color:var(--ink3)">${escH(s.description)}</span>`:''}</td>
       <td>${isActive?'<span class="band-badge band-high">⚡ ACTIVE</span>':`<span class="band-badge">${escH(s.status||'')}</span>`}</td>
+      <td id="ak-status-${escH(s.setID)}" style="font-size:0.75rem">⏳ checking...</td>
       <td style="font-size:0.75rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.configURL?`<a href="${escH(s.configURL)}" target="_blank" style="color:var(--blue2)">View ↗</a>`:'—'}</td>
       <td style="font-size:0.78rem">${formatDate(s.createdAt)}</td>
       <td style="white-space:nowrap">
@@ -1291,6 +1292,26 @@ async function loadTestSets() {
   });
   html += '</tbody></table></div>';
   wrap.innerHTML = html;
+
+  // Check answer-key status per set in the background — don't block the table render
+  sets.forEach(s => checkAnswerKeyStatus(s.setID));
+}
+
+async function checkAnswerKeyStatus(setID) {
+  const cell = document.getElementById('ak-status-' + setID);
+  if (!cell) return;
+  try {
+    const data = await callSheets({ action: 'getAnswerKey', testSetID: setID });
+    if (data.success) {
+      const lCount = Object.keys(data.listeningKey || {}).length;
+      const rCount = Object.keys(data.readingKey || {}).length;
+      cell.innerHTML = `<span class="band-badge band-high">✅ Saved</span> <span style="color:var(--ink3)">(L:${lCount} R:${rCount})</span>`;
+    } else {
+      cell.innerHTML = '<span class="band-badge band-low">⚠️ Missing</span>';
+    }
+  } catch (e) {
+    cell.innerHTML = '<span style="color:var(--ink3)">—</span>';
+  }
 }
 
 async function deleteSet(setID, setName) {
