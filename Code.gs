@@ -2,11 +2,12 @@
 //  IELTS Simulation — Google Apps Script Backend v4.0
 // ============================================================
 
-const SHEET_CANDIDATES = 'Candidates';
-const SHEET_SCORES     = 'Scores';
-const SHEET_SETS       = 'TestSets';
-const SHEET_SETTINGS   = 'Settings';
-const SHEET_OTP        = 'OTP_Tokens';
+const SHEET_CANDIDATES  = 'Candidates';
+const SHEET_SCORES      = 'Scores';
+const SHEET_SETS        = 'TestSets';
+const SHEET_SETTINGS    = 'Settings';
+const SHEET_OTP         = 'OTP_Tokens';
+const SHEET_ANSWERKEYS  = 'AnswerKeys';
 
 const API_SECRET = 'ielts-sim-x7k2m9-change-me';
 
@@ -65,6 +66,23 @@ const TESTSET_HEADERS = [
 const SETTINGS_HEADERS = ['Key', 'Value'];
 const OTP_HEADERS      = ['Email', 'OTP', 'Purpose', 'CandidateID', 'Expires'];
 
+// One row per TestSet. ListeningKey/ReadingKey hold JSON strings, e.g. {"1":"A","2":"TRUE",...}
+const ANSWERKEY_HEADERS = [
+  'TestSetID',      // 0
+  'ListeningKey',   // 1  (JSON string)
+  'ReadingKey',     // 2  (JSON string)
+  'UpdatedAt',      // 3
+  'UpdatedBy'       // 4
+];
+
+const AKIDX = {
+  TESTSET_ID:    0,
+  LISTENING_KEY: 1,
+  READING_KEY:   2,
+  UPDATED_AT:    3,
+  UPDATED_BY:    4
+};
+
 const CIDX = {
   ID: 0,
   FULL_NAME: 1,
@@ -118,6 +136,7 @@ function setupSheets() {
   ensureSheetWithHeaders_(ss, SHEET_SETS, TESTSET_HEADERS, '#002f5f');
   ensureSheetWithHeaders_(ss, SHEET_SETTINGS, SETTINGS_HEADERS, '#002f5f');
   ensureSheetWithHeaders_(ss, SHEET_OTP, OTP_HEADERS, '#002f5f');
+  ensureSheetWithHeaders_(ss, SHEET_ANSWERKEYS, ANSWERKEY_HEADERS, '#8a1c1c');
 
   seedDefaultSettings_();
   return 'All sheets ready! (v4.0)';
@@ -241,6 +260,9 @@ function doGet(e) {
         case 'deleteTestSet':             result = deleteTestSet(p); break;
         case 'setActiveSet':              result = setActiveSet(p); break;
         case 'getActiveSet':              result = getActiveSet(); break;
+
+        case 'getAnswerKey':              result = getAnswerKey(p); break;
+        case 'saveAnswerKey':             result = saveAnswerKey(p); break;
 
         case 'getSettings':               result = getSettings(); break;
         case 'saveSettings':              result = saveSettings(p); break;
@@ -408,9 +430,61 @@ function updateProfilePhoto(p) {
 // ============================================================
 //  SCORE ACTIONS
 // ============================================================
+
+// Same IELTS raw-score -> band conversion table used in simulation.html,
+// kept in one place server-side so grading is consistent and can't be spoofed.
+function scoreToBand_(score) {
+  if (score >= 39) return 9.0;
+  if (score >= 37) return 8.5;
+  if (score >= 35) return 8.0;
+  if (score >= 33) return 7.5;
+  if (score >= 30) return 7.0;
+  if (score >= 27) return 6.5;
+  if (score >= 23) return 6.0;
+  if (score >= 20) return 5.5;
+  if (score >= 16) return 5.0;
+  if (score >= 13) return 4.5;
+  if (score >= 10) return 4.0;
+  return 3.5;
+}
+
+// Compares a candidate's given answers (JSON string, e.g. {"1":"a","2":"true"})
+// against an answer key object ({"1":"A","2":"TRUE"}). Case/whitespace-insensitive.
+function computeSectionScore_(givenAnswersJSON, keyObj) {
+  let given = {};
+  try { given = JSON.parse(givenAnswersJSON || '{}'); } catch (e) {}
+  keyObj = keyObj || {};
+
+  let score = 0;
+  for (let i = 1; i <= 40; i++) {
+    const key = String(keyObj[i] || '').trim().toLowerCase();
+    const answer = String(given[i] || '').trim().toLowerCase();
+    if (key && answer === key) score++;
+  }
+  return score;
+}
+
 function saveScore(p) {
   const sheet = getOrCreateSheet_(SHEET_SCORES, SCORE_HEADERS);
   const subID = 'SUB-' + Date.now();
+
+  // Grade server-side using the protected AnswerKeys sheet — never trust a
+  // score sent by the client, since that would be visible/editable in the browser.
+  let listeningScore = 0, readingScore = 0;
+  const akSheet = getSheet_(SHEET_ANSWERKEYS);
+  if (akSheet && p.testSetID) {
+    const rowIdx = findAnswerKeyRow_(akSheet, p.testSetID);
+    if (rowIdx !== -1) {
+      const row = akSheet.getDataRange().getValues()[rowIdx];
+      let listeningKey = {}, readingKey = {};
+      try { listeningKey = JSON.parse(row[AKIDX.LISTENING_KEY] || '{}'); } catch (e) {}
+      try { readingKey = JSON.parse(row[AKIDX.READING_KEY] || '{}'); } catch (e) {}
+      listeningScore = computeSectionScore_(p.listeningAnswers, listeningKey);
+      readingScore = computeSectionScore_(p.readingAnswers, readingKey);
+    }
+  }
+  const listeningBand = scoreToBand_(listeningScore);
+  const readingBand = scoreToBand_(readingScore);
 
   sheet.appendRow([
     subID,
@@ -419,10 +493,10 @@ function saveScore(p) {
     String(p.fullName || ''),
     String(p.testSetID || ''),
     String(p.testSetName || ''),
-    toNumber_(p.listeningScore, 0),
-    toNumber_(p.listeningBand, 0),
-    toNumber_(p.readingScore, 0),
-    toNumber_(p.readingBand, 0),
+    listeningScore,
+    listeningBand,
+    readingScore,
+    readingBand,
     '',
     '',
     '',
@@ -439,7 +513,7 @@ function saveScore(p) {
     String(p.readingAnswers || '')
   ]);
 
-  return { success: true, submissionID: subID };
+  return { success: true, submissionID: subID, listeningScore, listeningBand, readingScore, readingBand };
 }
 
 function getScores(p) {
@@ -609,6 +683,76 @@ function getActiveSet() {
   const found = (all.sets || []).find(s => s.setID === id);
 
   return { success: true, set: found || null };
+}
+
+// ============================================================
+//  ANSWER KEYS (protected — API key required, see doGet publicActions)
+// ============================================================
+function findAnswerKeyRow_(sheet, testSetID) {
+  const data = sheet.getDataRange().getValues();
+  for (let i = 1; i < data.length; i++) {
+    if (String(data[i][AKIDX.TESTSET_ID]) === String(testSetID)) return i;
+  }
+  return -1;
+}
+
+function getAnswerKey(p) {
+  if (!p.testSetID) return { success: false, message: 'No testSetID.' };
+
+  const sheet = getSheet_(SHEET_ANSWERKEYS);
+  if (!sheet) return { success: false, message: 'AnswerKeys sheet not found. Run setup first.' };
+
+  const rowIdx = findAnswerKeyRow_(sheet, p.testSetID);
+  if (rowIdx === -1) return { success: false, message: 'No answer key found for this test set.' };
+
+  const row = sheet.getDataRange().getValues()[rowIdx];
+
+  let listeningKey = {};
+  let readingKey = {};
+  try { listeningKey = JSON.parse(row[AKIDX.LISTENING_KEY] || '{}'); } catch (e) {}
+  try { readingKey = JSON.parse(row[AKIDX.READING_KEY] || '{}'); } catch (e) {}
+
+  return {
+    success: true,
+    testSetID: String(row[AKIDX.TESTSET_ID] || ''),
+    listeningKey,
+    readingKey,
+    updatedAt: String(row[AKIDX.UPDATED_AT] || '')
+  };
+}
+
+function saveAnswerKey(p) {
+  if (!p.testSetID) return { success: false, message: 'No testSetID.' };
+
+  const sheet = getOrCreateSheet_(SHEET_ANSWERKEYS, ANSWERKEY_HEADERS);
+
+  // Accept either JSON-string or object payloads from the client.
+  const listeningKey = typeof p.listeningKey === 'string' ? p.listeningKey : JSON.stringify(p.listeningKey || {});
+  const readingKey   = typeof p.readingKey === 'string' ? p.readingKey : JSON.stringify(p.readingKey || {});
+  const now = new Date().toISOString();
+
+  const rowIdx = findAnswerKeyRow_(sheet, p.testSetID);
+
+  if (rowIdx !== -1) {
+    sheet.getRange(rowIdx + 1, 1, 1, ANSWERKEY_HEADERS.length).setValues([[
+      String(p.testSetID),
+      listeningKey,
+      readingKey,
+      now,
+      String(p.updatedBy || '')
+    ]]);
+    return { success: true, message: 'Answer key updated.' };
+  }
+
+  sheet.appendRow([
+    String(p.testSetID),
+    listeningKey,
+    readingKey,
+    now,
+    String(p.updatedBy || '')
+  ]);
+
+  return { success: true, message: 'Answer key created.' };
 }
 
 // ============================================================
