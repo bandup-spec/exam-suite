@@ -1676,33 +1676,25 @@ function loadConfig(input) {
 
 // ═══════════════════════════════════════
 // SEND ANSWER KEY TO GOOGLE SHEETS (protected backend)
+// Same connection pattern as admin.html / simulation.html — plain fetch()
+// to the Apps Script Web App is blocked by CORS, so we use a JSONP-style
+// <script> tag callback instead.
 // ═══════════════════════════════════════
-function getBackendSettings_() {
-  let gasUrl   = localStorage.getItem('ielts_gas_url')   || '';
-  let apiKey   = localStorage.getItem('ielts_gas_key')   || '';
-  let testSetID = localStorage.getItem('ielts_active_setid') || '';
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOWjeZlhj3HWA9C7W8j7GVh9OlVunuMgp6cvGfCFAW_RSZlsjpHvL4Ihqpbo0huwfdSg/exec';
+const API_KEY = 'ielts-sim-x7k2m9-change-me'; // must match API_SECRET in Code.gs
 
-  if (!gasUrl) {
-    gasUrl = prompt('Paste your Google Apps Script Web App URL (from Deploy > Manage deployments):', gasUrl || '');
-    if (!gasUrl) return null;
-    localStorage.setItem('ielts_gas_url', gasUrl.trim());
-  }
-  if (!apiKey) {
-    apiKey = prompt('Paste your API_SECRET (from Code.gs):', apiKey || '');
-    if (!apiKey) return null;
-    localStorage.setItem('ielts_gas_key', apiKey.trim());
-  }
-  if (!testSetID) {
-    testSetID = prompt('Enter the TestSetID this answer key belongs to (see TestSets sheet):', testSetID || '');
-    if (!testSetID) return null;
-    localStorage.setItem('ielts_active_setid', testSetID.trim());
-  }
-
-  return {
-    gasUrl: localStorage.getItem('ielts_gas_url'),
-    apiKey: localStorage.getItem('ielts_gas_key'),
-    testSetID: localStorage.getItem('ielts_active_setid')
-  };
+function callSheets(payload) {
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const timeout = setTimeout(() => { delete window[cbName]; reject(new Error('Timeout — could not reach the server.')); }, 20000);
+    window[cbName] = (data) => { clearTimeout(timeout); delete window[cbName]; resolve(data); };
+    const params = new URLSearchParams({ ...payload, key: API_KEY, callback: cbName });
+    const script = document.createElement('script');
+    script.src = APPS_SCRIPT_URL + '?' + params.toString();
+    script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('Network error.')); };
+    document.head.appendChild(script);
+    setTimeout(() => { try { document.head.removeChild(script); } catch(e){} }, 25000);
+  });
 }
 
 async function sendAnswerKeyToSheet() {
@@ -1715,29 +1707,27 @@ async function sendAnswerKeyToSheet() {
     if (!confirm('The answer key looks empty right now. Send anyway?')) return;
   }
 
-  const backend = getBackendSettings_();
-  if (!backend) { toast('⚠️ Cancelled — backend settings needed to send the answer key.'); return; }
-
-  const params = new URLSearchParams({
-    action: 'saveAnswerKey',
-    key: backend.apiKey,
-    testSetID: backend.testSetID,
-    listeningKey: JSON.stringify(listeningKey),
-    readingKey: JSON.stringify(readingKey),
-    updatedBy: 'question-maker'
-  });
+  let testSetID = localStorage.getItem('ielts_active_setid') || '';
+  testSetID = prompt('Enter the TestSetID this answer key belongs to (see TestSets sheet in admin.html):', testSetID);
+  if (!testSetID) { toast('⚠️ Cancelled — TestSetID needed to send the answer key.'); return; }
+  localStorage.setItem('ielts_active_setid', testSetID.trim());
 
   try {
     toast('⏳ Sending answer key...');
-    const res = await fetch(backend.gasUrl + '?' + params.toString());
-    const data = await res.json();
+    const data = await callSheets({
+      action: 'saveAnswerKey',
+      testSetID: testSetID.trim(),
+      listeningKey: JSON.stringify(listeningKey),
+      readingKey: JSON.stringify(readingKey),
+      updatedBy: 'question-maker'
+    });
     if (data.success) {
-      toast('✅ Answer key saved to Google Sheets for ' + backend.testSetID + '!');
+      toast('✅ Answer key saved to Google Sheets for ' + testSetID.trim() + '!');
     } else {
       alert('Failed to save answer key: ' + (data.message || 'Unknown error'));
     }
   } catch (err) {
-    alert('Could not reach the backend. Check the Web App URL and your internet connection.\n\n' + err.message);
+    alert('Could not reach the backend.\n\n' + err.message);
   }
 }
 
