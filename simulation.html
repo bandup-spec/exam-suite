@@ -500,16 +500,79 @@ function initTimer() {
   }
   renderTimer();
 
+  let tickCount = 0;
   setInterval(()=>{
     if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); return; }
     timeLeft--;
     renderTimer();
+    tickCount++;
+    if (tickCount % 3 === 0) saveAnswersLocal();       // every ~3s — instant local backup
+    if (tickCount % 90 === 0) syncDraftToSheets();      // every ~90s — offsite backup, throttled for quota
     if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); }
   },1000);
 }
 
 function clearTimerStorage() {
   try { localStorage.removeItem(getTimerStorageKey()); } catch(e) {}
+}
+
+// ══════════════════════════════════════
+// AUTOSAVE — Layer 1: instant local backup (survives refresh/crash)
+//            Layer 2: periodic backup to Google Sheets (survives device loss)
+// ══════════════════════════════════════
+function getAutosaveStorageKey() {
+  const cid = sessionStorage.getItem('candidateID') || 'guest';
+  const sid = (activeTestSet && activeTestSet.setID) || 'default';
+  return `ielts_draft_${cid}_${sid}`;
+}
+
+let lastSyncedSnapshot = ''; // used to skip Sheets sync when nothing changed
+
+function saveAnswersLocal() {
+  try {
+    localStorage.setItem(getAutosaveStorageKey(), JSON.stringify({ lAnswers, rAnswers, writingVals, savedAt: Date.now() }));
+  } catch(e) { /* storage full/unavailable — Layer 2 sync still runs on its own timer */ }
+}
+
+function restoreAnswersLocal() {
+  try {
+    const raw = localStorage.getItem(getAutosaveStorageKey());
+    if (!raw) return;
+    const draft = JSON.parse(raw);
+    if (draft.lAnswers) Object.assign(lAnswers, draft.lAnswers);
+    if (draft.rAnswers) Object.assign(rAnswers, draft.rAnswers);
+    if (draft.writingVals) Object.assign(writingVals, draft.writingVals);
+  } catch(e) { /* corrupted draft — ignore, candidate starts blank */ }
+}
+
+function clearAutosaveStorage() {
+  try { localStorage.removeItem(getAutosaveStorageKey()); } catch(e) {}
+}
+
+async function syncDraftToSheets() {
+  // capture the current writing textarea too, since it isn't written into
+  // writingVals until the user switches tasks or submits
+  const ta = document.getElementById('w-textarea');
+  if (ta) writingVals[curWriting] = ta.value;
+
+  const snapshot = JSON.stringify({ lAnswers, rAnswers, writingVals });
+  if (snapshot === lastSyncedSnapshot) return; // nothing new — save the Apps Script quota
+
+  const candidateData = JSON.parse(sessionStorage.getItem('candidateData') || '{}');
+  try {
+    await callSheets({
+      action: 'saveDraft',
+      candidateID: candidateData.candidateID || sessionStorage.getItem('candidateID') || '',
+      fullName:    candidateData.fullName || sessionStorage.getItem('candidateName') || '',
+      testSetID:   activeTestSet.setID   || '',
+      testSetName: activeTestSet.setName || '',
+      listeningAnswers: JSON.stringify(lAnswers),
+      readingAnswers:   JSON.stringify(rAnswers),
+      writingTask1: (writingVals[1]||'').substring(0,2000),
+      writingTask2: (writingVals[2]||'').substring(0,2000)
+    });
+    lastSyncedSnapshot = snapshot; // only mark synced on success — retry next interval otherwise
+  } catch(e) { /* offline/quota hit — Layer 1 local copy is already safe, will retry in 90s */ }
 }
 
 function autoSubmitOnTimeUp() {
@@ -1254,6 +1317,7 @@ async function submitTest(autoSubmit){
     // otherwise a failed submission permanently locks the candidate out
     // with a stuck "time's up" state on their next visit to this test.
     clearTimerStorage();
+    clearAutosaveStorage();
   }
 
   if (!autoSubmit) {
@@ -1279,6 +1343,7 @@ window.onload = async () => {
   initUser(); // must run before initTimer() — normalizes candidateID in sessionStorage,
               // which the timer's storage key depends on to avoid collisions between sessions
   initTimer();
+  restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
   detectSingleContinuousAudio();
 
   buildLQs(1);
