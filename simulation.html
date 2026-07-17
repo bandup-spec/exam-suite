@@ -1200,50 +1200,61 @@ function autoCheckScore(){
 
 async function submitTest(autoSubmit){
   if(!autoSubmit && !confirm('Submit your answers? You will not be able to make changes after this.'))return;
-  writingVals[curWriting]=document.getElementById('w-textarea').value;
 
-  const candidateData=JSON.parse(sessionStorage.getItem('candidateData')||'{}');
-  const wc1 = (writingVals[1]||'').trim().split(/\s+/).filter(Boolean).length;
-  const wc2 = (writingVals[2]||'').trim().split(/\s+/).filter(Boolean).length;
-
-  const submission={
-    ...candidateData,
-    submitTime: new Date().toISOString(),
-    testSetID:   activeTestSet.setID   || '',
-    testSetName: activeTestSet.setName || '',
-    listening: lAnswers,
-    reading: rAnswers,
-    writing: { task1: writingVals[1], task2: writingVals[2] }
-  };
-
-  // Download JSON backup
-  const blob=new Blob([JSON.stringify(submission,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download=`response_${candidateData.candidateID||'unknown'}_${Date.now()}.json`;a.click();
-
-  // Save to Google Sheets — raw answers only, no auto-scoring
-  const btn=document.getElementById('submit-btn');
-  btn.textContent='Saving...'; btn.disabled=true;
   try {
-    await callSheets({
-      action:'saveScore',
-      candidateID:   candidateData.candidateID||'',
-      fullName:      candidateData.fullName||sessionStorage.getItem('candidateName')||'',
-      testSetID:     activeTestSet.setID   || '',
-      testSetName:   activeTestSet.setName || '',
-      listeningAnswers: JSON.stringify(lAnswers),
-      readingAnswers:   JSON.stringify(rAnswers),
-      writingTask1WC:wc1, writingTask2WC:wc2,
-      writingTask1:  (writingVals[1]||'').substring(0,2000),
-      writingTask2:  (writingVals[2]||'').substring(0,2000)
-    });
-  } catch(e){
-    // Sheets save optional — JSON backup already downloaded
-  } finally {
-    btn.textContent='Submitted ✓'; btn.disabled=true;
-  }
+    writingVals[curWriting]=document.getElementById('w-textarea').value;
 
-  clearTimerStorage(); // test is done — don't resume this timer if they revisit
+    const candidateData=JSON.parse(sessionStorage.getItem('candidateData')||'{}');
+    const wc1 = (writingVals[1]||'').trim().split(/\s+/).filter(Boolean).length;
+    const wc2 = (writingVals[2]||'').trim().split(/\s+/).filter(Boolean).length;
+
+    const submission={
+      ...candidateData,
+      submitTime: new Date().toISOString(),
+      testSetID:   activeTestSet.setID   || '',
+      testSetName: activeTestSet.setName || '',
+      listening: lAnswers,
+      reading: rAnswers,
+      writing: { task1: writingVals[1], task2: writingVals[2] }
+    };
+
+    // Download JSON backup — this can be blocked by some browsers/extensions,
+    // so it must never be allowed to stop the submission or the timer cleanup below.
+    try {
+      const blob=new Blob([JSON.stringify(submission,null,2)],{type:'application/json'});
+      const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+      a.download=`response_${candidateData.candidateID||'unknown'}_${Date.now()}.json`;a.click();
+    } catch(e) {
+      // Backup download optional — the Sheets save below is the real record.
+    }
+
+    // Save to Google Sheets — raw answers only, no auto-scoring
+    const btn=document.getElementById('submit-btn');
+    btn.textContent='Saving...'; btn.disabled=true;
+    try {
+      await callSheets({
+        action:'saveScore',
+        candidateID:   candidateData.candidateID||'',
+        fullName:      candidateData.fullName||sessionStorage.getItem('candidateName')||'',
+        testSetID:     activeTestSet.setID   || '',
+        testSetName:   activeTestSet.setName || '',
+        listeningAnswers: JSON.stringify(lAnswers),
+        readingAnswers:   JSON.stringify(rAnswers),
+        writingTask1WC:wc1, writingTask2WC:wc2,
+        writingTask1:  (writingVals[1]||'').substring(0,2000),
+        writingTask2:  (writingVals[2]||'').substring(0,2000)
+      });
+    } catch(e){
+      // Sheets save optional — JSON backup already attempted above.
+    } finally {
+      btn.textContent='Submitted ✓'; btn.disabled=true;
+    }
+  } finally {
+    // ALWAYS clear the timer, even if something above threw an error —
+    // otherwise a failed submission permanently locks the candidate out
+    // with a stuck "time's up" state on their next visit to this test.
+    clearTimerStorage();
+  }
 
   if (!autoSubmit) {
     alert('✅ Answers submitted.\n\nYour test has been recorded. Your results will be reviewed and made available on your profile.');
@@ -1265,10 +1276,11 @@ window.onload = async () => {
 
   await loadConfig();
   if (activeTestSet.setName) document.getElementById('hdr-badge').textContent = activeTestSet.setName;
+  initUser(); // must run before initTimer() — normalizes candidateID in sessionStorage,
+              // which the timer's storage key depends on to avoid collisions between sessions
   initTimer();
   detectSingleContinuousAudio();
 
-  initUser();
   buildLQs(1);
   buildRQs();
   loadPassages();
