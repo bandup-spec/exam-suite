@@ -1,5 +1,5 @@
 // ============================================================
-//  IELTS Simulation — Google Apps Script Backend v4.0
+//  BandUp — Google Apps Script Backend v4.0
 // ============================================================
 
 const SHEET_CANDIDATES  = 'Candidates';
@@ -189,7 +189,7 @@ function ensureCandidateMigration_(sheet) {
 
 function seedDefaultSettings_() {
   const defaults = {
-    institution_name: 'IELTS Simulation Center',
+    institution_name: 'BandUp Center',
     institution_address: '',
     active_set_id: '',
     trf_footer_note: 'This is a simulation test result for preparation purposes only.',
@@ -1074,7 +1074,7 @@ function verifyOTP(email, otp, purpose) {
 }
 
 function sendOTPEmail(toEmail, otp, purpose) {
-  const siteName = 'IELTS Academic Simulation';
+  const siteName = 'BandUp';
   let subject, body;
 
   if (purpose === 'register') {
