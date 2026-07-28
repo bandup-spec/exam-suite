@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Select Test — IELTS Academic Simulation</title>
+<title>Select Test — BandUp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +31,15 @@
   .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
 
-  .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;border-bottom:3px solid var(--gold)}
+  .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;border-bottom:3px solid var(--gold);position:relative}
+  .hdr-burger{display:none;background:transparent;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:4px 8px;line-height:1}
+  @media(max-width:640px){
+    .hdr-burger{display:block}
+    .candidate-info{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;align-items:stretch;gap:10px;background:var(--blue);padding:14px 20px;box-shadow:0 8px 20px rgba(0,0,0,0.25);z-index:80}
+    .candidate-info.open{display:flex}
+    .candidate-info .font-size-ctrl{justify-content:center}
+    .candidate-info .btn-hdr{width:100%}
+  }
   .hdr-left{display:flex;align-items:center;gap:14px}
   .hdr-logo{font-family:'Source Serif 4',serif;font-size:1.1rem;font-weight:600}.hdr-logo span{color:var(--gold)}
   .hdr-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:3px 10px;font-size:0.75rem;color:rgba(255,255,255,0.8)}
@@ -111,10 +119,11 @@
 
 <div class="hdr">
   <div class="hdr-left">
-    <div class="hdr-logo">IELTS <span>Academic</span></div>
+    <div class="hdr-logo"><svg width="30" height="30" viewBox="0 0 290 270" role="img" aria-label="BandUp"><rect x="10" y="140" width="70" height="120" rx="10" fill="#c8a84b"/><rect x="110" y="90" width="70" height="170" rx="10" fill="#d8b85f"/><rect x="210" y="40" width="70" height="220" rx="10" fill="#c8a84b"/><path d="M27 110 L127 60 L227 10" fill="none" stroke="#f2e2b8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><path d="M189 10 L227 10 L227 48" fill="none" stroke="#f2e2b8" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
     <div class="hdr-badge">Select Test</div>
   </div>
-  <div class="candidate-info">
+  <button class="hdr-burger" onclick="toggleHdrMenu()" aria-label="Menu">☰</button>
+  <div class="candidate-info" id="hdr-actions">
     <span>Candidate: <b id="disp-name">Guest</b></span>
     <div class="font-size-ctrl">
       <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
@@ -220,6 +229,9 @@ function initAccessibilityPrefs() {
 function applyFontScale() {
   document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
   localStorage.setItem('ielts_font_scale', FONT_SCALE_STEPS[fontScaleIndex]);
+}
+function toggleHdrMenu(){
+  document.getElementById('hdr-actions').classList.toggle('open');
 }
 function changeFontSize(direction) {
   const newIndex = fontScaleIndex + direction;
