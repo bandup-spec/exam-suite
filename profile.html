@@ -992,19 +992,6 @@ async function confirmPhotoCrop() {
 
   renderTRF();
 }
-  let { width, height } = img;
-  if (width > maxW || height > maxH) {
-    const ratio = Math.min(maxW / width, maxH / height);
-    width  = Math.round(width  * ratio);
-    height = Math.round(height * ratio);
-  }
-  const canvas = document.createElement('canvas');
-  canvas.width = width; canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0,0,width,height); // flatten transparency for JPEG
-  ctx.drawImage(img, 0, 0, width, height);
-  return canvas.toDataURL('image/jpeg', quality);
-}
 
 // ─── HELPERS ───
 function switchTab(id, btn) {
