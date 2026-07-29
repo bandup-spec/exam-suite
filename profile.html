@@ -65,6 +65,21 @@
   .photo-ov{position:absolute;inset:0;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;opacity:0;transition:0.2s;border-radius:50%}
   .photo-circle:hover .photo-ov{opacity:1}
   .photo-ov span{color:#fff;font-size:0.68rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase}
+  .photo-crop-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;padding:20px}
+  .photo-crop-overlay.open{display:flex}
+  .photo-crop-box{background:var(--paper);border-radius:12px;padding:22px;width:320px;max-width:100%;text-align:center;box-shadow:0 12px 32px rgba(0,0,0,0.3)}
+  .photo-crop-title{font-family:'Source Serif 4',serif;font-size:1.05rem;font-weight:600;color:var(--ink);margin-bottom:14px}
+  .photo-crop-view{width:250px;height:250px;margin:0 auto 16px;border-radius:50%;overflow:hidden;position:relative;background:var(--paper3);cursor:grab;touch-action:none;border:3px solid var(--gold)}
+  .photo-crop-view:active{cursor:grabbing}
+  .photo-crop-view img{position:absolute;top:0;left:0;user-select:none;-webkit-user-drag:none;pointer-events:none;max-width:none}
+  .photo-crop-zoom{width:100%;margin-bottom:6px;accent-color:var(--blue)}
+  .photo-crop-hint{font-size:0.72rem;color:var(--ink3);margin-bottom:16px}
+  .photo-crop-actions{display:flex;gap:10px;justify-content:center}
+  .photo-crop-btn{padding:8px 20px;border-radius:6px;font-size:0.82rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;border:none;transition:all 0.15s}
+  .photo-crop-btn.cancel{background:var(--paper3);color:var(--ink2)}
+  .photo-crop-btn.cancel:hover{background:var(--border)}
+  .photo-crop-btn.save{background:var(--gold);color:var(--blue)}
+  .photo-crop-btn.save:hover{opacity:0.88}
   .p-name{font-family:'Source Serif 4',serif;font-size:1.15rem;font-weight:600;color:#fff;margin-bottom:3px}
   .p-id{font-size:0.75rem;color:rgba(255,255,255,0.6);font-weight:600;letter-spacing:0.05em}
   .p-details{padding:14px 18px}
@@ -254,6 +269,20 @@
             <div class="photo-ov"><span>Change Photo</span></div>
           </div>
           <input type="file" id="photo-file" accept="image/*" onchange="handlePhotoUpload(this)">
+          <div class="photo-crop-overlay" id="photo-crop-overlay">
+            <div class="photo-crop-box">
+              <div class="photo-crop-title">Adjust photo</div>
+              <div class="photo-crop-view" id="photo-crop-view">
+                <img id="photo-crop-img" src="" alt="">
+              </div>
+              <input type="range" class="photo-crop-zoom" id="photo-crop-zoom" min="100" max="300" value="100" oninput="onCropZoom()">
+              <div class="photo-crop-hint">Drag to reposition · slide to zoom</div>
+              <div class="photo-crop-actions">
+                <button class="photo-crop-btn cancel" onclick="cancelPhotoCrop()">Cancel</button>
+                <button class="photo-crop-btn save" onclick="confirmPhotoCrop()">Save photo</button>
+              </div>
+            </div>
+          </div>
           <div class="p-name" id="p-name">—</div>
           <div class="p-id" id="p-id">Loading...</div>
         </div>
@@ -453,6 +482,21 @@ function callSheetsOnce(payload, timeoutMs) {
 
 // Mobile networks can be slow on the first request — retry once with a
 // longer timeout before surfacing an error.
+// Large payloads (e.g. photoBase64) don't fit safely in a GET query string —
+// URLs that long can get silently rejected before they ever reach Apps Script.
+// This sends the data in the POST body instead, which has no such limit.
+// Content-Type stays 'text/plain' on purpose: a JSON content-type would trigger
+// a CORS preflight (OPTIONS) request, which Apps Script web apps don't handle.
+async function callSheetsPost(payload) {
+  const res = await fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify({ ...payload, key: API_KEY })
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  return await res.json();
+}
+
 async function callSheets(payload) {
   try {
     return await callSheetsOnce(payload, 25000);
@@ -816,39 +860,138 @@ function handlePhotoUpload(input) {
   if (!file.type.startsWith('image/')) { alert('Please select an image file.'); return; }
 
   const reader = new FileReader();
-  reader.onload = e => {
-    const img = new Image();
-    img.onload = async () => {
-      const compressed = compressImage(img, 300, 300, 0.75); // max 300x300, 75% quality JPEG
-
-      // Show immediately (optimistic UI)
-      document.getElementById('profile-photo-img').src = compressed;
-      document.getElementById('profile-photo-img').style.display = 'block';
-      document.getElementById('photo-placeholder').style.display = 'none';
-      localStorage.setItem('photo_'+candidateData.candidateID, compressed); // local cache, instant on reload
-
-      // Save to Google Sheets so it follows the candidate across devices
-      try {
-        const res = await callSheets({ action:'updateProfilePhoto', candidateID: candidateData.candidateID, photoBase64: compressed });
-        if (res.success) {
-          candidateData.photoBase64 = compressed;
-          sessionStorage.setItem('candidateData', JSON.stringify(candidateData));
-        } else {
-          alert('Photo saved on this device, but could not sync to the server: ' + (res.message||''));
-        }
-      } catch(err) {
-        alert('Photo saved on this device, but could not sync to the server (offline?). It will only show on this browser for now.');
-      }
-
-      renderTRF();
-    };
-    img.src = e.target.result;
-  };
+  reader.onload = e => { openPhotoCrop(e.target.result); };
   reader.readAsDataURL(file);
+  input.value = ''; // allow re-selecting the same file later
 }
 
-// Resize + compress an image to fit within maxW x maxH, output as JPEG data URL
-function compressImage(img, maxW, maxH, quality) {
+// ─── PHOTO CROP / REPOSITION ───
+const CROP_VIEW = 250;   // px, matches .photo-crop-view width/height
+const CROP_OUT  = 300;   // px, output resolution saved to the server
+let cropState = null;    // {scale, minScale, maxScale, offsetX, offsetY, natW, natH}
+let cropDrag  = null;    // {startX, startY, startOffX, startOffY}
+
+function openPhotoCrop(dataUrl) {
+  const img = document.getElementById('photo-crop-img');
+  img.onload = () => {
+    const natW = img.naturalWidth, natH = img.naturalHeight;
+    const minScale = Math.max(CROP_VIEW / natW, CROP_VIEW / natH); // "cover" the circle
+    cropState = {
+      scale: minScale, minScale, maxScale: minScale * 3,
+      offsetX: (CROP_VIEW - natW * minScale) / 2,
+      offsetY: (CROP_VIEW - natH * minScale) / 2,
+      natW, natH
+    };
+    document.getElementById('photo-crop-zoom').value = 100;
+    applyCropTransform();
+    document.getElementById('photo-crop-overlay').classList.add('open');
+  };
+  img.src = dataUrl;
+}
+
+function applyCropTransform() {
+  const img = document.getElementById('photo-crop-img');
+  img.style.width  = (cropState.natW * cropState.scale) + 'px';
+  img.style.height = (cropState.natH * cropState.scale) + 'px';
+  img.style.left = cropState.offsetX + 'px';
+  img.style.top  = cropState.offsetY + 'px';
+}
+
+function clampCropOffset() {
+  const w = cropState.natW * cropState.scale, h = cropState.natH * cropState.scale;
+  cropState.offsetX = Math.min(0, Math.max(CROP_VIEW - w, cropState.offsetX));
+  cropState.offsetY = Math.min(0, Math.max(CROP_VIEW - h, cropState.offsetY));
+}
+
+function onCropZoom() {
+  if (!cropState) return;
+  const pct = parseFloat(document.getElementById('photo-crop-zoom').value) / 100;
+  const newScale = cropState.minScale * pct;
+
+  // Keep the point currently at the center of the view fixed while zooming
+  const cx = (CROP_VIEW / 2 - cropState.offsetX) / cropState.scale;
+  const cy = (CROP_VIEW / 2 - cropState.offsetY) / cropState.scale;
+  cropState.scale = newScale;
+  cropState.offsetX = CROP_VIEW / 2 - cx * newScale;
+  cropState.offsetY = CROP_VIEW / 2 - cy * newScale;
+
+  clampCropOffset();
+  applyCropTransform();
+}
+
+function cropPointFromEvent(e) {
+  return { x: e.clientX, y: e.clientY };
+}
+
+(function initCropDrag() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const view = document.getElementById('photo-crop-view');
+    if (!view) return;
+    view.addEventListener('pointerdown', e => {
+      if (!cropState) return;
+      view.setPointerCapture(e.pointerId);
+      const pt = cropPointFromEvent(e);
+      cropDrag = { startX: pt.x, startY: pt.y, startOffX: cropState.offsetX, startOffY: cropState.offsetY };
+    });
+    view.addEventListener('pointermove', e => {
+      if (!cropDrag || !cropState) return;
+      const pt = cropPointFromEvent(e);
+      cropState.offsetX = cropDrag.startOffX + (pt.x - cropDrag.startX);
+      cropState.offsetY = cropDrag.startOffY + (pt.y - cropDrag.startY);
+      clampCropOffset();
+      applyCropTransform();
+    });
+    ['pointerup','pointercancel','pointerleave'].forEach(evt =>
+      view.addEventListener(evt, () => { cropDrag = null; })
+    );
+  });
+})();
+
+function cancelPhotoCrop() {
+  document.getElementById('photo-crop-overlay').classList.remove('open');
+  cropState = null;
+}
+
+async function confirmPhotoCrop() {
+  if (!cropState) return;
+  const img = document.getElementById('photo-crop-img');
+  const ratio = CROP_OUT / CROP_VIEW;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = CROP_OUT; canvas.height = CROP_OUT;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, CROP_OUT, CROP_OUT); // flatten transparency for JPEG
+  ctx.drawImage(
+    img,
+    cropState.offsetX * ratio, cropState.offsetY * ratio,
+    cropState.natW * cropState.scale * ratio, cropState.natH * cropState.scale * ratio
+  );
+  const compressed = canvas.toDataURL('image/jpeg', 0.75);
+
+  document.getElementById('photo-crop-overlay').classList.remove('open');
+  cropState = null;
+
+  // Show immediately (optimistic UI)
+  document.getElementById('profile-photo-img').src = compressed;
+  document.getElementById('profile-photo-img').style.display = 'block';
+  document.getElementById('photo-placeholder').style.display = 'none';
+  localStorage.setItem('photo_'+candidateData.candidateID, compressed); // local cache, instant on reload
+
+  // Save to Google Sheets so it follows the candidate across devices
+  try {
+    const res = await callSheetsPost({ action:'updateProfilePhoto', candidateID: candidateData.candidateID, photoBase64: compressed });
+    if (res.success) {
+      candidateData.photoBase64 = compressed;
+      sessionStorage.setItem('candidateData', JSON.stringify(candidateData));
+    } else {
+      alert('Photo saved on this device, but could not sync to the server: ' + (res.message||''));
+    }
+  } catch(err) {
+    alert('Photo saved on this device, but could not sync to the server (offline?). It will only show on this browser for now.');
+  }
+
+  renderTRF();
+}
   let { width, height } = img;
   if (width > maxW || height > maxH) {
     const ratio = Math.min(maxW / width, maxH / height);
