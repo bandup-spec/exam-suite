@@ -351,13 +351,14 @@ function renderItemAudioOnly(it){
 }
 function renderGroupAudio(g){
   const audio = g.audioURL ? `<audio controls src="${escH(g.audioURL)}"></audio>` : '';
+  const img = g.imgURL ? `<img class="item-img" src="${escH(g.imgURL)}" alt="Supporting graphic">` : '';
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
       <div class="item-q">Question ${it.num}</div>
       <div class="item-text">${escH(it.qText||'')}</div>
       ${renderOpts(it.num, it.options, ['A','B','C','D'])}
     </div>`).join('');
-  return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">${audio}${items}</div>`;
+  return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">${audio}${img}${items}</div>`;
 }
 function renderItemMC(it, letters){
   return `<div class="item" id="item-${it.num}">
@@ -367,6 +368,7 @@ function renderItemMC(it, letters){
   </div>`;
 }
 function renderGroupTextCompletion(g){
+  const img = g.imgURL ? `<img class="item-img" src="${escH(g.imgURL)}" alt="Supporting graphic">` : '';
   const passageHtml = (g.passageText||'').replace(/\[\[(\d+)\]\]/g, (m,n) => `<span class="blank-tag">${n}</span>`);
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
@@ -374,10 +376,11 @@ function renderGroupTextCompletion(g){
       ${renderOpts(it.num, it.options, ['A','B','C','D'])}
     </div>`).join('');
   return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">
-    <div class="passage">${passageHtml}</div>${items}</div>`;
+    ${img}<div class="passage">${passageHtml}</div>${items}</div>`;
 }
 function renderGroupReading(g){
-  const passages = (g.passageText||'').split('===PASSAGE===');
+  const img = g.imgURL ? `<img class="item-img" src="${escH(g.imgURL)}" alt="Supporting graphic">` : '';
+  const passages = (g.passageText||'').split('===PASSAGE===').filter(p => p.trim() !== '');
   const passageHtml = passages.map(p => `<div class="passage">${escH(p.trim())}</div>`).join('<div class="passage-sep"></div>');
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
@@ -386,7 +389,7 @@ function renderGroupReading(g){
       ${renderOpts(it.num, it.options, ['A','B','C','D'])}
     </div>`).join('');
   return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">
-    ${passageHtml}${items}</div>`;
+    ${img}${passageHtml}${items}</div>`;
 }
 
 function selectAnswer(num, letter, el){
