@@ -646,21 +646,36 @@
       <div class="card">
         <div class="card-title">Step 1 — Set Test Set Name</div>
         <div class="field">
+          <label>Exam Type</label>
+          <select id="pub-exam-type" onchange="onExamTypeChange()" style="width:100%;padding:8px 11px;border:1px solid var(--paper3);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.87rem">
+            <option value="IELTS">IELTS</option>
+            <option value="TOEIC">TOEIC</option>
+          </select>
+        </div>
+        <div class="field">
           <label>Test Set Name (will be shown to candidates)</label>
           <input type="text" id="pub-set-name" placeholder="e.g. Mock Test 1 — January 2025">
+          <div style="font-size:0.75rem;color:var(--ink3);margin-top:4px">For TOEIC, keep the word "TOEIC" in the name — <code>tests.html</code> uses it to send candidates to the TOEIC test screen instead of the IELTS one.</div>
         </div>
         <div class="field">
           <label>Description</label>
           <input type="text" id="pub-set-desc" placeholder="e.g. IELTS Academic simulation">
         </div>
       </div>
-      <div class="card">
+      <div class="card" id="pub-step2-ielts">
         <div class="card-title">Step 2 — Download Config JSON</div>
         <p style="font-size:0.85rem;color:var(--ink2);margin-bottom:14px;line-height:1.6">
           This downloads a JSON file containing all questions, passages, answer key, and settings.
           <b>Audio is NOT included</b> — YouTube URLs are stored in the config.
         </p>
         <button class="btn btn-blue" onclick="downloadConfigForGitHub()">⬇ Download Config JSON</button>
+      </div>
+      <div class="card" id="pub-step2-toeic" style="display:none">
+        <div class="card-title">Step 2 — Build your TOEIC config</div>
+        <p style="font-size:0.85rem;color:var(--ink2);margin-bottom:14px;line-height:1.6">
+          TOEIC tests are authored separately, in the <b>TOEIC Question Maker</b> (CSV import for all 200 questions, then Download Config JSON + Send Answer Key to Sheets from there).
+        </p>
+        <button class="btn btn-blue" onclick="window.open('toeic-question-maker.html','_blank')">↗ Open TOEIC Question Maker</button>
       </div>
       <div class="card">
         <div class="card-title">Step 3 — Upload to GitHub</div>
@@ -981,6 +996,24 @@ function renderScoresTable(rows, highlight) {
     // [1]=Timestamp [2]=CandidateID [3]=FullName
     // [6]=LScore [7]=LBand [8]=RScore [9]=RBand
     // [12]=WritingBand [13]=SpeakingBand [14]=OverallBand
+    // [24]=ExamType [25]=ListeningScaled [26]=ReadingScaled [27]=TOEICTotal
+    const examType = String(r[24]||'IELTS').toUpperCase() === 'TOEIC' ? 'TOEIC' : 'IELTS';
+
+    if (examType === 'TOEIC') {
+      html += `<tr>
+        <td style="font-size:0.78rem;white-space:nowrap">${formatDate(r[1])}</td>
+        <td><b>${hl(r[2])}</b></td>
+        <td>${hl(r[3])}</td>
+        <td style="text-align:center"><b>${escH(String(r[6]||'—'))}</b>/100</td>
+        <td><span class="band-badge">${escH(String(r[25]||'—'))}</span></td>
+        <td style="text-align:center"><b>${escH(String(r[8]||'—'))}</b>/100</td>
+        <td><span class="band-badge">${escH(String(r[26]||'—'))}</span></td>
+        <td colspan="2" style="text-align:center;color:var(--ink3);font-size:0.78rem">— (TOEIC has no Writing/Speaking) —</td>
+        <td><span class="band-badge band-high">${escH(String(r[27]||'—'))} / 990</span></td>
+      </tr>`;
+      return;
+    }
+
     const lBand   = parseFloat(r[7])||0;
     const rBand   = parseFloat(r[9])||0;
     const overall = parseFloat(r[14])||0;
@@ -1434,30 +1467,40 @@ async function testConfigURL() {
   }
 }
 
+function onExamTypeChange() {
+  const type = document.getElementById('pub-exam-type').value;
+  document.getElementById('pub-step2-ielts').style.display = type === 'TOEIC' ? 'none' : 'block';
+  document.getElementById('pub-step2-toeic').style.display = type === 'TOEIC' ? 'block' : 'none';
+}
+
 async function savePublishedSet() {
   const url  = document.getElementById('pub-github-url').value.trim();
   const name = document.getElementById('pub-set-name').value.trim();
   const desc = document.getElementById('pub-set-desc').value.trim();
+  const examType = document.getElementById('pub-exam-type').value || 'IELTS';
   if (!url || !name) { alert('Please fill in the set name and GitHub URL.'); return; }
+  if (examType === 'TOEIC' && !/toeic/i.test(name)) {
+    if (!confirm('The test set name doesn\'t contain "TOEIC" — candidates will be routed to the IELTS test screen instead of TOEIC unless you add it. Save anyway?')) return;
+  }
 
   const setID = 'SET-' + Date.now();
 
   // Save locally first (always works, no server needed)
   const localSets = JSON.parse(localStorage.getItem('ielts_test_sets') || '[]');
-  localSets.push({ setID, setName:name, configURL:url, status:'Active', createdAt:new Date().toISOString(), description:desc });
+  localSets.push({ setID, setName:name, configURL:url, status:'Active', createdAt:new Date().toISOString(), description:desc, examType });
   localStorage.setItem('ielts_test_sets', JSON.stringify(localSets));
   localStorage.setItem('ielts_active_set', JSON.stringify({ setID, setName:name, configURL:url }));
   localStorage.setItem('ielts_drive_url', url);
 
   // Try saving to Sheets too (optional — won't fail if not deployed yet)
   try {
-    const data = await callSheets({ action:'saveTestSet', setID, setName:name, configURL:url, status:'Active', description:desc });
+    const data = await callSheets({ action:'saveTestSet', setID, setName:name, configURL:url, status:'Active', description:desc, examType });
     if (data.success) {
       await callSheets({ action:'setActiveSet', setID: data.setID || setID });
     }
   } catch(e) { /* Sheets optional — already saved locally */ }
 
-  toast('✅ Test set saved & activated! Config URL stored.');
+  toast(`✅ ${examType} test set saved & activated! Config URL stored.` + (examType==='TOEIC' ? ' Don\'t forget to send the answer key from the TOEIC Question Maker.' : ''));
 }
 
 async function saveTestSetForm() {
