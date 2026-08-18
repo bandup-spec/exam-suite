@@ -107,8 +107,8 @@
         <tr><td><code>optionA..D</code></td><td>all except 1,2*</td><td>*Part 1 uses only the answer letter; Part 2 has 3 spoken options (A–C), leave optionD blank</td></tr>
         <tr><td><code>answer</code></td><td>all</td><td>Correct letter, A–D</td></tr>
         <tr><td><code>audioURL</code></td><td>1,2,3,4</td><td>Per-item (Parts 1–2) or once per group, first row only (Parts 3–4)</td></tr>
-        <tr><td><code>imgURL</code></td><td>1</td><td>Photograph shown for Part 1</td></tr>
-        <tr><td><code>passageText</code></td><td>6,7</td><td>Full passage HTML/text. For Part 6, mark blanks as <code>[[num]]</code> inline. For Part 7 double/triple passages, separate texts with <code>===PASSAGE===</code>. Only needs to be filled once per group (first row).</td></tr>
+        <tr><td><code>imgURL</code></td><td>1,4,6,7</td><td>Part 1: photo per item. Parts 4, 6, 7: one image per group (e.g. a chart, form, receipt, or ad) — fill it once per group, first row only, same as <code>audioURL</code>/<code>passageText</code>.</td></tr>
+        <tr><td><code>passageText</code></td><td>6,7</td><td>Full passage HTML/text. For Part 6, mark blanks as <code>[[num]]</code> inline. For Part 7 double/triple passages, separate texts with <code>===PASSAGE===</code>. Only needs to be filled once per group (first row). Optional if the group is graphic-only (image + questions, no body text) — leave blank and use <code>imgURL</code> instead.</td></tr>
       </table>
     </div>
   </div>
@@ -216,12 +216,16 @@ function downloadTemplate(){
     ['3','C1','32','What does the woman want to do?','Book a flight','Cancel a meeting','Order supplies','Return a product','A','https://example.com/audio/c1.mp3','',''],
     ['3','C1','33','What does the man suggest?','Calling later','Checking online','Visiting the office','Sending an email','B','','',''],
     ['3','C1','34','What will happen next?','A refund','A callback','A delivery','A discount','C','','',''],
+    ['4','T1','71','What is the chart mainly about?','Sales by region','Store hours','Staff schedule','Delivery routes','A','https://example.com/audio/t1.mp3','https://example.com/img/t1_chart.jpg',''],
+    ['4','T1','72','According to the chart, which region had the highest sales?','North','South','East','West','C','','',''],
+    ['4','T1','73','What will most likely happen next quarter?','Prices will rise','A new store will open','Staff will be hired','Sales will be reviewed','D','','',''],
     ['5','','101','The manager ------- the report before the meeting.','reviewed','review','reviewing','to review','A','','',''],
     ['6','P1','131','','delivered','delivers','delivering','to deliver','A','','','Dear team, the shipment was [[131]] yesterday. We will [[132]] it to the warehouse. Please [[133]] the invoice. Thank you [[134]] your patience.'],
     ['6','P1','132','','send','sends','sent','to send','A','','',''],
     ['6','P1','133','','confirm','confirms','confirmed','to confirm','A','','',''],
     ['6','P1','134','','for','of','with','on','A','','',''],
-    ['7','R1','147','What is the purpose of the notice?','To announce a sale','To request feedback','To confirm a booking','To advertise a job','A','','','Notice: Our store will be closed for renovation from June 1 to June 10.']
+    ['7','R1','147','What is the purpose of the notice?','To announce a sale','To request feedback','To confirm a booking','To advertise a job','A','','','Notice: Our store will be closed for renovation from June 1 to June 10.'],
+    ['7','R2','148','According to the schedule, what time does the workshop start?','9:00 AM','10:00 AM','1:00 PM','3:00 PM','B','','https://example.com/img/r2_schedule.jpg','']
   ];
   const csv = rows.map(r=>r.map(csvEscape).join(',')).join('\n');
   downloadBlob(csv, 'toeic_template.csv', 'text/csv');
@@ -300,20 +304,23 @@ function loadRecords(recs){
       data[2].push({num, audioURL:r.audioURL||'', answer:(r.answer||'').toUpperCase()});
     } else if(part===3 || part===4){
       const gid = r.group || ('G'+num);
-      if(!groupsByPart[part][gid]) groupsByPart[part][gid] = {groupID:gid, audioURL:'', items:[]};
+      if(!groupsByPart[part][gid]) groupsByPart[part][gid] = {groupID:gid, audioURL:'', imgURL:'', items:[]};
       if(r.audioURL) groupsByPart[part][gid].audioURL = r.audioURL;
+      if(r.imgURL) groupsByPart[part][gid].imgURL = r.imgURL;
       groupsByPart[part][gid].items.push({num, qText:r.qText||'', options, answer:(r.answer||'').toUpperCase()});
     } else if(part===5){
       data[5].push({num, qText:r.qText||'', options, answer:(r.answer||'').toUpperCase()});
     } else if(part===6){
       const gid = r.group || ('P'+num);
-      if(!groupsByPart[6][gid]) groupsByPart[6][gid] = {groupID:gid, passageText:'', items:[]};
+      if(!groupsByPart[6][gid]) groupsByPart[6][gid] = {groupID:gid, passageText:'', imgURL:'', items:[]};
       if(r.passageText) groupsByPart[6][gid].passageText = r.passageText;
+      if(r.imgURL) groupsByPart[6][gid].imgURL = r.imgURL;
       groupsByPart[6][gid].items.push({num, options, answer:(r.answer||'').toUpperCase()});
     } else if(part===7){
       const gid = r.group || ('R'+num);
-      if(!groupsByPart[7][gid]) groupsByPart[7][gid] = {groupID:gid, passageText:'', items:[]};
+      if(!groupsByPart[7][gid]) groupsByPart[7][gid] = {groupID:gid, passageText:'', imgURL:'', items:[]};
       if(r.passageText) groupsByPart[7][gid].passageText = r.passageText;
+      if(r.imgURL) groupsByPart[7][gid].imgURL = r.imgURL;
       groupsByPart[7][gid].items.push({num, qText:r.qText||'', options, answer:(r.answer||'').toUpperCase()});
     }
   });
