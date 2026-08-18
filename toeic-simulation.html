@@ -89,7 +89,8 @@
   </div>
   <div class="hdr-right">
     <span id="disp-name">Guest</span>
-    <button class="btn btn-submit" id="submit-btn" onclick="submitTest(false)">Submit</button>
+    <button class="btn btn-submit" id="finish-listening-btn" onclick="finishListening()" style="display:none">Finish Listening → Reading</button>
+    <button class="btn btn-submit" id="submit-btn" onclick="submitTest(false)" style="display:none">Submit</button>
   </div>
 </div>
 
@@ -213,8 +214,18 @@ function startStage(which){
   document.getElementById('gate-wrap').innerHTML = '';
   document.getElementById('main-app').style.display = 'flex';
   document.getElementById('stage-label').textContent = which === 'listening' ? 'Listening' : 'Reading';
+  document.getElementById('finish-listening-btn').style.display = which === 'listening' ? 'inline-block' : 'none';
+  document.getElementById('submit-btn').style.display = which === 'reading' ? 'inline-block' : 'none';
   initTimer(which);
   renderStage(which);
+}
+
+function finishListening(){
+  if(!confirm('Finish the Listening section now and move on to Reading? You will not be able to come back to Listening after this.')) return;
+  saveAutosave();
+  clearInterval(timerInterval);
+  clearStageTimer('listening');
+  showStageTransition();
 }
 
 // ═══════════════════════════════════════
@@ -279,6 +290,13 @@ function renderStage(which){
   const audioURL = which==='listening' ? (config.listening.audioURL||'') : '';
   if(audioURL){
     content.innerHTML += `<div class="part-block"><div class="part-head"><span class="part-num">Full Listening Audio</span></div><audio controls src="${escH(audioURL)}"></audio><div style="font-size:0.8rem;color:var(--ink3)">This single track covers Parts 1–4. Use the navigator on the right to jump between questions as you listen.</div></div>`;
+  }
+
+  if(which === 'listening'){
+    content.innerHTML += `<div class="part-block" style="background:#e8f0ff;border-color:var(--blue2);text-align:center">
+      <div style="font-size:0.86rem;color:var(--ink2);margin-bottom:10px">Done with all 100 Listening questions? Click below to move on — you won't be able to come back to Listening after that.</div>
+      <button class="btn" style="background:var(--blue);color:#fff;padding:10px 24px;border:none;border-radius:7px;font-weight:600;cursor:pointer" onclick="finishListening()">Finish Listening → Reading</button>
+    </div>`;
   }
 
   parts.forEach(([pnum, pdata]) => {
