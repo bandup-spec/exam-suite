@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOEIC Simulation — BandUp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:100%}
+  :root{
+    --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
+    --paper:#faf9f7;--paper2:#f2f0ec;--paper3:#e8e5df;
+    --blue:#002f5f;--blue2:#1a5fa8;--gold:#c8a84b;
+    --green:#2e7d4f;--red:#c0392b;--border:rgba(0,0,0,0.1);
+  }
+  body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+  .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;border-bottom:3px solid var(--gold)}
+  .hdr-logo{font-family:'Source Serif 4',serif;font-size:1.05rem;font-weight:600}
+  .hdr-logo span{color:var(--gold)}
+  .hdr-mid{display:flex;align-items:center;gap:16px;font-size:0.85rem}
+  .timer{background:rgba(255,255,255,0.12);padding:5px 14px;border-radius:6px;font-weight:600;letter-spacing:0.03em;font-variant-numeric:tabular-nums}
+  .timer.low{background:var(--red)}
+  .hdr-right{display:flex;align-items:center;gap:12px;font-size:0.82rem}
+  .btn{padding:8px 16px;border-radius:7px;border:none;font-family:'DM Sans',sans-serif;font-size:0.83rem;font-weight:600;cursor:pointer}
+  .btn-submit{background:var(--gold);color:var(--blue)}
+  .btn-submit:hover{opacity:0.9}
+  .btn-submit:disabled{opacity:0.5;cursor:default}
+
+  .main{display:flex;flex:1;overflow:hidden}
+  .content{flex:1;overflow-y:auto;padding:26px 26px 100px}
+  .content::-webkit-scrollbar{width:6px}
+  .content::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:3px}
+
+  .nav{width:230px;background:#fff;border-left:1px solid var(--border);flex-shrink:0;overflow-y:auto;padding:16px 12px}
+  .nav-title{font-size:0.7rem;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.08em;margin:10px 4px 6px}
+  .nav-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:6px}
+  .nav-btn{aspect-ratio:1;border-radius:5px;border:1px solid var(--border);background:var(--paper2);color:var(--ink2);font-size:0.68rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .nav-btn.answered{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .nav-btn.current{outline:2px solid var(--gold)}
+
+  .stage-gate{max-width:640px;margin:60px auto;background:#fff;border-radius:14px;padding:36px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.08)}
+  .stage-gate h1{font-family:'Source Serif 4',serif;color:var(--blue);margin-bottom:10px}
+  .stage-gate p{color:var(--ink2);font-size:0.92rem;line-height:1.7;margin-bottom:10px;text-align:left}
+  .stage-gate .btn{margin-top:18px;padding:12px 28px;font-size:0.92rem;background:var(--blue);color:#fff}
+
+  .part-block{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px}
+  .part-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+  .part-num{font-family:'Source Serif 4',serif;font-size:1.15rem;font-weight:600;color:var(--blue)}
+  .part-name{font-size:0.8rem;color:var(--ink3)}
+  .part-instr{font-size:0.85rem;color:var(--ink2);margin-bottom:16px;line-height:1.6}
+
+  .item{border-top:1px solid var(--paper3);padding:14px 0}
+  .item:first-of-type{border-top:none;padding-top:4px}
+  .item-q{font-size:0.68rem;color:var(--ink3);font-weight:700;margin-bottom:4px}
+  .item-text{font-size:0.9rem;margin-bottom:10px;line-height:1.6}
+  .item-img{max-width:100%;max-height:280px;border-radius:8px;margin-bottom:10px;display:block}
+  audio{width:100%;max-width:420px;margin-bottom:10px;display:block}
+  .opts{display:flex;flex-direction:column;gap:7px}
+  .opt{display:flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid var(--paper3);border-radius:8px;cursor:pointer;font-size:0.86rem}
+  .opt:hover{background:var(--paper2)}
+  .opt.selected{background:#e8f0ff;border-color:var(--blue2)}
+  .opt input{accent-color:var(--blue);width:15px;height:15px;flex-shrink:0}
+  .opt .lab{font-weight:700;color:var(--blue);width:16px;flex-shrink:0}
+
+  .passage{background:var(--paper2);border-radius:8px;padding:16px;font-size:0.86rem;line-height:1.75;margin-bottom:14px;white-space:pre-wrap}
+  .passage-sep{border-top:1px dashed var(--paper3);margin:12px 0}
+  .blank-tag{display:inline-block;background:var(--gold);color:var(--blue);font-weight:700;border-radius:4px;padding:0 5px;font-size:0.8em}
+
+  .results{max-width:560px;margin:50px auto;background:#fff;border-radius:14px;padding:36px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.08)}
+  .results h1{font-family:'Source Serif 4',serif;color:var(--blue);margin-bottom:16px}
+  .score-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--paper3);font-size:0.92rem}
+  .score-total{font-size:1.4rem;font-weight:700;color:var(--blue);margin-top:14px}
+
+  #load-overlay{position:fixed;inset:0;background:rgba(0,47,95,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:14px}
+  .spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">Band<span>Up</span> · TOEIC</div>
+  <div class="hdr-mid">
+    <div id="stage-label" style="opacity:0.8">Listening</div>
+    <div class="timer" id="timer-disp">--:--</div>
+  </div>
+  <div class="hdr-right">
+    <span id="disp-name">Guest</span>
+    <button class="btn btn-submit" id="submit-btn" onclick="submitTest(false)">Submit</button>
+  </div>
+</div>
+
+<div class="main" id="main-app" style="display:none">
+  <div class="content" id="content"></div>
+  <div class="nav" id="nav"></div>
+</div>
+
+<div id="gate-wrap"></div>
+<div id="results-wrap"></div>
+
+<script>
+// ═══════════════════════════════════════
+// SESSION / CANDIDATE
+// ═══════════════════════════════════════
+function initUser(){
+  let name = sessionStorage.getItem('candidateName') || '';
+  const raw = sessionStorage.getItem('candidateData');
+  if(raw){ try { const cd = JSON.parse(raw); name = cd.fullName || name; } catch(e){} }
+  document.getElementById('disp-name').innerText = name || 'Guest';
+}
+
+let activeTestSet = {setID:'', setName:''};
+let config = null;
+
+// ═══════════════════════════════════════
+// CONFIG LOADER — same pattern as simulation.html
+// ═══════════════════════════════════════
+async function loadConfig(){
+  const selected = sessionStorage.getItem('selectedTestSet');
+  let url = '';
+  if(selected){
+    try {
+      const sel = JSON.parse(selected);
+      url = sel.configURL || '';
+      activeTestSet = {setID: sel.setID || '', setName: sel.setName || ''};
+    } catch(e){}
+  }
+  if(!url){
+    document.getElementById('gate-wrap').innerHTML = `<div class="stage-gate"><h1>No test selected</h1><p>Go back to the test list and choose a TOEIC test set first.</p><button class="btn" style="background:var(--blue);color:#fff" onclick="location.href='tests.html'">← Back to test list</button></div>`;
+    return false;
+  }
+  showLoadingOverlay('Loading test configuration...');
+  try {
+    const res = await fetch(url, {cache:'no-cache'});
+    if(!res.ok) throw new Error('HTTP '+res.status);
+    config = await res.json();
+  } catch(e){
+    document.getElementById('gate-wrap').innerHTML = `<div class="stage-gate"><h1>Could not load this test</h1><p>${escH(e.message)}</p></div>`;
+    hideLoadingOverlay();
+    return false;
+  }
+  hideLoadingOverlay();
+  return true;
+}
+
+function showLoadingOverlay(msg){
+  let ov = document.getElementById('load-overlay');
+  if(!ov){
+    ov = document.createElement('div');
+    ov.id='load-overlay';
+    ov.innerHTML = `<div class="spinner"></div><div style="font-family:'Source Serif 4',serif;font-size:1.2rem;color:var(--gold)">BandUp</div><div id="load-msg" style="font-size:0.85rem;opacity:0.75"></div>`;
+    document.body.appendChild(ov);
+  }
+  document.getElementById('load-msg').textContent = msg;
+  ov.style.display='flex';
+}
+function hideLoadingOverlay(){ const ov=document.getElementById('load-overlay'); if(ov) ov.style.display='none'; }
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+let answers = {};      // absolute num (1-100 listening, 101-200 reading) -> 'A'/'B'/'C'/'D'
+let stage = null;      // 'listening' | 'reading'
+let timerInterval = null;
+
+const STAGE_DURATIONS = { listening: 45*60, reading: 75*60 };
+
+function getCandidateID(){ return sessionStorage.getItem('candidateID') || 'guest'; }
+function timerKey(st){ return `toeic_timer_end_${getCandidateID()}_${activeTestSet.setID||'default'}_${st}`; }
+function autosaveKey(){ return `toeic_autosave_${getCandidateID()}_${activeTestSet.setID||'default'}`; }
+
+function saveAutosave(){
+  try { localStorage.setItem(autosaveKey(), JSON.stringify({answers, stage, savedAt: Date.now()})); } catch(e){}
+}
+function loadAutosave(){
+  try {
+    const raw = localStorage.getItem(autosaveKey());
+    if(raw){ const d = JSON.parse(raw); answers = d.answers || {}; }
+  } catch(e){}
+}
+function clearAutosave(){ try{ localStorage.removeItem(autosaveKey()); }catch(e){} }
+
+// ═══════════════════════════════════════
+// GATE SCREENS
+// ═══════════════════════════════════════
+function showStartGate(){
+  const title = (config.meta && config.meta.title) || activeTestSet.setName || 'TOEIC Practice Test';
+  document.getElementById('gate-wrap').innerHTML = `
+    <div class="stage-gate">
+      <h1>${escH(title)}</h1>
+      <p><b>Format:</b> 100 Listening questions (Parts 1–4, ~45 min) + 100 Reading questions (Parts 5–7, 75 min). All multiple choice — no Writing or Speaking sections.</p>
+      <p>Once you start the Listening section, the timer begins automatically and cannot be paused. You may revisit and change any answer within a section before time runs out or before you move to the next section.</p>
+      <p>Make sure your audio is on and working before you begin.</p>
+      <button class="btn" onclick="startStage('listening')">Start Listening Section →</button>
+    </div>`;
+}
+
+function showStageTransition(){
+  document.getElementById('main-app').style.display='none';
+  document.getElementById('gate-wrap').innerHTML = `
+    <div class="stage-gate">
+      <h1>Listening section complete</h1>
+      <p>Next: the Reading section (Parts 5–7, 100 questions, 75 minutes). You can go straight in, or take a short breather first — the Reading timer only starts once you click below.</p>
+      <button class="btn" onclick="startStage('reading')">Start Reading Section →</button>
+    </div>`;
+}
+
+function startStage(which){
+  stage = which;
+  document.getElementById('gate-wrap').innerHTML = '';
+  document.getElementById('main-app').style.display = 'flex';
+  document.getElementById('stage-label').textContent = which === 'listening' ? 'Listening' : 'Reading';
+  initTimer(which);
+  renderStage(which);
+}
+
+// ═══════════════════════════════════════
+// TIMER — persists across refresh, same pattern as simulation.html
+// ═══════════════════════════════════════
+function initTimer(which){
+  const key = timerKey(which);
+  let endTime = localStorage.getItem(key);
+  if(!endTime){
+    endTime = Date.now() + STAGE_DURATIONS[which]*1000;
+    localStorage.setItem(key, String(endTime));
+  }
+  endTime = parseInt(endTime, 10);
+
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const remaining = Math.max(0, Math.round((endTime - Date.now())/1000));
+    renderTimer(remaining);
+    if(remaining <= 0){
+      clearInterval(timerInterval);
+      stageTimeUp(which);
+    }
+  }, 1000);
+  renderTimer(Math.max(0, Math.round((endTime-Date.now())/1000)));
+}
+
+function renderTimer(sec){
+  const m = Math.floor(sec/60), s = sec%60;
+  const disp = document.getElementById('timer-disp');
+  disp.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  disp.classList.toggle('low', sec <= 120);
+}
+
+function clearStageTimer(which){ try{ localStorage.removeItem(timerKey(which)); }catch(e){} }
+
+function stageTimeUp(which){
+  saveAutosave();
+  if(which === 'listening'){
+    clearStageTimer('listening');
+    alert("Time's up for the Listening section. Moving on to Reading.");
+    showStageTransition();
+  } else {
+    clearStageTimer('reading');
+    alert("Time's up. Submitting your test now.");
+    submitTest(true);
+  }
+}
+
+// ═══════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════
+function renderStage(which){
+  const content = document.getElementById('content');
+  const nav = document.getElementById('nav');
+  content.innerHTML = '';
+  nav.innerHTML = '';
+
+  const parts = which === 'listening'
+    ? [[1, config.listening.parts[1]], [2, config.listening.parts[2]], [3, config.listening.parts[3]], [4, config.listening.parts[4]]]
+    : [[5, config.reading.parts[5]], [6, config.reading.parts[6]], [7, config.reading.parts[7]]];
+
+  const audioURL = which==='listening' ? (config.listening.audioURL||'') : '';
+  if(audioURL){
+    content.innerHTML += `<div class="part-block"><div class="part-head"><span class="part-num">Full Listening Audio</span></div><audio controls src="${escH(audioURL)}"></audio><div style="font-size:0.8rem;color:var(--ink3)">This single track covers Parts 1–4. Use the navigator on the right to jump between questions as you listen.</div></div>`;
+  }
+
+  parts.forEach(([pnum, pdata]) => {
+    if(!pdata) return;
+    content.appendChild(renderPart(pnum, pdata));
+  });
+
+  renderNav(which, parts);
+  saveAutosave();
+}
+
+function renderPart(pnum, pdata){
+  const block = document.createElement('div');
+  block.className = 'part-block';
+  const instr = PART_INSTRUCTIONS[pnum] || '';
+  let html = `<div class="part-head"><span class="part-num">Part ${pnum}</span><span class="part-name">${escH(pdata.name||'')}</span></div><div class="part-instr">${instr}</div>`;
+
+  if(pnum===1){
+    html += (pdata.items||[]).map(it => renderItemPhoto(it)).join('');
+  } else if(pnum===2){
+    html += (pdata.items||[]).map(it => renderItemAudioOnly(it)).join('');
+  } else if(pnum===3 || pnum===4){
+    html += (pdata.groups||[]).map(g => renderGroupAudio(g)).join('');
+  } else if(pnum===5){
+    html += (pdata.items||[]).map(it => renderItemMC(it, ['A','B','C','D'])).join('');
+  } else if(pnum===6){
+    html += (pdata.groups||[]).map(g => renderGroupTextCompletion(g)).join('');
+  } else if(pnum===7){
+    html += (pdata.groups||[]).map(g => renderGroupReading(g)).join('');
+  }
+  block.innerHTML = html;
+  return block;
+}
+
+const PART_INSTRUCTIONS = {
+  1: 'For each question, look at the picture and choose the statement (A, B, C, or D) that best describes it.',
+  2: 'Listen to the question and the three responses. Choose the best response (A, B, or C).',
+  3: 'Listen to each conversation and answer the three questions that follow, based on what is said.',
+  4: 'Listen to each talk and answer the three questions that follow, based on what is said.',
+  5: 'Choose the word or phrase that best completes the sentence.',
+  6: 'Read the passage and choose the best word, phrase, or sentence for each blank.',
+  7: 'Read the passage(s) and answer the questions that follow.'
+};
+
+function optLabel(i){ return ['A','B','C','D'][i]; }
+
+function renderOpts(num, options, letters){
+  const use = (options && options.length) ? options.map((o,i)=>({l:optLabel(i), t:o})) : letters.map(l=>({l, t:''}));
+  return `<div class="opts">` + use.map(o => `
+    <label class="opt ${answers[num]===o.l?'selected':''}" onclick="selectAnswer(${num},'${o.l}',this)">
+      <input type="radio" name="q${num}" ${answers[num]===o.l?'checked':''}>
+      <span class="lab">${o.l}</span><span>${escH(o.t)}</span>
+    </label>`).join('') + `</div>`;
+}
+
+function renderItemPhoto(it){
+  return `<div class="item" id="item-${it.num}">
+    <div class="item-q">Question ${it.num}</div>
+    ${it.imgURL?`<img class="item-img" src="${escH(it.imgURL)}" alt="Question ${it.num} photo">`:''}
+    ${it.audioURL?`<audio controls src="${escH(it.audioURL)}"></audio>`:''}
+    ${renderOpts(it.num, null, ['A','B','C','D'])}
+  </div>`;
+}
+function renderItemAudioOnly(it){
+  return `<div class="item" id="item-${it.num}">
+    <div class="item-q">Question ${it.num}</div>
+    ${it.audioURL?`<audio controls src="${escH(it.audioURL)}"></audio>`:''}
+    ${renderOpts(it.num, null, ['A','B','C'])}
+  </div>`;
+}
+function renderGroupAudio(g){
+  const audio = g.audioURL ? `<audio controls src="${escH(g.audioURL)}"></audio>` : '';
+  const items = (g.items||[]).map(it => `
+    <div class="item" id="item-${it.num}">
+      <div class="item-q">Question ${it.num}</div>
+      <div class="item-text">${escH(it.qText||'')}</div>
+      ${renderOpts(it.num, it.options, ['A','B','C','D'])}
+    </div>`).join('');
+  return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">${audio}${items}</div>`;
+}
+function renderItemMC(it, letters){
+  return `<div class="item" id="item-${it.num}">
+    <div class="item-q">Question ${it.num}</div>
+    <div class="item-text">${escH(it.qText||'')}</div>
+    ${renderOpts(it.num, it.options, letters)}
+  </div>`;
+}
+function renderGroupTextCompletion(g){
+  const passageHtml = (g.passageText||'').replace(/\[\[(\d+)\]\]/g, (m,n) => `<span class="blank-tag">${n}</span>`);
+  const items = (g.items||[]).map(it => `
+    <div class="item" id="item-${it.num}">
+      <div class="item-q">Question ${it.num}</div>
+      ${renderOpts(it.num, it.options, ['A','B','C','D'])}
+    </div>`).join('');
+  return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">
+    <div class="passage">${passageHtml}</div>${items}</div>`;
+}
+function renderGroupReading(g){
+  const passages = (g.passageText||'').split('===PASSAGE===');
+  const passageHtml = passages.map(p => `<div class="passage">${escH(p.trim())}</div>`).join('<div class="passage-sep"></div>');
+  const items = (g.items||[]).map(it => `
+    <div class="item" id="item-${it.num}">
+      <div class="item-q">Question ${it.num}</div>
+      <div class="item-text">${escH(it.qText||'')}</div>
+      ${renderOpts(it.num, it.options, ['A','B','C','D'])}
+    </div>`).join('');
+  return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">
+    ${passageHtml}${items}</div>`;
+}
+
+function selectAnswer(num, letter, el){
+  answers[num] = letter;
+  const item = el.closest('.item');
+  item.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  saveAutosave();
+  refreshNav();
+}
+
+function renderNav(which, parts){
+  const nav = document.getElementById('nav');
+  const range = which==='listening' ? [1,100] : [101,200];
+  let html = `<div class="nav-title">${which==='listening'?'Listening 1–100':'Reading 101–200'}</div>`;
+  parts.forEach(([pnum, pdata]) => {
+    if(!pdata) return;
+    const nums = [];
+    if(pnum===1||pnum===2||pnum===5){ (pdata.items||[]).forEach(it=>nums.push(it.num)); }
+    else { (pdata.groups||[]).forEach(g=>(g.items||[]).forEach(it=>nums.push(it.num))); }
+    if(!nums.length) return;
+    html += `<div class="nav-title">Part ${pnum}</div><div class="nav-grid">` +
+      nums.map(n => `<button class="nav-btn ${answers[n]?'answered':''}" id="nav-${n}" onclick="jumpTo(${n})">${n}</button>`).join('') +
+      `</div>`;
+  });
+  nav.innerHTML = html;
+}
+function refreshNav(){
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    const n = b.id.replace('nav-','');
+    b.classList.toggle('answered', !!answers[n]);
+  });
+}
+function jumpTo(num){
+  const el = document.getElementById('item-'+num);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ═══════════════════════════════════════
+// SUBMIT — same JSONP pattern as simulation.html
+// ═══════════════════════════════════════
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOWjeZlhj3HWA9C7W8j7GVh9OlVunuMgp6cvGfCFAW_RSZlsjpHvL4Ihqpbo0huwfdSg/exec';
+const API_KEY = 'ielts-sim-x7k2m9-change-me';
+
+function callSheetsOnce(payload, timeoutMs){
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const timeout = setTimeout(() => { delete window[cbName]; reject(new Error('TIMEOUT')); }, timeoutMs);
+    window[cbName] = (data) => { clearTimeout(timeout); delete window[cbName]; resolve(data); };
+    const params = new URLSearchParams({...payload, key: API_KEY, callback: cbName});
+    const script = document.createElement('script');
+    script.src = APPS_SCRIPT_URL + '?' + params.toString();
+    script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('NETWORK_ERROR')); };
+    document.head.appendChild(script);
+    setTimeout(() => { try{ document.head.removeChild(script); }catch(e){} }, timeoutMs+5000);
+  });
+}
+async function callSheets(payload){
+  try { return await callSheetsOnce(payload, 25000); }
+  catch(e){
+    if(e.message==='TIMEOUT' || e.message==='NETWORK_ERROR'){
+      try { return await callSheetsOnce(payload, 25000); }
+      catch(e2){ throw new Error('Could not reach the server after 2 attempts. Please check your connection and try again.'); }
+    }
+    throw e;
+  }
+}
+
+async function submitTest(autoSubmit){
+  if(!autoSubmit && !confirm('Submit your TOEIC test? You will not be able to change answers after this.')) return;
+
+  clearInterval(timerInterval);
+  const candidateData = JSON.parse(sessionStorage.getItem('candidateData')||'{}');
+
+  // Listening: keys 1-100 as-is. Reading: convert absolute (101-200) -> relative (1-100)
+  // to match the generic server-side scorer in Code.gs.
+  const listeningAnswers = {};
+  const readingAnswers = {};
+  Object.keys(answers).forEach(k => {
+    const n = parseInt(k,10);
+    if(n <= 100) listeningAnswers[n] = answers[k];
+    else readingAnswers[n-100] = answers[k];
+  });
+
+  const submitBtn = document.getElementById('submit-btn');
+  submitBtn.textContent = 'Saving...'; submitBtn.disabled = true;
+
+  // JSON backup download — best-effort, must never block submission.
+  try {
+    const blob = new Blob([JSON.stringify({...candidateData, examType:'TOEIC', testSetID:activeTestSet.setID, testSetName:activeTestSet.setName, answers}, null, 2)], {type:'application/json'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `toeic_response_${candidateData.candidateID||'unknown'}_${Date.now()}.json`;
+    a.click();
+  } catch(e){}
+
+  let result = null;
+  try {
+    result = await callSheets({
+      action: 'saveScore',
+      examType: 'TOEIC',
+      candidateID: candidateData.candidateID || '',
+      fullName: candidateData.fullName || sessionStorage.getItem('candidateName') || '',
+      testSetID: activeTestSet.setID || '',
+      testSetName: activeTestSet.setName || '',
+      listeningAnswers: JSON.stringify(listeningAnswers),
+      readingAnswers: JSON.stringify(readingAnswers)
+    });
+  } catch(e){ /* Sheets save optional — JSON backup already attempted above. */ }
+
+  clearStageTimer('listening');
+  clearStageTimer('reading');
+  clearAutosave();
+
+  submitBtn.textContent = 'Submitted ✓';
+  showResults(result);
+}
+
+function showResults(result){
+  document.getElementById('main-app').style.display = 'none';
+  const wrap = document.getElementById('results-wrap');
+  if(result && result.success){
+    wrap.innerHTML = `
+      <div class="results">
+        <h1>Test submitted ✓</h1>
+        <div class="score-row"><span>Listening (raw)</span><span>${result.listeningScore}/100</span></div>
+        <div class="score-row"><span>Listening (scaled)</span><span>${result.listeningScaled}</span></div>
+        <div class="score-row"><span>Reading (raw)</span><span>${result.readingScore}/100</span></div>
+        <div class="score-row"><span>Reading (scaled)</span><span>${result.readingScaled}</span></div>
+        <div class="score-total">Total: ${result.toeicTotal} / 990</div>
+        <button class="btn" style="background:var(--blue);color:#fff;margin-top:22px" onclick="location.href='profile.html'">Go to Profile</button>
+      </div>`;
+  } else {
+    wrap.innerHTML = `
+      <div class="results">
+        <h1>Test submitted</h1>
+        <p style="color:var(--ink2);font-size:0.9rem">Your answers were recorded locally and a backup file was downloaded. We couldn't confirm the score from the server just now — check your profile shortly, or contact your administrator if it doesn't appear.</p>
+        <button class="btn" style="background:var(--blue);color:#fff;margin-top:22px" onclick="location.href='profile.html'">Go to Profile</button>
+      </div>`;
+  }
+}
+
+function escH(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+// ═══════════════════════════════════════
+// BOOT
+// ═══════════════════════════════════════
+(async function boot(){
+  initUser();
+  loadAutosave();
+  const ok = await loadConfig();
+  if(!ok) return;
+  showStartGate();
+})();
+</script>
+</body>
+</html>
