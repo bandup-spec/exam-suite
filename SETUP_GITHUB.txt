@@ -3,10 +3,14 @@
 ═══════════════════════════════════════════════════════════════
 
 FILES NA I-UPLOAD:
-  • index.html       (Login page)
-  • profile.html     (Candidate profile + TRF)
-  • admin.html       (Admin panel)
-  • simulation.html  (Test interface)
+  • index.html              (Login page)
+  • profile.html            (Candidate profile + TRF)
+  • admin.html              (Admin panel)
+  • simulation.html         (IELTS test interface)
+  • tests.html               (Test set listing/selection)
+  • question-maker.html      (IELTS question authoring tool)
+  • toeic-simulation.html    (TOEIC test interface)
+  • toeic-question-maker.html (TOEIC question authoring tool)
 
 ═══════════════════════════════════════════════════════════════
   STEP 1 — CREATE GITHUB ACCOUNT (kung wala pa)
@@ -123,6 +127,9 @@ Buksan kining files gamit Notepad o text editor:
   - simulation.html
   - profile.html
   - admin.html
+  - toeic-simulation.html
+  - toeic-question-maker.html
+  - question-maker.html (kung naa)
 
 Pangitaa kining linya (naa sa <script> section):
   const APPS_SCRIPT_URL = 'https://script.google.com/...';
@@ -134,20 +141,53 @@ PAGKAHUMAN — i-upload pag-usab kining files sa GitHub
 (Add file → Upload files → overwrite existing files)
 
 ═══════════════════════════════════════════════════════════════
-  STEP 10 — CREATE FIRST TEST SET
+  STEP 10 — CREATE FIRST TEST SET (IELTS)
 ═══════════════════════════════════════════════════════════════
 1. Adto sa admin.html (admin panel)
 2. Login: candidate number "superadmin" + password
 3. Buhata ang imong questions (Listening, Reading, Writing)
 4. Adto sa "Publish" panel
-5. I-fill ang Test Set Name (e.g. "Mock Test 1 - June 2026")
-6. Click "Download Config JSON"
-7. Adto sa GitHub repository → configs/ folder
-8. Click "Add file" → "Upload files" → i-upload ang JSON
-9. Commit changes
-10. Click sa file → click "Raw" button → i-copy ang URL
-11. Balik sa admin.html → Publish panel
-12. I-paste ang Raw URL → "Save Test Set & Activate"
+5. Exam Type: pilia "IELTS"
+6. I-fill ang Test Set Name (e.g. "Mock Test 1 - June 2026")
+7. Click "Download Config JSON"
+8. Adto sa GitHub repository → configs/ folder
+9. Click "Add file" → "Upload files" → i-upload ang JSON
+10. Commit changes
+11. Click sa file → click "Raw" button → i-copy ang URL
+12. Balik sa admin.html → Publish panel
+13. I-paste ang Raw URL → "Save Test Set & Activate"
+
+═══════════════════════════════════════════════════════════════
+  STEP 10b — CREATE FIRST TEST SET (TOEIC)
+═══════════════════════════════════════════════════════════════
+TOEIC kay lahi ug format sa IELTS (100 Listening + 100 Reading,
+tanan multiple choice, walay Writing/Speaking), so lahi pud ang
+authoring tool: toeic-question-maker.html imbes admin.html.
+
+1. Buksan ang toeic-question-maker.html (naa sa root sa repo,
+   pwede i-open direkta sa link nga https://YOUR-USERNAME.github.io/ielts-sim/toeic-question-maker.html)
+2. Tab "2. Import Questions (CSV)" → Download CSV Template
+3. I-fill sa Google Sheets/Excel ang 200 questions (Part 1-7),
+   i-export as CSV, unya i-upload balik sa tool
+4. Tab "3. Review" → siguraduha nga complete ang 1-200 ug naay
+   answer ang matag question
+5. Tab "4. Publish":
+   a. Click "Download Config JSON" (walay answers ang file para
+      safe i-public sa GitHub)
+   b. I-upload sa GitHub repo → configs/TOEIC/ folder (himuon
+      una ang folder kung wala pa — parehas ra sa Step 4)
+   c. Click sa file → "Raw" → i-copy ang URL
+6. Adto sa admin.html → Publish panel:
+   a. Exam Type: pilia "TOEIC"
+   b. Test Set Name: siguraduha naa'y "TOEIC" sa ngalan
+      (e.g. "TOEIC Mock Test 1") — kay ang tests.html mo-detect
+      niini para mo-route sa TOEIC test screen imbes IELTS
+   c. I-paste ang Raw URL gikan sa step 5c → "Save Test Set & Activate"
+7. Balik sa toeic-question-maker.html → Publish tab →
+   "Send Answer Key to Sheets" → i-paste ang Test Set ID
+   (makita sa admin.html o sa TestSets sheet) → Send
+   (Kani ang mo-store sa tinuod nga answers, PROTECTED sa
+   Google Sheets — dili ni makita sa public config JSON.)
 
 ═══════════════════════════════════════════════════════════════
   PARA SA IMAGES (maps, diagrams, charts)
@@ -217,11 +257,18 @@ ielts-sim/
 ├── index.html
 ├── profile.html
 ├── admin.html
-├── simulation.html
+├── simulation.html          (IELTS test interface)
+├── question-maker.html      (IELTS question authoring)
+├── toeic-simulation.html    (TOEIC test interface)
+├── toeic-question-maker.html (TOEIC question authoring)
+├── tests.html
 ├── README.md
 ├── configs/
 │   ├── README.md
-│   └── mock_test_1_2026.json
+│   ├── mock_test_1_2026.json
+│   └── TOEIC/
+│       ├── README.md
+│       └── toeic_mock_1.json
 └── images/
     ├── README.md
     └── map1.jpg
