@@ -461,7 +461,11 @@ function handleButtonClick(card) {
 
 function startTest(setID, setName, configURL) {
   sessionStorage.setItem('selectedTestSet', JSON.stringify({ setID, setName, configURL }));
-  window.location.href = 'simulation.html';
+  // TOEIC test sets are named/described with "TOEIC" (see inferType above) and
+  // use their own candidate-facing engine — everything else falls back to the
+  // original IELTS simulation.
+  const isTOEIC = inferType({ setName, description: '' }) === 'TOEIC';
+  window.location.href = isTOEIC ? 'toeic-simulation.html' : 'simulation.html';
 }
 
 function retakeConfirm(setID, setName, configURL) {
