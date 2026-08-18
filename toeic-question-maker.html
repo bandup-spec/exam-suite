@@ -90,13 +90,39 @@
     <div class="card">
       <div class="card-title">Bulk import via CSV</div>
       <div class="card-desc">
-        With 200 questions per test, CSV import is much faster than adding items one by one. Download the template, fill it in (Google Sheets/Excel work fine — export as CSV when done), then upload it here.
+        With 200 questions per test, an in-browser editor is much faster than adding items one by one via forms. Start blank and add rows, or upload a CSV first (Google Sheets/Excel export) and keep editing it here — either way, work autosaves as you type.
       </div>
       <div class="row" style="margin-bottom:14px">
         <button class="btn btn-outline" onclick="downloadTemplate()">⬇ Download CSV Template</button>
         <input type="file" id="csv-file" accept=".csv" onchange="handleCSV(this)">
+        <button class="btn btn-outline" onclick="exportEditorCSV()">⬇ Export current table as CSV</button>
       </div>
       <div id="import-msg"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Question editor <span style="color:var(--ink3);font-weight:400;font-size:0.8rem" id="editor-count"></span></div>
+      <div class="card-desc">Edit any cell directly. <code>group</code> only matters for Parts 3, 4, 6, 7 (same group = shares one audio clip / passage / image — fill <code>audioURL</code>/<code>imgURL</code>/<code>passageText</code> on that group's first row only). Rows are sorted by <code>num</code> automatically when you click Apply.</div>
+      <div class="row" style="margin:10px 0 14px">
+        <button class="btn btn-blue" onclick="addEditorRow()">+ Add Row</button>
+        <button class="btn btn-green" onclick="applyEditorToTest()">✅ Apply to Test</button>
+      </div>
+      <div style="overflow-x:auto;max-height:520px;overflow-y:auto;border:1px solid var(--paper3);border-radius:8px">
+        <table id="editor-table" style="min-width:1400px;font-size:0.78rem">
+          <thead style="position:sticky;top:0;background:var(--paper2);z-index:1">
+            <tr>
+              <th style="width:50px">Part</th><th style="width:60px">Group</th><th style="width:60px">Num</th>
+              <th style="min-width:200px">qText</th>
+              <th style="width:110px">A</th><th style="width:110px">B</th><th style="width:110px">C</th><th style="width:110px">D</th>
+              <th style="width:60px">Ans</th>
+              <th style="min-width:160px">audioURL</th><th style="min-width:160px">imgURL</th>
+              <th style="min-width:220px">passageText</th><th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="editor-body"></tbody>
+        </table>
+      </div>
+      <div id="editor-msg"></div>
       <div class="card-title" style="font-size:0.9rem;margin-top:18px">Column reference</div>
       <table>
         <tr><th>Column</th><th>Used by</th><th>Notes</th></tr>
@@ -272,21 +298,118 @@ function handleCSV(input){
     try {
       const rows = parseCSV(e.target.result);
       const headers = rows[0].map(h=>h.trim());
-      const idx = k => headers.indexOf(k);
       const recs = rows.slice(1).map(r=>{
         const o={};
         headers.forEach((h,i)=>o[h]=(r[i]||'').trim());
-        return o;
+        return {part:o.part||'', group:o.group||'', num:o.num||'', qText:o.qText||'',
+                optionA:o.optionA||'', optionB:o.optionB||'', optionC:o.optionC||'', optionD:o.optionD||'',
+                answer:o.answer||'', audioURL:o.audioURL||'', imgURL:o.imgURL||'', passageText:o.passageText||''};
       });
-      loadRecords(recs);
-      renderSummary();
-      document.getElementById('import-msg').innerHTML = `<div class="msg ok">Imported ${recs.length} rows successfully. Check the Part Info tab or Review tab for counts.</div>`;
+      editorRows = recs;
+      renderEditor();
+      saveEditorState();
+      document.getElementById('import-msg').innerHTML = `<div class="msg ok">Loaded ${recs.length} rows into the editor below — edit freely, then click Apply to Test.</div>`;
     } catch(err){
       document.getElementById('import-msg').innerHTML = `<div class="msg err">Could not parse this file: ${err.message}</div>`;
     }
   };
   reader.readAsText(file);
+  input.value = '';
 }
+
+// ═══════════════════════════════════════
+// IN-BROWSER CSV EDITOR (add/edit/delete rows directly, no external app needed)
+// ═══════════════════════════════════════
+const EDITOR_COLS = ['part','group','num','qText','optionA','optionB','optionC','optionD','answer','audioURL','imgURL','passageText'];
+let editorRows = [];
+const EDITOR_STORAGE_KEY = 'toeic_editor_rows_v1';
+
+function blankRow(){
+  const o={}; EDITOR_COLS.forEach(c=>o[c]=''); return o;
+}
+
+function saveEditorState(){
+  try { localStorage.setItem(EDITOR_STORAGE_KEY, JSON.stringify(editorRows)); } catch(e){}
+}
+function loadEditorState(){
+  try {
+    const raw = localStorage.getItem(EDITOR_STORAGE_KEY);
+    if(raw){ editorRows = JSON.parse(raw); }
+  } catch(e){}
+}
+
+function addEditorRow(){
+  editorRows.push(blankRow());
+  renderEditor();
+  saveEditorState();
+  // scroll to and focus the new row's first cell
+  requestAnimationFrame(()=>{
+    const body = document.getElementById('editor-body');
+    const lastRow = body.lastElementChild;
+    if(lastRow){ lastRow.scrollIntoView({behavior:'smooth', block:'end'}); const inp = lastRow.querySelector('input,textarea'); if(inp) inp.focus(); }
+  });
+}
+function deleteEditorRow(i){
+  editorRows.splice(i,1);
+  renderEditor();
+  saveEditorState();
+}
+function updateEditorCell(i, col, val){
+  editorRows[i][col] = val;
+  saveEditorState();
+}
+
+function renderEditor(){
+  const body = document.getElementById('editor-body');
+  document.getElementById('editor-count').textContent = editorRows.length ? `(${editorRows.length} rows)` : '(empty — add a row or upload a CSV above)';
+  if(editorRows.length===0){
+    body.innerHTML = `<tr><td colspan="13" style="text-align:center;color:var(--ink3);padding:20px">No rows yet. Click "+ Add Row" or upload a CSV.</td></tr>`;
+    return;
+  }
+  body.innerHTML = editorRows.map((r,i) => `
+    <tr>
+      <td>${cellInput(i,'part',r.part,'text',40)}</td>
+      <td>${cellInput(i,'group',r.group,'text',50)}</td>
+      <td>${cellInput(i,'num',r.num,'text',50)}</td>
+      <td>${cellInput(i,'qText',r.qText,'text',180)}</td>
+      <td>${cellInput(i,'optionA',r.optionA,'text',100)}</td>
+      <td>${cellInput(i,'optionB',r.optionB,'text',100)}</td>
+      <td>${cellInput(i,'optionC',r.optionC,'text',100)}</td>
+      <td>${cellInput(i,'optionD',r.optionD,'text',100)}</td>
+      <td>${cellInput(i,'answer',r.answer,'text',40)}</td>
+      <td>${cellInput(i,'audioURL',r.audioURL,'text',150)}</td>
+      <td>${cellInput(i,'imgURL',r.imgURL,'text',150)}</td>
+      <td>${cellInput(i,'passageText',r.passageText,'text',200)}</td>
+      <td><button onclick="deleteEditorRow(${i})" title="Delete row" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:0.9rem">✕</button></td>
+    </tr>`).join('');
+}
+
+function cellInput(i, col, val, type, width){
+  return `<input type="${type}" value="${attrEsc(val)}" style="width:${width}px;border:1px solid transparent;background:transparent;font-size:0.78rem;padding:4px 5px;border-radius:4px" onfocus="this.style.borderColor='var(--paper3)';this.style.background='#fff'" onblur="this.style.borderColor='transparent';this.style.background='transparent'" oninput="updateEditorCell(${i},'${col}',this.value)">`;
+}
+function attrEsc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+function exportEditorCSV(){
+  if(editorRows.length===0){ alert('The editor table is empty — nothing to export.'); return; }
+  const rows = [EDITOR_COLS, ...editorRows.map(r=>EDITOR_COLS.map(c=>r[c]||''))];
+  const csv = rows.map(r=>r.map(csvEscape).join(',')).join('\n');
+  downloadBlob(csv, 'toeic_questions.csv', 'text/csv');
+}
+
+function applyEditorToTest(){
+  if(editorRows.length===0){
+    document.getElementById('editor-msg').innerHTML = `<div class="msg err">The editor table is empty — add rows first.</div>`;
+    return;
+  }
+  loadRecords(editorRows);
+  renderSummary();
+  const total = countItemsInPart(1)+countItemsInPart(2)+countItemsInPart(3)+countItemsInPart(4)+countItemsInPart(5)+countItemsInPart(6)+countItemsInPart(7);
+  document.getElementById('editor-msg').innerHTML = `<div class="msg ok">Applied — ${total} questions loaded into the test. Check the Review tab, then Publish when ready.</div>`;
+}
+
+loadEditorState();
+renderEditor();
+renderSummary();
 
 function loadRecords(recs){
   data = {1:[],2:[],3:[],4:[],5:[],6:[],7:[]};
