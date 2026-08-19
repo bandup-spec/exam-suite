@@ -55,6 +55,12 @@
   .item{border-top:1px solid var(--paper3);padding:14px 0}
   .item:first-of-type{border-top:none;padding-top:4px}
   .item-q{font-size:0.68rem;color:var(--ink3);font-weight:700;margin-bottom:4px}
+  .item-q-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+  .item-q-row .item-q{margin-bottom:0}
+  .flag-btn{background:none;border:none;cursor:pointer;font-size:0.9rem;opacity:0.25;filter:grayscale(1);padding:2px 4px;line-height:1}
+  .flag-btn:hover{opacity:0.6}
+  .flag-btn.flagged{opacity:1;filter:none}
+  .nav-btn.flagged{box-shadow:inset 0 0 0 2px var(--gold)}
   .item-text{font-size:0.9rem;margin-bottom:10px;line-height:1.6}
   .item-img{max-width:100%;max-height:280px;border-radius:8px;margin-bottom:10px;display:block}
   audio{width:100%;max-width:420px;margin-bottom:10px;display:block}
@@ -164,6 +170,7 @@ function hideLoadingOverlay(){ const ov=document.getElementById('load-overlay');
 // STATE
 // ═══════════════════════════════════════
 let answers = {};      // absolute num (1-100 listening, 101-200 reading) -> 'A'/'B'/'C'/'D'
+let flagged = {};      // absolute num -> true if marked for review
 let stage = null;      // 'listening' | 'reading'
 let timerInterval = null;
 
@@ -174,12 +181,12 @@ function timerKey(st){ return `toeic_timer_end_${getCandidateID()}_${activeTestS
 function autosaveKey(){ return `toeic_autosave_${getCandidateID()}_${activeTestSet.setID||'default'}`; }
 
 function saveAutosave(){
-  try { localStorage.setItem(autosaveKey(), JSON.stringify({answers, stage, savedAt: Date.now()})); } catch(e){}
+  try { localStorage.setItem(autosaveKey(), JSON.stringify({answers, flagged, stage, savedAt: Date.now()})); } catch(e){}
 }
 function loadAutosave(){
   try {
     const raw = localStorage.getItem(autosaveKey());
-    if(raw){ const d = JSON.parse(raw); answers = d.answers || {}; }
+    if(raw){ const d = JSON.parse(raw); answers = d.answers || {}; flagged = d.flagged || {}; }
   } catch(e){}
 }
 function clearAutosave(){ try{ localStorage.removeItem(autosaveKey()); }catch(e){} }
@@ -221,11 +228,12 @@ function startStage(which){
 }
 
 function finishListening(){
-  if(!confirm('Finish the Listening section now and move on to Reading? You will not be able to come back to Listening after this.')) return;
-  saveAutosave();
-  clearInterval(timerInterval);
-  clearStageTimer('listening');
-  showStageTransition();
+  showReviewModal('Listening', [1,100], 'Yes, Move to Reading →', () => {
+    saveAutosave();
+    clearInterval(timerInterval);
+    clearStageTimer('listening');
+    showStageTransition();
+  });
 }
 
 // ═══════════════════════════════════════
@@ -343,6 +351,23 @@ const PART_INSTRUCTIONS = {
 
 function optLabel(i){ return ['A','B','C','D'][i]; }
 
+function itemQHeader(num){
+  return `<div class="item-q-row">
+    <div class="item-q">Question ${num}</div>
+    <button type="button" class="flag-btn ${flagged[num]?'flagged':''}" id="flagbtn-${num}" onclick="toggleFlag(${num}, event)" title="Mark for review">🚩</button>
+  </div>`;
+}
+
+function toggleFlag(num, ev){
+  if(ev) ev.stopPropagation();
+  flagged[num] = !flagged[num];
+  const btn = document.getElementById('flagbtn-'+num);
+  if(btn) btn.classList.toggle('flagged', !!flagged[num]);
+  const navBtn = document.getElementById('nav-'+num);
+  if(navBtn) navBtn.classList.toggle('flagged', !!flagged[num]);
+  saveAutosave();
+}
+
 function renderOpts(num, options, letters){
   const use = (options && options.length) ? options.map((o,i)=>({l:optLabel(i), t:o})) : letters.map(l=>({l, t:''}));
   return `<div class="opts">` + use.map(o => `
@@ -354,7 +379,7 @@ function renderOpts(num, options, letters){
 
 function renderItemPhoto(it){
   return `<div class="item" id="item-${it.num}">
-    <div class="item-q">Question ${it.num}</div>
+    ${itemQHeader(it.num)}
     ${it.imgURL?`<img class="item-img" src="${escH(it.imgURL)}" alt="Question ${it.num} photo">`:''}
     ${it.audioURL?`<audio controls src="${escH(it.audioURL)}"></audio>`:''}
     ${renderOpts(it.num, null, ['A','B','C','D'])}
@@ -362,7 +387,7 @@ function renderItemPhoto(it){
 }
 function renderItemAudioOnly(it){
   return `<div class="item" id="item-${it.num}">
-    <div class="item-q">Question ${it.num}</div>
+    ${itemQHeader(it.num)}
     ${it.audioURL?`<audio controls src="${escH(it.audioURL)}"></audio>`:''}
     ${renderOpts(it.num, null, ['A','B','C'])}
   </div>`;
@@ -372,7 +397,7 @@ function renderGroupAudio(g){
   const img = g.imgURL ? `<img class="item-img" src="${escH(g.imgURL)}" alt="Supporting graphic">` : '';
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
-      <div class="item-q">Question ${it.num}</div>
+      ${itemQHeader(it.num)}
       <div class="item-text">${escH(it.qText||'')}</div>
       ${renderOpts(it.num, it.options, ['A','B','C','D'])}
     </div>`).join('');
@@ -380,7 +405,7 @@ function renderGroupAudio(g){
 }
 function renderItemMC(it, letters){
   return `<div class="item" id="item-${it.num}">
-    <div class="item-q">Question ${it.num}</div>
+    ${itemQHeader(it.num)}
     <div class="item-text">${escH(it.qText||'')}</div>
     ${renderOpts(it.num, it.options, letters)}
   </div>`;
@@ -390,7 +415,7 @@ function renderGroupTextCompletion(g){
   const passageHtml = (g.passageText||'').replace(/\[\[(\d+)\]\]/g, (m,n) => `<span class="blank-tag">${n}</span>`);
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
-      <div class="item-q">Question ${it.num}</div>
+      ${itemQHeader(it.num)}
       ${renderOpts(it.num, it.options, ['A','B','C','D'])}
     </div>`).join('');
   return `<div style="margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--paper3)">
@@ -402,7 +427,7 @@ function renderGroupReading(g){
   const passageHtml = passages.map(p => `<div class="passage">${escH(p.trim())}</div>`).join('<div class="passage-sep"></div>');
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
-      <div class="item-q">Question ${it.num}</div>
+      ${itemQHeader(it.num)}
       <div class="item-text">${escH(it.qText||'')}</div>
       ${renderOpts(it.num, it.options, ['A','B','C','D'])}
     </div>`).join('');
@@ -430,7 +455,7 @@ function renderNav(which, parts){
     else { (pdata.groups||[]).forEach(g=>(g.items||[]).forEach(it=>nums.push(it.num))); }
     if(!nums.length) return;
     html += `<div class="nav-title">Part ${pnum}</div><div class="nav-grid">` +
-      nums.map(n => `<button class="nav-btn ${answers[n]?'answered':''}" id="nav-${n}" onclick="jumpTo(${n})">${n}</button>`).join('') +
+      nums.map(n => `<button class="nav-btn ${answers[n]?'answered':''} ${flagged[n]?'flagged':''}" id="nav-${n}" onclick="jumpTo(${n})">${n}</button>`).join('') +
       `</div>`;
   });
   nav.innerHTML = html;
@@ -439,11 +464,56 @@ function refreshNav(){
   document.querySelectorAll('.nav-btn').forEach(b=>{
     const n = b.id.replace('nav-','');
     b.classList.toggle('answered', !!answers[n]);
+    b.classList.toggle('flagged', !!flagged[n]);
   });
 }
 function jumpTo(num){
   const el = document.getElementById('item-'+num);
   if(el) el.scrollIntoView({behavior:'smooth', block:'center'});
+}
+
+// ═══════════════════════════════════════
+// REVIEW SUMMARY — shown before moving from Listening → Reading, and before final submit
+// ═══════════════════════════════════════
+function getRangeStatus(range){
+  const [lo, hi] = range;
+  const unanswered = [];
+  const flaggedList = [];
+  for(let n=lo; n<=hi; n++){
+    if(!answers[n]) unanswered.push(n);
+    if(flagged[n]) flaggedList.push(n);
+  }
+  return { total: hi-lo+1, answeredCount: (hi-lo+1)-unanswered.length, unanswered, flaggedList };
+}
+
+function showReviewModal(stageLabel, range, confirmLabel, onConfirm){
+  const { total, answeredCount, unanswered, flaggedList } = getRangeStatus(range);
+  const overlay = document.createElement('div');
+  overlay.id = 'review-modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px';
+
+  const chip = (n, cls) => `<button class="nav-btn ${cls}" style="aspect-ratio:auto;padding:4px 8px;width:auto;height:auto" onclick="closeReviewModal();jumpTo(${n})">${n}</button>`;
+
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:14px;padding:26px;max-width:480px;width:100%;max-height:85vh;overflow-y:auto">
+      <h2 style="font-family:'Source Serif 4',serif;color:var(--blue);margin-bottom:14px">Review — ${stageLabel}</h2>
+      <div style="font-size:0.9rem;color:var(--ink2);margin-bottom:14px">
+        <b>${answeredCount} / ${total}</b> questions answered.
+        ${flaggedList.length ? `<br><b>${flaggedList.length}</b> flagged for review.` : ''}
+      </div>
+      ${unanswered.length ? `<div style="margin-bottom:14px"><div style="font-size:0.78rem;font-weight:700;color:var(--red);margin-bottom:6px">Unanswered (${unanswered.length}):</div><div style="display:flex;flex-wrap:wrap;gap:5px">${unanswered.slice(0,60).map(n=>chip(n,'')).join('')}${unanswered.length>60?`<span style="font-size:0.78rem;color:var(--ink3)">+${unanswered.length-60} more</span>`:''}</div></div>` : `<div class="msg" style="background:rgba(46,125,79,0.1);color:var(--green);border-radius:8px;padding:8px 12px;font-size:0.83rem;margin-bottom:14px">✅ All questions answered.</div>`}
+      ${flaggedList.length ? `<div style="margin-bottom:18px"><div style="font-size:0.78rem;font-weight:700;color:#c8a84b;margin-bottom:6px">Flagged (${flaggedList.length}):</div><div style="display:flex;flex-wrap:wrap;gap:5px">${flaggedList.map(n=>chip(n,'flagged')).join('')}</div></div>` : ''}
+      <div style="display:flex;gap:10px;margin-top:18px">
+        <button class="btn" style="flex:1;background:var(--paper2);color:var(--ink2);border:1px solid var(--border);padding:10px;border-radius:7px;cursor:pointer" onclick="closeReviewModal()">← Go Back &amp; Review</button>
+        <button class="btn" style="flex:1;background:var(--blue);color:#fff;border:none;padding:10px;border-radius:7px;cursor:pointer;font-weight:600" id="review-confirm-btn">${confirmLabel}</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  document.getElementById('review-confirm-btn').onclick = () => { closeReviewModal(); onConfirm(); };
+}
+function closeReviewModal(){
+  const ov = document.getElementById('review-modal-overlay');
+  if(ov) ov.remove();
 }
 
 // ═══════════════════════════════════════
@@ -477,8 +547,14 @@ async function callSheets(payload){
 }
 
 async function submitTest(autoSubmit){
-  if(!autoSubmit && !confirm('Submit your TOEIC test? You will not be able to change answers after this.')) return;
+  if(!autoSubmit){
+    showReviewModal('Reading', [101,200], 'Yes, Submit Test', () => doSubmitTest(false));
+    return;
+  }
+  doSubmitTest(true);
+}
 
+async function doSubmitTest(autoSubmit){
   clearInterval(timerInterval);
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData')||'{}');
 
