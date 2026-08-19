@@ -31,6 +31,30 @@
   .fs-btn:hover{background:rgba(255,255,255,0.12)}
   .fs-btn:first-child{border-radius:5px 0 0 5px}
   .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
+
+  /* ─── SETTINGS POPOVER ─── */
+  .settings-wrap{position:relative}
+  .icon-btn{display:flex;align-items:center;gap:6px}
+  .settings-panel{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--paper);color:var(--ink);border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.25);padding:16px;width:230px;z-index:200}
+  .settings-panel.open{display:block}
+  .settings-row{display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;margin-bottom:14px}
+  .settings-row:last-child{margin-bottom:0}
+  .settings-label{font-weight:600;color:var(--ink2)}
+  .switch{position:relative;width:38px;height:21px;flex-shrink:0}
+  .switch input{opacity:0;width:0;height:0;position:absolute}
+  .slider-track{position:absolute;inset:0;background:var(--paper3);border-radius:20px;cursor:pointer;transition:0.2s}
+  .slider-track:before{content:'';position:absolute;width:17px;height:17px;left:2px;top:2px;background:#fff;border-radius:50%;transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+  .switch input:checked + .slider-track{background:var(--blue2)}
+  .switch input:checked + .slider-track:before{transform:translateX(17px)}
+  .fs-slider-wrap{display:flex;flex-direction:column;gap:8px}
+  .fs-slider-wrap input[type=range]{width:100%;accent-color:var(--blue2)}
+  .fs-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--ink3);padding:0 2px}
+  @media(max-width:680px){
+    .hdr-right{flex-direction:row!important;justify-content:center;flex-wrap:wrap;gap:10px!important;padding:14px!important}
+    .hdr-right .btn-hdr{width:auto!important;padding:9px 12px!important;font-size:1.05rem}
+    .hdr-right .btn-label{display:none}
+    .settings-panel{right:auto;left:50%;transform:translateX(-50%)}
+  }
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
 
   .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;border-bottom:3px solid var(--gold);position:relative}
@@ -245,14 +269,28 @@
   <div style="display:flex;gap:10px;align-items:center">
     <button class="hdr-burger" onclick="toggleHdrMenu()" aria-label="Menu">☰</button>
     <div class="hdr-right" id="hdr-actions">
-      <div class="font-size-ctrl">
-        <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
-        <button class="fs-btn" onclick="changeFontSize(1)">A+</button>
+      <div class="settings-wrap">
+        <button class="btn-hdr btn-logout icon-btn" onclick="toggleSettingsPanel(event)" title="Settings">⚙️<span class="btn-label"> Settings</span></button>
+        <div class="settings-panel" id="settings-panel">
+          <div class="settings-row">
+            <span class="settings-label">🌙 Dark Mode</span>
+            <label class="switch">
+              <input type="checkbox" id="dark-mode-switch" onchange="toggleDarkMode()">
+              <span class="slider-track"></span>
+            </label>
+          </div>
+          <div class="settings-row" style="flex-direction:column;align-items:stretch">
+            <span class="settings-label" style="margin-bottom:8px">🔤 Font Size</span>
+            <div class="fs-slider-wrap">
+              <input type="range" min="0" max="4" step="1" id="font-size-slider" oninput="setFontSize(this.value)">
+              <div class="fs-labels"><span>A</span><span style="font-size:1.3em">A</span></div>
+            </div>
+          </div>
+        </div>
       </div>
-      <button class="btn-hdr btn-logout" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
-      <button class="btn-hdr btn-logout" onclick="window.location.href='index.html'">← Logout</button>
+      <button class="btn-hdr btn-start icon-btn" onclick="proceedToTest()" title="Start Test">🚀<span class="btn-label"> Start Test</span></button>
+      <button class="btn-hdr btn-logout icon-btn" onclick="window.location.href='index.html'" title="Logout">🚪<span class="btn-label"> Logout</span></button>
     </div>
-    <button class="btn-hdr btn-start" onclick="proceedToTest()">Start Test →</button>
   </div>
 </div>
 
@@ -292,6 +330,7 @@
           <div class="d-row"><span class="d-label">Nationality</span><span class="d-val" id="p-nationality">—</span></div>
           <div class="d-row"><span class="d-label">Tests Taken</span><span class="d-val" id="p-tests">—</span></div>
           <div class="d-row"><span class="d-label">Best Band</span><span class="d-val" id="p-best">—</span></div>
+          <div class="d-row" id="p-best-toeic-row" style="display:none"><span class="d-label">Best TOEIC</span><span class="d-val" id="p-best-toeic">—</span></div>
           <div class="d-row"><span class="d-label">Last Test</span><span class="d-val" id="p-last">—</span></div>
         </div>
       </div>
@@ -438,13 +477,13 @@ function initAccessibilityPrefs() {
     fontScaleIndex = idx >= 0 ? idx : 1;
   }
   applyFontScale();
+  const fsSlider = document.getElementById('font-size-slider');
+  if (fsSlider) fsSlider.value = fontScaleIndex;
 
   const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
-  if (darkOn) {
-    document.body.classList.add('dark-mode');
-    const btn = document.getElementById('dark-mode-toggle');
-    if (btn) btn.textContent = '☀️';
-  }
+  if (darkOn) document.body.classList.add('dark-mode');
+  const darkSwitch = document.getElementById('dark-mode-switch');
+  if (darkSwitch) darkSwitch.checked = darkOn;
 }
 function applyFontScale() {
   document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
@@ -453,18 +492,26 @@ function applyFontScale() {
 function toggleHdrMenu(){
   document.getElementById('hdr-actions').classList.toggle('open');
 }
-function changeFontSize(direction) {
-  const newIndex = fontScaleIndex + direction;
-  if (newIndex < 0 || newIndex >= FONT_SCALE_STEPS.length) return;
-  fontScaleIndex = newIndex;
+function setFontSize(idx) {
+  fontScaleIndex = parseInt(idx, 10);
   applyFontScale();
 }
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle('dark-mode');
   localStorage.setItem('ielts_dark_mode', isDark ? '1' : '0');
-  const btn = document.getElementById('dark-mode-toggle');
-  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  const darkSwitch = document.getElementById('dark-mode-switch');
+  if (darkSwitch) darkSwitch.checked = isDark;
 }
+function toggleSettingsPanel(ev) {
+  if (ev) ev.stopPropagation();
+  document.getElementById('settings-panel').classList.toggle('open');
+}
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('settings-panel');
+  if (panel && panel.classList.contains('open') && !e.target.closest('.settings-wrap')) {
+    panel.classList.remove('open');
+  }
+});
 
 // ─── JSONP ───
 function callSheetsOnce(payload, timeoutMs) {
@@ -566,6 +613,8 @@ function renderProfile() {
 }
 
 // ─── PROGRESS ───
+function isTOEIC(r){ return String(r[24]||'IELTS').toUpperCase() === 'TOEIC'; }
+
 function renderProgress() {
   const wrap = document.getElementById('progress-content');
   document.getElementById('p-tests').textContent = myScores.length;
@@ -574,6 +623,7 @@ function renderProgress() {
     wrap.innerHTML='<div class="empty-state"><div class="empty-icon">📊</div>No test attempts yet.<br>Complete a test to see your progress.</div>';
     document.getElementById('p-best').textContent='—';
     document.getElementById('p-last').textContent='—';
+    document.getElementById('p-best-toeic-row').style.display='none';
     return;
   }
 
@@ -581,17 +631,29 @@ function renderProgress() {
   const last = myScores[myScores.length-1];
   document.getElementById('p-last').textContent = formatDate(last[1]) || '—';
 
-  // Best overall
-  const overalls = myScores.map(r=>parseFloat(r[14])||0).filter(n=>n>0);
+  const ieltsScores = myScores.filter(r=>!isTOEIC(r));
+  const toeicScores = myScores.filter(isTOEIC);
+
+  // Best overall (IELTS band)
+  const overalls = ieltsScores.map(r=>parseFloat(r[14])||0).filter(n=>n>0);
   const best = overalls.length ? Math.max(...overalls) : 0;
   document.getElementById('p-best').textContent = best ? 'Band '+best : '—';
 
+  // Best TOEIC total (only shown if the candidate has TOEIC attempts)
+  const toeicTotals = toeicScores.map(r=>parseInt(r[27])||0).filter(n=>n>0);
+  if (toeicTotals.length) {
+    document.getElementById('p-best-toeic-row').style.display = '';
+    document.getElementById('p-best-toeic').textContent = Math.max(...toeicTotals) + ' / 990';
+  } else {
+    document.getElementById('p-best-toeic-row').style.display = 'none';
+  }
+
   let html = '';
 
-  // Trend chart (if >1 attempt)
-  if (myScores.length > 1) {
+  // Trend chart (IELTS band trend — only meaningful across IELTS attempts)
+  if (ieltsScores.length > 1) {
     html += `<div class="trend-wrap"><div class="trend-title">Band Score Trend</div>`;
-    myScores.forEach((r,i) => {
+    ieltsScores.forEach((r,i) => {
       const overall = parseFloat(r[14]) || parseFloat(r[7]) || 0;
       const pct     = (overall/9)*100;
       const color   = overall>=7?'#2e7d4f':overall>=5.5?'#c8a84b':'#c0392b';
@@ -604,60 +666,112 @@ function renderProgress() {
     html += `</div>`;
   }
 
+  // TOEIC total-score trend (separate chart, different scale — 10-990)
+  if (toeicScores.length > 1) {
+    html += `<div class="trend-wrap"><div class="trend-title">TOEIC Total Score Trend</div>`;
+    toeicScores.forEach((r,i) => {
+      const total = parseInt(r[27]) || 0;
+      const pct   = (total/990)*100;
+      const color = total>=785?'#2e7d4f':total>=550?'#c8a84b':'#c0392b';
+      html += `<div class="trend-row">
+        <div class="trend-label">Attempt ${i+1}</div>
+        <div class="trend-bar-wrap"><div class="trend-bar" style="width:${pct}%;background:${color}">${total||''}</div></div>
+        <div class="trend-val">${total||'—'}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
   // Attempt cards — newest first
   myScores.slice().reverse().forEach((r,i) => {
-    const idx      = myScores.length - i;
-    const date     = r[1] ? new Date(r[1]).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}) : '—';
-    const setName  = r[5] || '—';
-    const lScore   = r[6]||0,  lBand  = r[7]||'—';
-    const rdScore  = r[8]||0,  rdBand = r[9]||'—';
-    const wBand    = r[12]||'';
-    const sBand    = r[13]||'';
-    const overall  = r[14]||'';
-    const w1wc     = r[15]||0, w2wc   = r[16]||0;
-    const graded   = !!overall;
-    const bClass   = b => { const n=parseFloat(b); return n>=7?'band-high':n>=5.5?'band-mid':n>0?'band-low':'band-na'; };
-
-    html += `<div class="attempt-card">
-      <div class="att-hdr">
-        <div style="display:flex;gap:6px;align-items:center">
-          <span class="att-num">Attempt ${idx}</span>
-          <span class="att-set">${escH(setName)}</span>
-        </div>
-        <span class="att-date">${date}</span>
-      </div>
-      <div class="score-grid">
-        <div class="score-box">
-          <div class="score-sec">Listening</div>
-          <div class="score-val">${lScore}<span style="font-size:0.9rem;color:var(--ink3)">/40</span></div>
-          <div class="score-band ${bClass(lBand)}">${lBand}</div>
-        </div>
-        <div class="score-box">
-          <div class="score-sec">Reading</div>
-          <div class="score-val">${rdScore}<span style="font-size:0.9rem;color:var(--ink3)">/40</span></div>
-          <div class="score-band ${bClass(rdBand)}">${rdBand}</div>
-        </div>
-        <div class="score-box">
-          <div class="score-sec">Writing</div>
-          <div class="score-val" style="font-size:1.4rem">${wBand||'—'}</div>
-          ${wBand ? `<div class="score-band ${bClass(wBand)}">${wBand}</div>` : `<div class="grading-badge">⏳ Pending</div>`}
-        </div>
-        <div class="score-box">
-          <div class="score-sec">Speaking</div>
-          <div class="score-val" style="font-size:1.4rem">${sBand||'—'}</div>
-          ${sBand ? `<div class="score-band ${bClass(sBand)}">${sBand}</div>` : `<div class="score-band band-na">N/A</div>`}
-        </div>
-      </div>
-      ${graded ? `<div class="overall-banner"><div><div class="overall-label">Overall Band Score</div></div><div class="overall-score">${overall}</div></div>` :
-        `<div style="background:var(--paper3);border-radius:8px;padding:8px 14px;margin-top:8px;font-size:0.8rem;color:var(--ink3);text-align:center">⏳ Overall band pending writing grade</div>`}
-      <div class="wc-row">
-        <div class="wc-chip"><b>${w1wc}</b>Task 1 words</div>
-        <div class="wc-chip"><b>${w2wc}</b>Task 2 words</div>
-      </div>
-    </div>`;
+    const idx = myScores.length - i;
+    html += isTOEIC(r) ? renderTOEICAttemptCard(r, idx) : renderIELTSAttemptCard(r, idx);
   });
 
   wrap.innerHTML = html;
+}
+
+function renderIELTSAttemptCard(r, idx) {
+  const date     = r[1] ? new Date(r[1]).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}) : '—';
+  const setName  = r[5] || '—';
+  const lScore   = r[6]||0,  lBand  = r[7]||'—';
+  const rdScore  = r[8]||0,  rdBand = r[9]||'—';
+  const wBand    = r[12]||'';
+  const sBand    = r[13]||'';
+  const overall  = r[14]||'';
+  const w1wc     = r[15]||0, w2wc   = r[16]||0;
+  const graded   = !!overall;
+  const bClass   = b => { const n=parseFloat(b); return n>=7?'band-high':n>=5.5?'band-mid':n>0?'band-low':'band-na'; };
+
+  return `<div class="attempt-card">
+    <div class="att-hdr">
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="att-num">Attempt ${idx}</span>
+        <span class="att-set">${escH(setName)}</span>
+      </div>
+      <span class="att-date">${date}</span>
+    </div>
+    <div class="score-grid">
+      <div class="score-box">
+        <div class="score-sec">Listening</div>
+        <div class="score-val">${lScore}<span style="font-size:0.9rem;color:var(--ink3)">/40</span></div>
+        <div class="score-band ${bClass(lBand)}">${lBand}</div>
+      </div>
+      <div class="score-box">
+        <div class="score-sec">Reading</div>
+        <div class="score-val">${rdScore}<span style="font-size:0.9rem;color:var(--ink3)">/40</span></div>
+        <div class="score-band ${bClass(rdBand)}">${rdBand}</div>
+      </div>
+      <div class="score-box">
+        <div class="score-sec">Writing</div>
+        <div class="score-val" style="font-size:1.4rem">${wBand||'—'}</div>
+        ${wBand ? `<div class="score-band ${bClass(wBand)}">${wBand}</div>` : `<div class="grading-badge">⏳ Pending</div>`}
+      </div>
+      <div class="score-box">
+        <div class="score-sec">Speaking</div>
+        <div class="score-val" style="font-size:1.4rem">${sBand||'—'}</div>
+        ${sBand ? `<div class="score-band ${bClass(sBand)}">${sBand}</div>` : `<div class="score-band band-na">N/A</div>`}
+      </div>
+    </div>
+    ${graded ? `<div class="overall-banner"><div><div class="overall-label">Overall Band Score</div></div><div class="overall-score">${overall}</div></div>` :
+      `<div style="background:var(--paper3);border-radius:8px;padding:8px 14px;margin-top:8px;font-size:0.8rem;color:var(--ink3);text-align:center">⏳ Overall band pending writing grade</div>`}
+    <div class="wc-row">
+      <div class="wc-chip"><b>${w1wc}</b>Task 1 words</div>
+      <div class="wc-chip"><b>${w2wc}</b>Task 2 words</div>
+    </div>
+  </div>`;
+}
+
+function renderTOEICAttemptCard(r, idx) {
+  const date    = r[1] ? new Date(r[1]).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}) : '—';
+  const setName = r[5] || '—';
+  const lScore  = r[6]||0, lScaled = r[25]||'—';
+  const rdScore = r[8]||0, rdScaled = r[26]||'—';
+  const total   = r[27]||'—';
+  const tClass  = n => { n=parseInt(n)||0; return n>=785?'band-high':n>=550?'band-mid':n>0?'band-low':'band-na'; };
+
+  return `<div class="attempt-card">
+    <div class="att-hdr">
+      <div style="display:flex;gap:6px;align-items:center">
+        <span class="att-num">Attempt ${idx}</span>
+        <span class="att-set">${escH(setName)} <span style="font-size:0.68rem;color:var(--ink3);border:1px solid var(--paper3);border-radius:4px;padding:1px 5px;margin-left:4px">TOEIC</span></span>
+      </div>
+      <span class="att-date">${date}</span>
+    </div>
+    <div class="score-grid" style="grid-template-columns:repeat(2,1fr)">
+      <div class="score-box">
+        <div class="score-sec">Listening</div>
+        <div class="score-val">${lScore}<span style="font-size:0.9rem;color:var(--ink3)">/100</span></div>
+        <div class="score-band ${tClass(lScaled)}">${lScaled} scaled</div>
+      </div>
+      <div class="score-box">
+        <div class="score-sec">Reading</div>
+        <div class="score-val">${rdScore}<span style="font-size:0.9rem;color:var(--ink3)">/100</span></div>
+        <div class="score-band ${tClass(rdScaled)}">${rdScaled} scaled</div>
+      </div>
+    </div>
+    <div class="overall-banner"><div><div class="overall-label">Total Score</div></div><div class="overall-score">${total} <span style="font-size:0.9rem;opacity:0.7">/ 990</span></div></div>
+  </div>`;
 }
 
 // ─── TRF ───
@@ -677,8 +791,64 @@ function renderTRFSelect() {
 function renderTRF() {
   const idx  = document.getElementById('trf-attempt-sel').value;
   const wrap = document.getElementById('trf-wrap');
-  if (idx===''||!myScores[idx]) { wrap.innerHTML='<div class="no-trf">Select an attempt to view the TRF.</div>'; return; }
-  const r       = myScores[idx];
+  if (idx===''||!myScores[idx]) { wrap.innerHTML='<div class="no-trf">Select an attempt to view the report.</div>'; return; }
+  const r = myScores[idx];
+  if (isTOEIC(r)) { renderTOEICReport(r); return; }
+  renderIELTSTRF(r);
+}
+
+function renderTOEICReport(r) {
+  const wrap = document.getElementById('trf-wrap');
+  const cd = candidateData;
+  const date = r[1] ? new Date(r[1]).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}) : '—';
+  const setName = r[5] || 'TOEIC Simulation Test';
+  const lScore = r[6]||0, lScaled = r[25]||'—';
+  const rdScore = r[8]||0, rdScaled = r[26]||'—';
+  const total = r[27]||'—';
+  const instName = settings.institution_name || 'BandUp Center';
+  const footerNote = settings.trf_footer_note || 'This is a simulation test result for preparation purposes only.';
+
+  wrap.innerHTML = `<div class="trf-doc" id="trf-printable">
+    <div class="trf-top-bar"></div>
+    <div class="trf-inner">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-family:'Source Serif 4',serif;font-size:1.3rem;font-weight:600;color:var(--blue)">${escH(instName)}</div>
+        <div style="font-size:0.8rem;color:var(--ink3);margin-top:2px">TOEIC Listening &amp; Reading — Score Report</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.85rem;margin-bottom:20px;border-top:1px solid #ddd;border-bottom:1px solid #ddd;padding:12px 0">
+        <div><b>Candidate:</b> ${escH(cd.fullName||'—')}</div>
+        <div><b>Candidate ID:</b> ${escH(cd.candidateID||'—')}</div>
+        <div><b>Test:</b> ${escH(setName)}</div>
+        <div><b>Date:</b> ${date}</div>
+      </div>
+      <div class="trf-bands" style="grid-template-columns:repeat(3,1fr)">
+        <div class="trf-band-cell">
+          <div class="trf-band-label">Listening</div>
+          <div class="trf-band-score" style="font-size:1.8rem">${lScaled}</div>
+          <div class="trf-band-raw">${lScore}/100 correct</div>
+        </div>
+        <div class="trf-band-cell">
+          <div class="trf-band-label">Reading</div>
+          <div class="trf-band-score" style="font-size:1.8rem">${rdScaled}</div>
+          <div class="trf-band-raw">${rdScore}/100 correct</div>
+        </div>
+        <div class="trf-band-cell">
+          <div class="trf-band-label">Total Score</div>
+          <div class="trf-band-score">${total}</div>
+          <div class="trf-band-raw">out of 990</div>
+        </div>
+      </div>
+      <div class="validity-note">
+        This is a SIMULATION result for preparation purposes only and is NOT an official TOEIC Score Report.<br>
+        ${escH(footerNote)}
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-blue" style="margin-top:14px" onclick="window.print()">🖨 Print / Save as PDF</button>`;
+}
+
+function renderIELTSTRF(r) {
+  const wrap = document.getElementById('trf-wrap');
   const cd      = candidateData;
   const lBand   = r[7]||'—';
   const rdBand  = r[9]||'—';
