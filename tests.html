@@ -29,16 +29,36 @@
   .fs-btn:hover{background:rgba(255,255,255,0.12)}
   .fs-btn:first-child{border-radius:5px 0 0 5px}
   .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
+
+  /* ─── SETTINGS POPOVER ─── */
+  .settings-wrap{position:relative}
+  .icon-btn{display:flex;align-items:center;gap:6px}
+  .settings-panel{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--paper);color:var(--ink);border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.25);padding:16px;width:230px;z-index:200}
+  .settings-panel.open{display:block}
+  .settings-row{display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;margin-bottom:14px}
+  .settings-row:last-child{margin-bottom:0}
+  .settings-label{font-weight:600;color:var(--ink2)}
+  .switch{position:relative;width:38px;height:21px;flex-shrink:0}
+  .switch input{opacity:0;width:0;height:0;position:absolute}
+  .slider-track{position:absolute;inset:0;background:var(--paper3);border-radius:20px;cursor:pointer;transition:0.2s}
+  .slider-track:before{content:'';position:absolute;width:17px;height:17px;left:2px;top:2px;background:#fff;border-radius:50%;transition:0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.3)}
+  .switch input:checked + .slider-track{background:var(--blue2)}
+  .switch input:checked + .slider-track:before{transform:translateX(17px)}
+  .fs-slider-wrap{display:flex;flex-direction:column;gap:8px}
+  .fs-slider-wrap input[type=range]{width:100%;accent-color:var(--blue2)}
+  .fs-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--ink3);padding:0 2px}
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);min-height:100vh;display:flex;flex-direction:column;overflow-x:hidden}
 
   .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;border-bottom:3px solid var(--gold);position:relative}
   .hdr-burger{display:none;background:transparent;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:4px 8px;line-height:1}
   @media(max-width:640px){
     .hdr-burger{display:block}
-    .candidate-info{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;align-items:stretch;gap:10px;background:var(--blue);padding:14px 20px;box-shadow:0 8px 20px rgba(0,0,0,0.25);z-index:80}
+    .candidate-info{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:row;justify-content:center;flex-wrap:wrap;align-items:center;gap:10px;background:var(--blue);padding:14px 20px;box-shadow:0 8px 20px rgba(0,0,0,0.25);z-index:80}
     .candidate-info.open{display:flex}
-    .candidate-info .font-size-ctrl{justify-content:center}
-    .candidate-info .btn-hdr{width:100%}
+    .candidate-info .btn-hdr{width:auto;padding:9px 12px;font-size:1.05rem}
+    .candidate-info .btn-label{display:none}
+    .candidate-info > span{display:none}
+    .settings-panel{right:auto;left:50%;transform:translateX(-50%)}
   }
   .hdr-left{display:flex;align-items:center;gap:14px}
   .hdr-logo{font-family:'Source Serif 4',serif;font-size:1.1rem;font-weight:600}.hdr-logo span{color:var(--gold)}
@@ -125,13 +145,27 @@
   <button class="hdr-burger" onclick="toggleHdrMenu()" aria-label="Menu">☰</button>
   <div class="candidate-info" id="hdr-actions">
     <span>Candidate: <b id="disp-name">Guest</b></span>
-    <div class="font-size-ctrl">
-      <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
-      <button class="fs-btn" onclick="changeFontSize(1)">A+</button>
+    <div class="settings-wrap">
+      <button class="btn-hdr icon-btn" onclick="toggleSettingsPanel(event)" title="Settings">⚙️<span class="btn-label"> Settings</span></button>
+      <div class="settings-panel" id="settings-panel">
+        <div class="settings-row">
+          <span class="settings-label">🌙 Dark Mode</span>
+          <label class="switch">
+            <input type="checkbox" id="dark-mode-switch" onchange="toggleDarkMode()">
+            <span class="slider-track"></span>
+          </label>
+        </div>
+        <div class="settings-row" style="flex-direction:column;align-items:stretch">
+          <span class="settings-label" style="margin-bottom:8px">🔤 Font Size</span>
+          <div class="fs-slider-wrap">
+            <input type="range" min="0" max="4" step="1" id="font-size-slider" oninput="setFontSize(this.value)">
+            <div class="fs-labels"><span>A</span><span style="font-size:1.3em">A</span></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <button class="btn-hdr" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
-    <button class="btn-hdr" onclick="window.location.href='profile.html'">👤 My Profile</button>
-    <button class="btn-hdr" onclick="logout()">Logout</button>
+    <button class="btn-hdr icon-btn" onclick="window.location.href='profile.html'" title="My Profile">👤<span class="btn-label"> My Profile</span></button>
+    <button class="btn-hdr icon-btn" onclick="logout()" title="Logout">🚪<span class="btn-label"> Logout</span></button>
   </div>
 </div>
 
@@ -219,12 +253,13 @@ function initAccessibilityPrefs() {
     fontScaleIndex = idx >= 0 ? idx : 1;
   }
   applyFontScale();
+  const fsSlider = document.getElementById('font-size-slider');
+  if (fsSlider) fsSlider.value = fontScaleIndex;
+
   const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
-  if (darkOn) {
-    document.body.classList.add('dark-mode');
-    const btn = document.getElementById('dark-mode-toggle');
-    if (btn) btn.textContent = '☀️';
-  }
+  if (darkOn) document.body.classList.add('dark-mode');
+  const darkSwitch = document.getElementById('dark-mode-switch');
+  if (darkSwitch) darkSwitch.checked = darkOn;
 }
 function applyFontScale() {
   document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
@@ -233,18 +268,26 @@ function applyFontScale() {
 function toggleHdrMenu(){
   document.getElementById('hdr-actions').classList.toggle('open');
 }
-function changeFontSize(direction) {
-  const newIndex = fontScaleIndex + direction;
-  if (newIndex < 0 || newIndex >= FONT_SCALE_STEPS.length) return;
-  fontScaleIndex = newIndex;
+function setFontSize(idx) {
+  fontScaleIndex = parseInt(idx, 10);
   applyFontScale();
 }
 function toggleDarkMode() {
   const isDark = document.body.classList.toggle('dark-mode');
   localStorage.setItem('ielts_dark_mode', isDark ? '1' : '0');
-  const btn = document.getElementById('dark-mode-toggle');
-  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  const darkSwitch = document.getElementById('dark-mode-switch');
+  if (darkSwitch) darkSwitch.checked = isDark;
 }
+function toggleSettingsPanel(ev) {
+  if (ev) ev.stopPropagation();
+  document.getElementById('settings-panel').classList.toggle('open');
+}
+document.addEventListener('click', (e) => {
+  const panel = document.getElementById('settings-panel');
+  if (panel && panel.classList.contains('open') && !e.target.closest('.settings-wrap')) {
+    panel.classList.remove('open');
+  }
+});
 
 function callSheetsOnce(payload, timeoutMs) {
   return new Promise((resolve, reject) => {
