@@ -625,19 +625,28 @@
             <input type="text" id="set-desc" placeholder="e.g. Academic module, 40 questions">
           </div>
         </div>
+        <div class="row2">
+          <div class="field">
+            <label>Exam Type</label>
+            <select id="set-exam-type" style="width:100%;padding:8px 11px;border:1px solid var(--paper3);border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.87rem">
+              <option value="IELTS">IELTS</option>
+              <option value="TOEIC">TOEIC</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <select id="set-status">
+              <option value="Active">Active</option>
+              <option value="Archived">Archived</option>
+            </select>
+          </div>
+        </div>
         <div class="field">
           <label>Config URL (GitHub raw URL)</label>
           <input type="text" id="set-url" placeholder="https://raw.githubusercontent.com/...">
           <div style="font-size:0.75rem;color:var(--ink3);margin-top:4px">
             Get this from GitHub: open the JSON file → click "Raw" → copy URL
           </div>
-        </div>
-        <div class="field">
-          <label>Status</label>
-          <select id="set-status">
-            <option value="Active">Active</option>
-            <option value="Archived">Archived</option>
-          </select>
         </div>
         <div class="btn-row">
           <button class="btn btn-blue" onclick="saveTestSetForm()">💾 Save Set</button>
@@ -1328,11 +1337,13 @@ async function loadTestSets() {
     return;
   }
 
-  let html = '<div style="overflow-x:auto"><table class="sheets-table"><thead><tr><th>Set Name</th><th>Status</th><th>Answer Key</th><th>Config URL</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
+  let html = '<div style="overflow-x:auto"><table class="sheets-table"><thead><tr><th>Set Name</th><th>Type</th><th>Status</th><th>Answer Key</th><th>Config URL</th><th>Created</th><th>Actions</th></tr></thead><tbody>';
   sets.forEach(s => {
     const isActive = s.setID === activeID || s.status === 'Active';
+    const examType = (s.examType||'IELTS').toUpperCase() === 'TOEIC' ? 'TOEIC' : 'IELTS';
     html += `<tr>
       <td><b>${escH(s.setName)}</b>${s.description?`<br><span style="font-size:0.75rem;color:var(--ink3)">${escH(s.description)}</span>`:''}</td>
+      <td>${examType==='TOEIC'?'<span class="band-badge" style="background:rgba(200,168,75,0.15);color:#7a5f1a;border:1px solid rgba(200,168,75,0.4)">💼 TOEIC</span>':'<span class="band-badge">🎓 IELTS</span>'}</td>
       <td>${isActive?'<span class="band-badge band-high">⚡ ACTIVE</span>':`<span class="band-badge">${escH(s.status||'')}</span>`}</td>
       <td id="ak-status-${escH(s.setID)}" style="font-size:0.75rem">⏳ checking...</td>
       <td style="font-size:0.75rem;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.configURL?`<a href="${escH(s.configURL)}" target="_blank" style="color:var(--blue2)">View ↗</a>`:'—'}</td>
@@ -1397,6 +1408,7 @@ function showNewSetForm() {
   document.getElementById('set-desc').value='';
   document.getElementById('set-url').value='';
   document.getElementById('set-status').value='Active';
+  document.getElementById('set-exam-type').value='IELTS';
   document.getElementById('set-form-title').textContent='New Test Set';
   document.getElementById('activate-btn').style.display='none';
   document.getElementById('set-form-card').style.display='block';
@@ -1410,6 +1422,7 @@ function editSet(s) {
   document.getElementById('set-desc').value=s.description||'';
   document.getElementById('set-url').value=s.configURL||'';
   document.getElementById('set-status').value=s.status||'Active';
+  document.getElementById('set-exam-type').value=(s.examType||'IELTS').toUpperCase()==='TOEIC'?'TOEIC':'IELTS';
   document.getElementById('set-form-title').textContent='Edit: '+s.setName;
   document.getElementById('activate-btn').style.display='inline-flex';
   document.getElementById('set-form-card').style.display='block';
@@ -1518,19 +1531,23 @@ async function saveTestSetForm() {
   const url    = document.getElementById('set-url').value.trim();
   const desc   = document.getElementById('set-desc').value.trim();
   const status = document.getElementById('set-status').value;
+  const examType = document.getElementById('set-exam-type').value || 'IELTS';
   const setID  = document.getElementById('set-id').value || ('SET-'+Date.now());
   if (!name) { alert('Please enter a set name.'); return; }
+  if (examType === 'TOEIC' && !/toeic/i.test(name)) {
+    if (!confirm('The test set name doesn\'t contain "TOEIC" — candidates will be routed to the IELTS test screen instead of TOEIC unless you add it. Save anyway?')) return;
+  }
 
   // Save locally
   const localSets = JSON.parse(localStorage.getItem('ielts_test_sets') || '[]');
   const existing  = localSets.findIndex(s => s.setID === setID);
-  const setObj    = { setID, setName:name, configURL:url, status, createdAt:new Date().toISOString(), description:desc };
+  const setObj    = { setID, setName:name, configURL:url, status, createdAt:new Date().toISOString(), description:desc, examType };
   if (existing >= 0) localSets[existing] = setObj; else localSets.push(setObj);
   localStorage.setItem('ielts_test_sets', JSON.stringify(localSets));
 
   // Try Sheets optionally
   try {
-    await callSheets({ action:'saveTestSet', setID, setName:name, configURL:url, status, description:desc });
+    await callSheets({ action:'saveTestSet', setID, setName:name, configURL:url, status, description:desc, examType });
   } catch(e) { /* optional */ }
 
   toast('✅ Test set saved!');
