@@ -1127,19 +1127,53 @@ async function confirmPhotoCrop() {
   const img = document.getElementById('photo-crop-img');
   const ratio = CROP_OUT / CROP_VIEW;
 
-  const canvas = document.createElement('canvas');
-  canvas.width = CROP_OUT; canvas.height = CROP_OUT;
-  const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, CROP_OUT, CROP_OUT); // flatten transparency for JPEG
-  ctx.drawImage(
+  // Draw once at full output resolution — this is the source we'll re-encode
+  // at progressively lower quality/size if the result is too big to store.
+  const srcCanvas = document.createElement('canvas');
+  srcCanvas.width = CROP_OUT; srcCanvas.height = CROP_OUT;
+  const srcCtx = srcCanvas.getContext('2d');
+  srcCtx.fillStyle = '#ffffff'; srcCtx.fillRect(0, 0, CROP_OUT, CROP_OUT); // flatten transparency for JPEG
+  srcCtx.drawImage(
     img,
     cropState.offsetX * ratio, cropState.offsetY * ratio,
     cropState.natW * cropState.scale * ratio, cropState.natH * cropState.scale * ratio
   );
-  const compressed = canvas.toDataURL('image/jpeg', 0.75);
+
+  // Server limit is 45000 chars (Google Sheets cell limit). Try progressively
+  // lower quality first, then smaller dimensions, until it fits — a busy/
+  // detailed photo can still be too big even at the default quality.
+  const MAX_CHARS = 45000;
+  const attempts = [
+    { size: CROP_OUT, quality: 0.75 },
+    { size: CROP_OUT, quality: 0.55 },
+    { size: CROP_OUT, quality: 0.4 },
+    { size: 220,       quality: 0.6 },
+    { size: 220,       quality: 0.4 },
+    { size: 160,       quality: 0.5 },
+    { size: 160,       quality: 0.3 }
+  ];
+
+  let compressed = null;
+  for (const a of attempts) {
+    let sourceCanvas = srcCanvas;
+    if (a.size !== CROP_OUT) {
+      const resized = document.createElement('canvas');
+      resized.width = a.size; resized.height = a.size;
+      resized.getContext('2d').drawImage(srcCanvas, 0, 0, a.size, a.size);
+      sourceCanvas = resized;
+    }
+    const candidate = sourceCanvas.toDataURL('image/jpeg', a.quality);
+    if (candidate.length <= MAX_CHARS) { compressed = candidate; break; }
+    compressed = candidate; // keep the smallest attempt so far as a fallback
+  }
 
   document.getElementById('photo-crop-overlay').classList.remove('open');
   cropState = null;
+
+  if (!compressed || compressed.length > MAX_CHARS) {
+    alert('This photo is too detailed to compress small enough to save. Please try a simpler/smaller photo (a plain-background headshot works best).');
+    return;
+  }
 
   // Show immediately (optimistic UI)
   document.getElementById('profile-photo-img').src = compressed;
