@@ -51,7 +51,11 @@ const SCORE_HEADERS = [
   'GradedBy',         // 20
   'GradedAt',         // 21
   'ListeningAnswers', // 22
-  'ReadingAnswers'    // 23
+  'ReadingAnswers',   // 23
+  'ExamType',         // 24  'IELTS' (default) or 'TOEIC'
+  'ListeningScaled',  // 25  TOEIC scaled score, 5-495 (blank for IELTS rows)
+  'ReadingScaled',    // 26  TOEIC scaled score, 5-495 (blank for IELTS rows)
+  'TOEICTotal'        // 27  ListeningScaled + ReadingScaled, 10-990
 ];
 
 const TESTSET_HEADERS = [
@@ -60,7 +64,8 @@ const TESTSET_HEADERS = [
   'ConfigURL',
   'Status',
   'CreatedAt',
-  'Description'
+  'Description',
+  'ExamType'  // 6  'IELTS' (default) or 'TOEIC' — drives which simulation page tests.html routes to
 ];
 
 const SETTINGS_HEADERS = ['Key', 'Value'];
@@ -120,7 +125,11 @@ const SIDX = {
   GRADED_BY: 20,
   GRADED_AT: 21,
   LISTENING_ANSWERS: 22,
-  READING_ANSWERS: 23
+  READING_ANSWERS: 23,
+  EXAM_TYPE: 24,
+  LISTENING_SCALED: 25,
+  READING_SCALED: 26,
+  TOEIC_TOTAL: 27
 };
 
 // ============================================================
@@ -209,8 +218,28 @@ function seedDefaultSettings_() {
 //  ROUTER
 // ============================================================
 function doGet(e) {
-  const p = e.parameter || {};
-  const callback = p.callback || '';
+  const p = (e && e.parameter) || {};
+  return handleRequest(p, p.callback || '');
+}
+
+function doPost(e) {
+  // e.parameter only captures URL query-string / form-encoded params — it does
+  // NOT parse a raw JSON body (Content-Type: text/plain, e.g. the photo upload
+  // call from profile.html). Merge in the JSON body here so action/key/etc.
+  // are read correctly regardless of how the request was sent.
+  let p = (e && e.parameter) || {};
+  if (e && e.postData && e.postData.contents) {
+    try {
+      const bodyParams = JSON.parse(e.postData.contents);
+      p = Object.assign({}, p, bodyParams);
+    } catch (err) {
+      // Body wasn't JSON — fall back to whatever e.parameter had.
+    }
+  }
+  return handleRequest(p, p.callback || '');
+}
+
+function handleRequest(p, callback) {
   const action = p.action || '';
   let result;
 
@@ -295,10 +324,6 @@ function doGet(e) {
   return ContentService
     .createTextOutput(json)
     .setMimeType(ContentService.MimeType.JSON);
-}
-
-function doPost(e) {
-  return doGet(e);
 }
 
 function checkApiKey(p) {
@@ -450,13 +475,14 @@ function scoreToBand_(score) {
 
 // Compares a candidate's given answers (JSON string, e.g. {"1":"a","2":"true"})
 // against an answer key object ({"1":"A","2":"TRUE"}). Case/whitespace-insensitive.
-function computeSectionScore_(givenAnswersJSON, keyObj) {
+// maxN is the highest question number to check (40 for IELTS, 100 for TOEIC per section).
+function computeSectionScoreN_(givenAnswersJSON, keyObj, maxN) {
   let given = {};
   try { given = JSON.parse(givenAnswersJSON || '{}'); } catch (e) {}
   keyObj = keyObj || {};
 
   let score = 0;
-  for (let i = 1; i <= 40; i++) {
+  for (let i = 1; i <= maxN; i++) {
     const key = String(keyObj[i] || '').trim().toLowerCase();
     const answer = String(given[i] || '').trim().toLowerCase();
     if (key && answer === key) score++;
@@ -464,9 +490,47 @@ function computeSectionScore_(givenAnswersJSON, keyObj) {
   return score;
 }
 
+// Back-compat wrapper — IELTS sections are always 40 questions.
+function computeSectionScore_(givenAnswersJSON, keyObj) {
+  return computeSectionScoreN_(givenAnswersJSON, keyObj, 40);
+}
+
+// ------------------------------------------------------------
+// TOEIC raw (0-100 per section) -> scaled score (5-495 per section)
+// NOTE: ETS does not publish one fixed official conversion table — the real
+// TOEIC curve shifts slightly from form to form. This table is a commonly
+// used APPROXIMATE conversion for practice/mock purposes, not an official
+// ETS table. Edit the two arrays below any time to match a specific
+// answer key's published conversion chart if you have one.
+// ------------------------------------------------------------
+const TOEIC_LISTENING_TABLE = [
+  [96,100,495],[91,95,480],[86,90,455],[81,85,430],[76,80,405],
+  [71,75,380],[66,70,355],[61,65,325],[56,60,300],[51,55,275],
+  [46,50,250],[41,45,225],[36,40,200],[31,35,175],[26,30,150],
+  [21,25,125],[16,20,100],[11,15,75],[6,10,50],[0,5,25]
+];
+const TOEIC_READING_TABLE = [
+  [96,100,495],[91,95,470],[86,90,435],[81,85,405],[76,80,375],
+  [71,75,345],[66,70,315],[61,65,285],[56,60,255],[51,55,225],
+  [46,50,200],[41,45,175],[36,40,150],[31,35,125],[26,30,100],
+  [21,25,75],[16,20,50],[11,15,35],[6,10,20],[0,5,5]
+];
+
+function scoreToScaled_(raw, table) {
+  for (let i = 0; i < table.length; i++) {
+    const [lo, hi, scaled] = table[i];
+    if (raw >= lo && raw <= hi) return scaled;
+  }
+  return 5;
+}
+function scoreToTOEICListening_(raw) { return scoreToScaled_(raw, TOEIC_LISTENING_TABLE); }
+function scoreToTOEICReading_(raw)   { return scoreToScaled_(raw, TOEIC_READING_TABLE); }
+
 function saveScore(p) {
   const sheet = getOrCreateSheet_(SHEET_SCORES, SCORE_HEADERS);
   const subID = 'SUB-' + Date.now();
+  const examType = (String(p.examType || 'IELTS').toUpperCase() === 'TOEIC') ? 'TOEIC' : 'IELTS';
+  const maxN = examType === 'TOEIC' ? 100 : 40;
 
   // Grade server-side using the protected AnswerKeys sheet — never trust a
   // score sent by the client, since that would be visible/editable in the browser.
@@ -479,12 +543,20 @@ function saveScore(p) {
       let listeningKey = {}, readingKey = {};
       try { listeningKey = JSON.parse(row[AKIDX.LISTENING_KEY] || '{}'); } catch (e) {}
       try { readingKey = JSON.parse(row[AKIDX.READING_KEY] || '{}'); } catch (e) {}
-      listeningScore = computeSectionScore_(p.listeningAnswers, listeningKey);
-      readingScore = computeSectionScore_(p.readingAnswers, readingKey);
+      listeningScore = computeSectionScoreN_(p.listeningAnswers, listeningKey, maxN);
+      readingScore = computeSectionScoreN_(p.readingAnswers, readingKey, maxN);
     }
   }
-  const listeningBand = scoreToBand_(listeningScore);
-  const readingBand = scoreToBand_(readingScore);
+
+  let listeningBand = '', readingBand = '', listeningScaled = '', readingScaled = '', toeicTotal = '';
+  if (examType === 'TOEIC') {
+    listeningScaled = scoreToTOEICListening_(listeningScore);
+    readingScaled = scoreToTOEICReading_(readingScore);
+    toeicTotal = listeningScaled + readingScaled;
+  } else {
+    listeningBand = scoreToBand_(listeningScore);
+    readingBand = scoreToBand_(readingScore);
+  }
 
   sheet.appendRow([
     subID,
@@ -510,10 +582,18 @@ function saveScore(p) {
     '',
     '',
     String(p.listeningAnswers || ''),
-    String(p.readingAnswers || '')
+    String(p.readingAnswers || ''),
+    examType,
+    listeningScaled,
+    readingScaled,
+    toeicTotal
   ]);
 
-  return { success: true, submissionID: subID, listeningScore, listeningBand, readingScore, readingBand };
+  return {
+    success: true, submissionID: subID, examType,
+    listeningScore, listeningBand, readingScore, readingBand,
+    listeningScaled, readingScaled, toeicTotal
+  };
 }
 
 function getScores(p) {
@@ -609,7 +689,8 @@ function getTestSets() {
     configURL: String(r[2] || ''),
     status: String(r[3] || ''),
     createdAt: String(r[4] || ''),
-    description: String(r[5] || '')
+    description: String(r[5] || ''),
+    examType: String(r[6] || 'IELTS')
   }));
 
   return { success: true, sets };
@@ -621,13 +702,14 @@ function saveTestSet(p) {
 
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][0]) === String(p.setID)) {
-      sheet.getRange(i + 1, 1, 1, 6).setValues([[
+      sheet.getRange(i + 1, 1, 1, 7).setValues([[
         String(p.setID),
         String(p.setName || ''),
         String(p.configURL || ''),
         String(p.status || 'Active'),
         String(data[i][4] || ''),
-        String(p.description || '')
+        String(p.description || ''),
+        String(p.examType || data[i][6] || 'IELTS')
       ]]);
       return { success: true, message: 'Updated.' };
     }
@@ -640,7 +722,8 @@ function saveTestSet(p) {
     String(p.configURL || ''),
     String(p.status || 'Active'),
     new Date().toISOString(),
-    String(p.description || '')
+    String(p.description || ''),
+    String(p.examType || 'IELTS')
   ]);
 
   return { success: true, setID, message: 'Created.' };
