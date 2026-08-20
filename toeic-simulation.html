@@ -297,7 +297,7 @@ function renderStage(which){
 
   const audioURL = which==='listening' ? (config.listening.audioURL||'') : '';
   if(audioURL){
-    content.innerHTML += `<div class="part-block"><div class="part-head"><span class="part-num">Full Listening Audio</span></div><audio controls src="${escH(audioURL)}"></audio><div style="font-size:0.8rem;color:var(--ink3)">This single track covers Parts 1–4. Use the navigator on the right to jump between questions as you listen.</div></div>`;
+    content.innerHTML += `<div class="part-block"><div class="part-head"><span class="part-num">Full Listening Audio</span></div>${renderAudioPlayer(audioURL)}<div style="font-size:0.8rem;color:var(--ink3)">This single track covers Parts 1–4. Use the navigator on the right to jump between questions as you listen.</div></div>`;
   }
 
   if(which === 'listening'){
@@ -351,6 +351,32 @@ const PART_INSTRUCTIONS = {
 
 function optLabel(i){ return ['A','B','C','D'][i]; }
 
+// ═══════════════════════════════════════
+// AUDIO — supports both direct file URLs (mp3/wav/ogg) and YouTube links
+// (youtu.be/... or youtube.com/watch?v=...), including unlisted videos —
+// unlisted just means "not searchable", it still embeds fine. A plain
+// <audio src="youtu.be/...">  does NOT work since YouTube isn't a raw media
+// file, so YouTube URLs get an <iframe> embed instead.
+// ═══════════════════════════════════════
+function getYoutubeID(url){
+  if(!url) return null;
+  let m = url.match(/youtu\.be\/([A-Za-z0-9_-]{6,})/);
+  if(m) return m[1];
+  m = url.match(/[?&]v=([A-Za-z0-9_-]{6,})/);
+  if(m) return m[1];
+  m = url.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{6,})/);
+  if(m) return m[1];
+  return null;
+}
+function renderAudioPlayer(url){
+  if(!url) return '';
+  const ytID = getYoutubeID(url);
+  if(ytID){
+    return `<div style="max-width:420px;margin-bottom:10px"><iframe width="100%" height="70" src="https://www.youtube.com/embed/${ytID}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius:8px"></iframe></div>`;
+  }
+  return `<audio controls src="${escH(url)}"></audio>`;
+}
+
 function itemQHeader(num){
   return `<div class="item-q-row">
     <div class="item-q">Question ${num}</div>
@@ -381,19 +407,19 @@ function renderItemPhoto(it){
   return `<div class="item" id="item-${it.num}">
     ${itemQHeader(it.num)}
     ${it.imgURL?`<img class="item-img" src="${escH(it.imgURL)}" alt="Question ${it.num} photo">`:''}
-    ${it.audioURL?`<audio controls src="${escH(it.audioURL)}"></audio>`:''}
+    ${renderAudioPlayer(it.audioURL)}
     ${renderOpts(it.num, null, ['A','B','C','D'])}
   </div>`;
 }
 function renderItemAudioOnly(it){
   return `<div class="item" id="item-${it.num}">
     ${itemQHeader(it.num)}
-    ${it.audioURL?`<audio controls src="${escH(it.audioURL)}"></audio>`:''}
+    ${renderAudioPlayer(it.audioURL)}
     ${renderOpts(it.num, null, ['A','B','C'])}
   </div>`;
 }
 function renderGroupAudio(g){
-  const audio = g.audioURL ? `<audio controls src="${escH(g.audioURL)}"></audio>` : '';
+  const audio = renderAudioPlayer(g.audioURL);
   const img = g.imgURL ? `<img class="item-img" src="${escH(g.imgURL)}" alt="Supporting graphic">` : '';
   const items = (g.items||[]).map(it => `
     <div class="item" id="item-${it.num}">
