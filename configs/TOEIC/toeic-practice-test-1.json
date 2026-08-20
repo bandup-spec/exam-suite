@@ -51,131 +51,31 @@
       "2": {
         "name": "Question-Response",
         "items": [
-          {
-            "num": 7,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 8,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 9,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 10,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 11,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 12,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 13,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 14,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 15,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 16,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 17,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 18,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 19,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 20,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 21,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 22,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 23,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 24,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 25,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 26,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 27,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 28,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 29,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 30,
-            "audioURL": "",
-            "answer": ""
-          },
-          {
-            "num": 31,
-            "audioURL": "",
-            "answer": ""
-          }
+          { "num": 7, "audioURL": "", "answer": "" },
+          { "num": 8, "audioURL": "", "answer": "" },
+          { "num": 9, "audioURL": "", "answer": "" },
+          { "num": 10, "audioURL": "", "answer": "" },
+          { "num": 11, "audioURL": "", "answer": "" },
+          { "num": 12, "audioURL": "", "answer": "" },
+          { "num": 13, "audioURL": "", "answer": "" },
+          { "num": 14, "audioURL": "", "answer": "" },
+          { "num": 15, "audioURL": "", "answer": "" },
+          { "num": 16, "audioURL": "", "answer": "" },
+          { "num": 17, "audioURL": "", "answer": "" },
+          { "num": 18, "audioURL": "", "answer": "" },
+          { "num": 19, "audioURL": "", "answer": "" },
+          { "num": 20, "audioURL": "", "answer": "" },
+          { "num": 21, "audioURL": "", "answer": "" },
+          { "num": 22, "audioURL": "", "answer": "" },
+          { "num": 23, "audioURL": "", "answer": "" },
+          { "num": 24, "audioURL": "", "answer": "" },
+          { "num": 25, "audioURL": "", "answer": "" },
+          { "num": 26, "audioURL": "", "answer": "" },
+          { "num": 27, "audioURL": "", "answer": "" },
+          { "num": 28, "audioURL": "", "answer": "" },
+          { "num": 29, "audioURL": "", "answer": "" },
+          { "num": 30, "audioURL": "", "answer": "" },
+          { "num": 31, "audioURL": "", "answer": "" }
         ]
       },
       "3": {
@@ -188,34 +88,34 @@
             "items": [
               {
                 "num": 32,
-                "qText": "Sample question 32 regarding conversation C1?",
+                "qText": "Where are the speakers?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "In an office",
+                  "At a restaurant",
+                  "At the airport",
+                  "In the parade"
                 ],
                 "answer": ""
               },
               {
                 "num": 33,
-                "qText": "Sample question 33 regarding conversation C1?",
+                "qText": "Why is the traffic jam expected?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Many people are going on a picnic.",
+                  "Construction is ongoing.",
+                  "There will be a street parade.",
+                  "There was an accident on the street."
                 ],
                 "answer": ""
               },
               {
                 "num": 34,
-                "qText": "Sample question 34 regarding conversation C1?",
+                "qText": "What time will the speakers leave?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "At 5 p.m.",
+                  "At 6 p.m.",
+                  "At 7 p.m.",
+                  "At 9 p.m."
                 ],
                 "answer": ""
               }
@@ -228,34 +128,34 @@
             "items": [
               {
                 "num": 35,
-                "qText": "Sample question 35 regarding conversation C2?",
+                "qText": "What is the purpose of the call?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "To promote a new service",
+                  "To make a complaint",
+                  "To inform a customer of unpaid bills",
+                  "To confirm a schedule"
                 ],
                 "answer": ""
               },
               {
                 "num": 36,
-                "qText": "Sample question 36 regarding conversation C2?",
+                "qText": "According to the woman, what was the problem?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "She was not aware of the new services.",
+                  "She could not meet the deadline.",
+                  "She was unfairly treated by a staff member.",
+                  "She may have forgotten to notify some change."
                 ],
                 "answer": ""
               },
               {
                 "num": 37,
-                "qText": "Sample question 37 regarding conversation C2?",
+                "qText": "What will the man probably do next?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Call a colleague",
+                  "Provide her with a discount",
+                  "Explain the procedure",
+                  "Update some information"
                 ],
                 "answer": ""
               }
@@ -268,34 +168,34 @@
             "items": [
               {
                 "num": 38,
-                "qText": "Sample question 38 regarding conversation C3?",
+                "qText": "Where do the speakers most likely work?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "At a bank",
+                  "At a supermarket",
+                  "At an employment firm",
+                  "At a business school"
                 ],
                 "answer": ""
               },
               {
                 "num": 39,
-                "qText": "Sample question 39 regarding conversation C3?",
+                "qText": "What does the man say he wants to do?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Register for a management class",
+                  "Work as a cashier",
+                  "Hire a new loan officer",
+                  "Open a new account"
                 ],
                 "answer": ""
               },
               {
                 "num": 40,
-                "qText": "Sample question 40 regarding conversation C3?",
+                "qText": "What do the women say they will send the man tomorrow?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Handouts from a presentation",
+                  "Brochures for financial services",
+                  "An application for the new position",
+                  "A list of some names"
                 ],
                 "answer": ""
               }
@@ -308,34 +208,34 @@
             "items": [
               {
                 "num": 41,
-                "qText": "Sample question 41 regarding conversation C4?",
+                "qText": "Where is the conversation probably taking place?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "In a restaurant",
+                  "In the office",
+                  "On the street",
+                  "At the park"
                 ],
                 "answer": ""
               },
               {
                 "num": 42,
-                "qText": "Sample question 42 regarding conversation C4?",
+                "qText": "What does the man say about the restaurant?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "It was too expensive.",
+                  "It was as good as its reputation.",
+                  "It was below his expectations.",
+                  "It was far away from the office."
                 ],
                 "answer": ""
               },
               {
                 "num": 43,
-                "qText": "Sample question 43 regarding conversation C4?",
+                "qText": "What will the speakers probably do?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Go out to eat",
+                  "Leave for the day",
+                  "Take a walk",
+                  "Order some food"
                 ],
                 "answer": ""
               }
@@ -348,34 +248,34 @@
             "items": [
               {
                 "num": 44,
-                "qText": "Sample question 44 regarding conversation C5?",
+                "qText": "Where does the woman work?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "At a theater",
+                  "At a dental clinic",
+                  "At a travel agency",
+                  "At a restaurant"
                 ],
                 "answer": ""
               },
               {
                 "num": 45,
-                "qText": "Sample question 45 regarding conversation C5?",
+                "qText": "How long did it take for the man to make a reservation?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Three hours",
+                  "One week",
+                  "Two weeks",
+                  "Three weeks"
                 ],
                 "answer": ""
               },
               {
                 "num": 46,
-                "qText": "Sample question 46 regarding conversation C5?",
+                "qText": "What does the man say he will do?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Cancel his appointment with his client",
+                  "Look for some reviews",
+                  "Book another time",
+                  "Finish the work early"
                 ],
                 "answer": ""
               }
@@ -388,34 +288,34 @@
             "items": [
               {
                 "num": 47,
-                "qText": "Sample question 47 regarding conversation C6?",
+                "qText": "What is the conversation mainly about?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "A vacation trip",
+                  "Office supply purchase",
+                  "Changes in personnel",
+                  "Software installation"
                 ],
                 "answer": ""
               },
               {
                 "num": 48,
-                "qText": "Sample question 48 regarding conversation C6?",
+                "qText": "What does the woman mean when she says, \"I knew that he would be promoted soon.\"?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "She was notified about the news before.",
+                  "She is very close to Mr. Russell.",
+                  "She wants to get promoted, too.",
+                  "She thinks Mr. Russell has worked hard."
                 ],
                 "answer": ""
               },
               {
                 "num": 49,
-                "qText": "Sample question 49 regarding conversation C6?",
+                "qText": "What will the woman do next?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Call Mr. Russell",
+                  "Talk to a former colleague",
+                  "Interview an applicant",
+                  "Make a reservation"
                 ],
                 "answer": ""
               }
@@ -428,34 +328,34 @@
             "items": [
               {
                 "num": 50,
-                "qText": "Sample question 50 regarding conversation C7?",
+                "qText": "Why did the woman invite the man?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "To request a refund",
+                  "To sign a business contract",
+                  "To obtain more information",
+                  "To rent some equipment"
                 ],
                 "answer": ""
               },
               {
                 "num": 51,
-                "qText": "Sample question 51 regarding conversation C7?",
+                "qText": "What kind of company does the woman work for?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "A shipping company",
+                  "A heavy equipment company",
+                  "A real estate agency",
+                  "A law firm"
                 ],
                 "answer": ""
               },
               {
                 "num": 52,
-                "qText": "Sample question 52 regarding conversation C7?",
+                "qText": "What is the woman most likely to do next?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Give a lecture",
+                  "Prepare for shipment",
+                  "Answer the questions",
+                  "Sign a contract"
                 ],
                 "answer": ""
               }
@@ -468,34 +368,34 @@
             "items": [
               {
                 "num": 53,
-                "qText": "Sample question 53 regarding conversation C8?",
+                "qText": "Where most likely are the speakers?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "At a bus stop",
+                  "In an auto repair shop",
+                  "In an office",
+                  "On the road"
                 ],
                 "answer": ""
               },
               {
                 "num": 54,
-                "qText": "Sample question 54 regarding conversation C8?",
+                "qText": "According to the woman, when does she expect to be back?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "By 5 p.m.",
+                  "By 6 p.m.",
+                  "By 6:30 p.m.",
+                  "By 8 p.m."
                 ],
                 "answer": ""
               },
               {
                 "num": 55,
-                "qText": "Sample question 55 regarding conversation C8?",
+                "qText": "What does the woman ask the man to do?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Order more parts",
+                  "Drop her keys off",
+                  "Close the shop later than usual",
+                  "Notify any change"
                 ],
                 "answer": ""
               }
@@ -508,34 +408,34 @@
             "items": [
               {
                 "num": 56,
-                "qText": "Sample question 56 regarding conversation C9?",
+                "qText": "Who is the man calling?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "A business owner",
+                  "A job applicant",
+                  "A photographer",
+                  "A journalist"
                 ],
                 "answer": ""
               },
               {
                 "num": 57,
-                "qText": "Sample question 57 regarding conversation C9?",
+                "qText": "Why does the woman say, \"It's a relief to hear the news\"?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "She's been sick for the last few days.",
+                  "She had applied for this company before.",
+                  "She is working for a newspaper company.",
+                  "She was worried she might not get the job."
                 ],
                 "answer": ""
               },
               {
                 "num": 58,
-                "qText": "Sample question 58 regarding conversation C9?",
+                "qText": "According to the man, why does the woman have to see him?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "To complete some documents",
+                  "To submit a certification",
+                  "To celebrate an anniversary",
+                  "To start working"
                 ],
                 "answer": ""
               }
@@ -548,34 +448,34 @@
             "items": [
               {
                 "num": 59,
-                "qText": "Sample question 59 regarding conversation C10?",
+                "qText": "What problem are the speakers mainly discussing?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "A flight has been canceled.",
+                  "Tickets are all sold out.",
+                  "The registration has not been completed.",
+                  "Hotel rooms are unavailable."
                 ],
                 "answer": ""
               },
               {
                 "num": 60,
-                "qText": "Sample question 60 regarding conversation C10?",
+                "qText": "What solution does the woman suggest?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Reserving rooms in another area",
+                  "Postponing a business trip",
+                  "Calling a travel agent",
+                  "Taking public transportation"
                 ],
                 "answer": ""
               },
               {
                 "num": 61,
-                "qText": "Sample question 61 regarding conversation C10?",
+                "qText": "What does the man imply when he says, \"That makes sense\"?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "They may be late for the conference.",
+                  "They may not exceed the budget.",
+                  "They may have missed the deadline.",
+                  "The rooms may be too small for the group."
                 ],
                 "answer": ""
               }
@@ -588,34 +488,34 @@
             "items": [
               {
                 "num": 62,
-                "qText": "Sample question 62 regarding conversation C11?",
+                "qText": "What problem does the woman have?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Her presentation materials are inaccessible.",
+                  "There are a number of mistakes in her report.",
+                  "The technical support team is out of the office all day.",
+                  "The meeting is canceled due to the inclement weather."
                 ],
                 "answer": ""
               },
               {
                 "num": 63,
-                "qText": "Sample question 63 regarding conversation C11?",
+                "qText": "When was the technician supposed to arrive?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "This morning",
+                  "This afternoon",
+                  "Tomorrow morning",
+                  "Tomorrow afternoon"
                 ],
                 "answer": ""
               },
               {
                 "num": 64,
-                "qText": "Sample question 64 regarding conversation C11?",
+                "qText": "What will the man do next?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Make a call",
+                  "Help her presentation",
+                  "Contact her client",
+                  "Repair her computer"
                 ],
                 "answer": ""
               }
@@ -628,34 +528,34 @@
             "items": [
               {
                 "num": 65,
-                "qText": "Sample question 65 regarding conversation C12?",
+                "qText": "What do the speakers want to do?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Plan a party for customers",
+                  "Conduct a training session for employees",
+                  "Mail out some information to participants",
+                  "Show their appreciation to sponsors"
                 ],
                 "answer": ""
               },
               {
                 "num": 66,
-                "qText": "Sample question 66 regarding conversation C12?",
+                "qText": "What did the organization send out last year?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Thank you cards",
+                  "Money orders",
+                  "Picture frames",
+                  "Monogrammed cups"
                 ],
                 "answer": ""
               },
               {
                 "num": 67,
-                "qText": "Sample question 67 regarding conversation C12?",
+                "qText": "Look at the graphic. What number shows where the gift shop is located?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "1",
+                  "2",
+                  "3",
+                  "4"
                 ],
                 "answer": ""
               }
@@ -668,34 +568,34 @@
             "items": [
               {
                 "num": 68,
-                "qText": "Sample question 68 regarding conversation C13?",
+                "qText": "What is the conversation mainly about?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Taking a vacation",
+                  "Winning a prize",
+                  "Testing a program",
+                  "Booking a flight"
                 ],
                 "answer": ""
               },
               {
                 "num": 69,
-                "qText": "Sample question 69 regarding conversation C13?",
+                "qText": "Look at the graphic. In which location has the woman decided to stay longer?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "At Bangkok",
+                  "At Phuket",
+                  "At Chiangmai",
+                  "At home"
                 ],
                 "answer": ""
               },
               {
                 "num": 70,
-                "qText": "Sample question 70 regarding conversation C13?",
+                "qText": "What does the woman say was the problem with her vacation?",
                 "options": [
-                  "Schedule a client meeting",
-                  "Submit the monthly expense report",
-                  "Contact the IT support department",
-                  "Order additional office supplies"
+                  "Her flight was delayed.",
+                  "She got too much sun.",
+                  "Her schedule was too tight.",
+                  "One of her friends got sick."
                 ],
                 "answer": ""
               }
@@ -713,34 +613,34 @@
             "items": [
               {
                 "num": 71,
-                "qText": "Sample question 71 about the talk/announcement T1?",
+                "qText": "When is the report being broadcasted?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "In the morning",
+                  "At noon",
+                  "In the afternoon",
+                  "At midnight"
                 ],
                 "answer": ""
               },
               {
                 "num": 72,
-                "qText": "Sample question 72 about the talk/announcement T1?",
+                "qText": "What is causing the traffic delay?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "Road construction",
+                  "Electric repairs",
+                  "Bad weather",
+                  "An accident in a highway"
                 ],
                 "answer": ""
               },
               {
                 "num": 73,
-                "qText": "Sample question 73 about the talk/announcement T1?",
+                "qText": "What will people hear next?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "An interview with the guest",
+                  "An emergency weather report",
+                  "A presidential election",
+                  "An advertisement"
                 ],
                 "answer": ""
               }
@@ -753,34 +653,34 @@
             "items": [
               {
                 "num": 74,
-                "qText": "Sample question 74 about the talk/announcement T2?",
+                "qText": "What is the purpose of the message?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "To explain a change in the invoice",
+                  "To ask for the mailing address",
+                  "To respond to a customer complaint",
+                  "To report a problem with the order"
                 ],
                 "answer": ""
               },
               {
                 "num": 75,
-                "qText": "Sample question 75 about the talk/announcement T2?",
+                "qText": "Why has the product been discontinued?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "The style was out of date.",
+                  "The color was not popular.",
+                  "The quality was below expectation.",
+                  "The manufacturer has been changed."
                 ],
                 "answer": ""
               },
               {
                 "num": 76,
-                "qText": "Sample question 76 about the talk/announcement T2?",
+                "qText": "What does the speaker suggest the customers do?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "Speak with a manager",
+                  "Cancel the order",
+                  "Wait for the new model",
+                  "Visit the store"
                 ],
                 "answer": ""
               }
@@ -793,34 +693,34 @@
             "items": [
               {
                 "num": 77,
-                "qText": "Sample question 77 about the talk/announcement T3?",
+                "qText": "Who most likely is the speaker?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "A well-known reporter",
+                  "A radio host",
+                  "A technical staff",
+                  "A political commentator"
                 ],
                 "answer": ""
               },
               {
                 "num": 78,
-                "qText": "Sample question 78 about the talk/announcement T3?",
+                "qText": "Why has the schedule changed?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "The election was delayed.",
+                  "The live performance was cancelled.",
+                  "A studio is not available at the moment.",
+                  "Some equipment is not working."
                 ],
                 "answer": ""
               },
               {
                 "num": 79,
-                "qText": "Sample question 79 about the talk/announcement T3?",
+                "qText": "What has Barbara Fisher recently done?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "She joined a political party.",
+                  "She wrote a book.",
+                  "She moved to a suburb.",
+                  "She received a prestigious award."
                 ],
                 "answer": ""
               }
@@ -833,34 +733,34 @@
             "items": [
               {
                 "num": 80,
-                "qText": "Sample question 80 about the talk/announcement T4?",
+                "qText": "What is the problem with the fax message?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "It is blurring.",
+                  "It is incomplete.",
+                  "It has been damaged.",
+                  "It's been sent to a wrong place."
                 ],
                 "answer": ""
               },
               {
                 "num": 81,
-                "qText": "Sample question 81 about the talk/announcement T4?",
+                "qText": "What has the speaker requested?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "Give him a call",
+                  "Fix the fax machine",
+                  "Confirm the appointment time",
+                  "Send the information again."
                 ],
                 "answer": ""
               },
               {
                 "num": 82,
-                "qText": "Sample question 82 about the talk/announcement T4?",
+                "qText": "What is Peter asked to do?",
                 "options": [
-                  "To announce a company restructuring",
-                  "To introduce a new product line",
-                  "To remind staff about a policy change",
-                  "To invite employees to a workshop"
+                  "Contact Ms. Thompson for help",
+                  "Deliver the item soon",
+                  "Check the order form again",
+                  "Place the coversheet on top of the document"
                 ],
                 "answer": ""
               }
@@ -1118,331 +1018,181 @@
           {
             "num": 101,
             "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
-            "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
-            ],
+            "options": ["reviewed", "review", "reviewing", "to review"],
             "answer": ""
           },
           {
             "num": 102,
             "qText": "Employees are required to sign in ------- arriving at the main office building.",
-            "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
-            ],
+            "options": ["upon", "about", "along", "toward"],
             "answer": ""
           },
           {
             "num": 103,
             "qText": "The new software package offers a ------- range of features for data analysis.",
-            "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
-            ],
+            "options": ["broad", "broadly", "broaden", "breadth"],
             "answer": ""
           },
           {
             "num": 104,
             "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
-            "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
-            ],
+            "options": ["extensive", "extensively", "extend", "extension"],
             "answer": ""
           },
           {
             "num": 105,
             "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
-            "options": [
-              "by",
-              "until",
-              "for",
-              "with"
-            ],
+            "options": ["by", "until", "for", "with"],
             "answer": ""
           },
           {
             "num": 106,
             "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
-            "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
-            ],
+            "options": ["reviewed", "review", "reviewing", "to review"],
             "answer": ""
           },
           {
             "num": 107,
             "qText": "Employees are required to sign in ------- arriving at the main office building.",
-            "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
-            ],
+            "options": ["upon", "about", "along", "toward"],
             "answer": ""
           },
           {
             "num": 108,
             "qText": "The new software package offers a ------- range of features for data analysis.",
-            "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
-            ],
+            "options": ["broad", "broadly", "broaden", "breadth"],
             "answer": ""
           },
           {
             "num": 109,
             "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
-            "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
-            ],
+            "options": ["extensive", "extensively", "extend", "extension"],
             "answer": ""
           },
           {
             "num": 110,
             "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
-            "options": [
-              "by",
-              "until",
-              "for",
-              "with"
-            ],
+            "options": ["by", "until", "for", "with"],
             "answer": ""
           },
           {
             "num": 111,
             "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
-            "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
-            ],
+            "options": ["reviewed", "review", "reviewing", "to review"],
             "answer": ""
           },
           {
             "num": 112,
             "qText": "Employees are required to sign in ------- arriving at the main office building.",
-            "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
-            ],
+            "options": ["upon", "about", "along", "toward"],
             "answer": ""
           },
           {
             "num": 113,
             "qText": "The new software package offers a ------- range of features for data analysis.",
-            "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
-            ],
+            "options": ["broad", "broadly", "broaden", "breadth"],
             "answer": ""
           },
           {
             "num": 114,
             "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
-            "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
-            ],
+            "options": ["extensive", "extensively", "extend", "extension"],
             "answer": ""
           },
           {
             "num": 115,
             "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
-            "options": [
-              "by",
-              "until",
-              "for",
-              "with"
-            ],
+            "options": ["by", "until", "for", "with"],
             "answer": ""
           },
           {
             "num": 116,
             "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
-            "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
-            ],
+            "options": ["reviewed", "review", "reviewing", "to review"],
             "answer": ""
           },
           {
             "num": 117,
             "qText": "Employees are required to sign in ------- arriving at the main office building.",
-            "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
-            ],
+            "options": ["upon", "about", "along", "toward"],
             "answer": ""
           },
           {
             "num": 118,
             "qText": "The new software package offers a ------- range of features for data analysis.",
-            "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
-            ],
+            "options": ["broad", "broadly", "broaden", "breadth"],
             "answer": ""
           },
           {
             "num": 119,
             "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
-            "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
-            ],
+            "options": ["extensive", "extensively", "extend", "extension"],
             "answer": ""
           },
           {
             "num": 120,
             "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
-            "options": [
-              "by",
-              "until",
-              "for",
-              "with"
-            ],
+            "options": ["by", "until", "for", "with"],
             "answer": ""
           },
           {
             "num": 121,
             "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
-            "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
-            ],
+            "options": ["reviewed", "review", "reviewing", "to review"],
             "answer": ""
           },
           {
             "num": 122,
             "qText": "Employees are required to sign in ------- arriving at the main office building.",
-            "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
-            ],
+            "options": ["upon", "about", "along", "toward"],
             "answer": ""
           },
           {
             "num": 123,
             "qText": "The new software package offers a ------- range of features for data analysis.",
-            "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
-            ],
+            "options": ["broad", "broadly", "broaden", "breadth"],
             "answer": ""
           },
           {
             "num": 124,
             "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
-            "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
-            ],
+            "options": ["extensive", "extensively", "extend", "extension"],
             "answer": ""
           },
           {
             "num": 125,
             "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
-            "options": [
-              "by",
-              "until",
-              "for",
-              "with"
-            ],
+            "options": ["by", "until", "for", "with"],
             "answer": ""
           },
           {
             "num": 126,
             "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
-            "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
-            ],
+            "options": ["reviewed", "review", "reviewing", "to review"],
             "answer": ""
           },
           {
             "num": 127,
             "qText": "Employees are required to sign in ------- arriving at the main office building.",
-            "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
-            ],
+            "options": ["upon", "about", "along", "toward"],
             "answer": ""
           },
           {
             "num": 128,
             "qText": "The new software package offers a ------- range of features for data analysis.",
-            "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
-            ],
+            "options": ["broad", "broadly", "broaden", "breadth"],
             "answer": ""
           },
           {
             "num": 129,
             "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
-            "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
-            ],
+            "options": ["extensive", "extensively", "extend", "extension"],
             "answer": ""
           },
           {
             "num": 130,
             "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
-            "options": [
-              "by",
-              "until",
-              "for",
-              "with"
-            ],
+            "options": ["by", "until", "for", "with"],
             "answer": ""
           }
         ]
@@ -1457,42 +1207,22 @@
             "items": [
               {
                 "num": 131,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 132,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 133,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 134,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               }
             ]
@@ -1504,42 +1234,22 @@
             "items": [
               {
                 "num": 135,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 136,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 137,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 138,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               }
             ]
@@ -1551,42 +1261,22 @@
             "items": [
               {
                 "num": 139,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 140,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 141,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 142,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               }
             ]
@@ -1598,42 +1288,22 @@
             "items": [
               {
                 "num": 143,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 144,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 145,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               },
               {
                 "num": 146,
-                "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
-                ],
+                "options": ["dispatched", "dispatch", "dispatching", "to dispatch"],
                 "answer": ""
               }
             ]
