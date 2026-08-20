@@ -112,7 +112,8 @@
       <div class="step-desc">Enter your candidate number to continue.</div>
       <div class="field">
         <label for="candidateNum">Candidate Number</label>
-        <input type="text" id="candidateNum" placeholder="e.g. 2024-0081" autofocus>
+        <input type="text" id="candidateNum" placeholder="e.g. CWA-01234" autofocus oninput="this.value=this.value.toUpperCase()">
+        <div style="font-size:0.75rem;color:var(--ink3);margin-top:5px">Format: 3 letters, a hyphen, then 5 digits (e.g. CWA-01234)</div>
       </div>
       <div class="error-msg" id="err1"></div>
       <button class="btn-primary" id="btn1" onclick="handleStep1()">
@@ -452,7 +453,7 @@ async function callSheets(payload) {
 //  STEP 1 — Check candidate ID
 // ══════════════════════════════════════════════
 async function handleStep1() {
-  const id = document.getElementById('candidateNum').value.trim();
+  let id = document.getElementById('candidateNum').value.trim().toUpperCase();
   hideErr('err1');
   if (!id) { showErr('err1','Please enter your candidate number.'); return; }
 
@@ -461,6 +462,12 @@ async function handleStep1() {
     setTimeout(()=>document.getElementById('adminPass').focus(),50);
     return;
   }
+
+  if (!/^[A-Z]{3}-\d{5}$/.test(id)) {
+    showErr('err1','Candidate ID must be 3 letters, a hyphen, then 5 digits — e.g. CWA-01234.');
+    return;
+  }
+  document.getElementById('candidateNum').value = id;
 
   setLoading('btn1','spin1','btn1-txt',true);
 
@@ -734,14 +741,15 @@ async function handleVerifyOTPReg() {
     });
 
     if (data.success) {
-      showSuc('suc-otp-reg','✅ Verified! Redirecting to your profile...');
-      sessionStorage.setItem('userRole','Candidate');
-      sessionStorage.setItem('candidateName', name);
-      sessionStorage.setItem('candidateID', id);
-      sessionStorage.setItem('candidateData', JSON.stringify({ candidateID:id, fullName:name, email, dob, gender, nationality:nat }));
+      showSuc('suc-otp-reg','✅ Registration submitted! Your account is now awaiting admin approval — you\'ll be able to log in once approved.');
       // Clean up temp storage
       ['pendingEmail','pendingName','pendingDOB','pendingGender','pendingNat','pendingPass'].forEach(k=>sessionStorage.removeItem(k));
-      setTimeout(()=>{ window.location.href='profile.html'; }, 1200);
+      document.getElementById('btn-otp-reg').style.display = 'none';
+      setTimeout(()=>{
+        goTo('step-otp-reg','step1');
+        document.getElementById('candidateNum').value = '';
+        document.getElementById('btn-otp-reg').style.display = '';
+      }, 3500);
     } else {
       showErr('err-otp-reg', data.message || 'Incorrect or expired code. Please try again.');
     }
