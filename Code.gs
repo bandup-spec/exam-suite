@@ -24,8 +24,15 @@ const CANDIDATE_HEADERS = [
   'Password',        // 6
   'CreatedAt',       // 7
   'LastLogin',       // 8
-  'PhotoBase64'      // 9
+  'PhotoBase64',     // 9
+  'Status'           // 10  'Pending' | 'Approved' | 'Rejected' — new registrations need admin approval before they can log in
 ];
+
+// Candidate ID format: 3 letters + hyphen + 5 digits, e.g. CWA-01234 (9 chars total)
+const CANDIDATE_ID_PATTERN = /^[A-Z]{3}-\d{5}$/;
+function isValidCandidateID_(id) {
+  return CANDIDATE_ID_PATTERN.test(String(id || '').toUpperCase());
+}
 
 const SCORE_HEADERS = [
   'SubmissionID',     // 0
@@ -98,7 +105,8 @@ const CIDX = {
   PASSWORD: 6,
   CREATED_AT: 7,
   LAST_LOGIN: 8,
-  PHOTO: 9
+  PHOTO: 9,
+  STATUS: 10
 };
 
 const SIDX = {
@@ -283,6 +291,8 @@ function handleRequest(p, callback) {
         case 'gradeWriting':              result = gradeWriting(p); break;
 
         case 'getCandidates':             result = getCandidates(); break;
+        case 'approveCandidate':          result = approveCandidate(p); break;
+        case 'rejectCandidate':           result = rejectCandidate(p); break;
 
         case 'getTestSets':               result = getTestSets(); break;
         case 'saveTestSet':               result = saveTestSet(p); break;
@@ -351,7 +361,12 @@ function registerCandidate(p) {
     return { success: false, message: 'Missing required fields.' };
   }
 
-  if (findCandidate(p.candidateID)) {
+  const candidateID = String(p.candidateID).toUpperCase();
+  if (!isValidCandidateID_(candidateID)) {
+    return { success: false, message: 'Candidate ID must be 3 letters, a hyphen, then 5 digits — e.g. CWA-01234.' };
+  }
+
+  if (findCandidate(candidateID)) {
     return { success: false, message: 'Candidate ID already registered.' };
   }
 
@@ -359,7 +374,7 @@ function registerCandidate(p) {
   const now = new Date().toISOString();
 
   sheet.appendRow([
-    String(p.candidateID),
+    candidateID,
     String(p.fullName),
     String(p.dob || ''),
     String(p.gender || ''),
@@ -368,13 +383,15 @@ function registerCandidate(p) {
     hashPassword(String(p.password)),
     now,
     now,
-    ''
+    '',
+    'Pending'
   ]);
 
   return {
     success: true,
-    candidateID: p.candidateID,
-    fullName: p.fullName
+    candidateID: candidateID,
+    fullName: p.fullName,
+    status: 'Pending'
   };
 }
 
@@ -388,6 +405,16 @@ function loginCandidate(p) {
 
   if (String(row[CIDX.PASSWORD] || '') !== hashPassword(String(p.password))) {
     return { success: false, message: 'Incorrect password.' };
+  }
+
+  // Blank status = accounts created before the approval gate existed —
+  // treat those as already approved so nobody gets locked out retroactively.
+  const status = String(row[CIDX.STATUS] || 'Approved') || 'Approved';
+  if (status === 'Pending') {
+    return { success: false, message: 'Your account is awaiting admin approval. Please check back later or contact the admin.' };
+  }
+  if (status === 'Rejected') {
+    return { success: false, message: 'Your registration was not approved. Please contact the admin.' };
   }
 
   updateLastLogin(p.candidateID);
@@ -1003,13 +1030,45 @@ function getCandidates() {
     String(r[CIDX.DOB] || ''),
     String(r[CIDX.GENDER] || ''),
     String(r[CIDX.NATIONALITY] || ''),
-    '',
     String(r[CIDX.EMAIL] || ''),
     String(r[CIDX.CREATED_AT] || ''),
-    String(r[CIDX.LAST_LOGIN] || '')
+    String(r[CIDX.LAST_LOGIN] || ''),
+    String(r[CIDX.STATUS] || 'Approved') || 'Approved'
   ]);
 
   return { success: true, rows };
+}
+
+function approveCandidate(p) {
+  if (!p.candidateID) return { success: false, message: 'No candidateID.' };
+  const sheet = getSheet_(SHEET_CANDIDATES);
+  if (!sheet) return { success: false, message: 'Candidates sheet not found.' };
+
+  const data = sheet.getDataRange().getValues();
+  const id = normalize_(p.candidateID);
+  for (let i = 1; i < data.length; i++) {
+    if (normalize_(data[i][CIDX.ID]) === id) {
+      sheet.getRange(i + 1, CIDX.STATUS + 1).setValue('Approved');
+      return { success: true, message: 'Candidate approved.' };
+    }
+  }
+  return { success: false, message: 'Candidate not found.' };
+}
+
+function rejectCandidate(p) {
+  if (!p.candidateID) return { success: false, message: 'No candidateID.' };
+  const sheet = getSheet_(SHEET_CANDIDATES);
+  if (!sheet) return { success: false, message: 'Candidates sheet not found.' };
+
+  const data = sheet.getDataRange().getValues();
+  const id = normalize_(p.candidateID);
+  for (let i = 1; i < data.length; i++) {
+    if (normalize_(data[i][CIDX.ID]) === id) {
+      sheet.getRange(i + 1, CIDX.STATUS + 1).setValue('Rejected');
+      return { success: true, message: 'Candidate rejected.' };
+    }
+  }
+  return { success: false, message: 'Candidate not found.' };
 }
 
 function findCandidate(candidateID) {
@@ -1232,12 +1291,16 @@ function handleSendOTP(p) {
 function handleVerifyOTPAndRegister(p) {
   const otp         = String(p.otp || '').trim();
   const email       = String(p.email || '').trim().toLowerCase();
-  const candidateID = String(p.candidateID || '');
+  const candidateID = String(p.candidateID || '').toUpperCase();
   const fullName    = String(p.fullName || '');
   const dob         = String(p.dob || '');
   const gender      = String(p.gender || '');
   const nationality = String(p.nationality || '');
   const password    = String(p.password || '');
+
+  if (!isValidCandidateID_(candidateID)) {
+    return { success: false, message: 'Candidate ID must be 3 letters, a hyphen, then 5 digits — e.g. CWA-01234.' };
+  }
 
   const otpResult = verifyOTP(email, otp, 'register');
   if (!otpResult.valid) {
@@ -1262,10 +1325,11 @@ function handleVerifyOTPAndRegister(p) {
       hashPassword(password),
       now,
       now,
-      ''
+      '',
+      'Pending'
     ]);
 
-    return { success: true, candidateID: candidateID, fullName: fullName };
+    return { success: true, candidateID: candidateID, fullName: fullName, status: 'Pending' };
   } catch (e) {
     return { success: false, message: 'Registration failed: ' + e.message };
   }
