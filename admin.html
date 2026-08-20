@@ -312,7 +312,7 @@
   <div class="sidebar">
     <div class="sb-section">Candidates</div>
     <button class="sb-btn active" onclick="showPanel('p-monitor')"    id="sb-p-monitor"><span class="sb-icon">🟢</span> Live Monitor</button>
-    <button class="sb-btn" onclick="showPanel('p-candidates')" id="sb-p-candidates"><span class="sb-icon">👥</span> Candidates</button>
+    <button class="sb-btn" onclick="showPanel('p-candidates')" id="sb-p-candidates"><span class="sb-icon">👥</span> Candidates <span id="pending-badge" style="display:none;background:var(--gold);color:var(--blue);border-radius:10px;padding:1px 7px;font-size:0.7rem;font-weight:700;margin-left:auto"></span></button>
     <button class="sb-btn" onclick="showPanel('p-scores')"    id="sb-p-scores"><span class="sb-icon">📊</span> Scores</button>
     <button class="sb-btn" onclick="showPanel('p-trf')"       id="sb-p-trf"><span class="sb-icon">📄</span> TRF Viewer</button>
     <div class="sb-section">Grading</div>
@@ -899,11 +899,19 @@ async function loadCandidates() {
     status.textContent = `✅ ${_candidateRows.length} candidates`;
     document.getElementById('cand-search').value = '';
     renderCandidateTable(_candidateRows);
+    updatePendingBadge();
   } catch(e) {
     status.className = 'sheets-status err';
     status.textContent = '❌ Error';
     wrap.innerHTML = `<div class="tbl-empty" style="color:var(--red)">❌ ${e.message}<br><br>Make sure Code.gs is updated and redeployed.</div>`;
   }
+}
+
+function updatePendingBadge() {
+  const pendingCount = _candidateRows.filter(r => (r[8]||'Approved') === 'Pending').length;
+  const badge = document.getElementById('pending-badge');
+  if (pendingCount > 0) { badge.style.display = 'inline-block'; badge.textContent = pendingCount; }
+  else badge.style.display = 'none';
 }
 
 function filterCandidates() {
@@ -935,21 +943,53 @@ function renderCandidateTable(rows, highlight) {
   let html = `<div style="overflow-x:auto"><table class="sheets-table">
     <thead><tr>
       <th>Candidate ID</th><th>Full Name</th><th>Date of Birth</th>
-      <th>Gender</th><th>Nationality</th><th>Registered</th><th>Last Login</th>
+      <th>Gender</th><th>Nationality</th><th>Status</th><th>Registered</th><th>Last Login</th><th>Actions</th>
     </tr></thead><tbody>`;
   rows.forEach(r => {
+    const status = r[8] || 'Approved';
+    const statusBadge = status === 'Pending'
+      ? '<span class="band-badge" style="background:rgba(200,168,75,0.15);color:#7a5f1a;border:1px solid rgba(200,168,75,0.4)">⏳ Pending</span>'
+      : status === 'Rejected'
+      ? '<span class="band-badge" style="background:rgba(192,57,43,0.1);color:var(--red);border:1px solid rgba(192,57,43,0.3)">✕ Rejected</span>'
+      : '<span class="band-badge band-high">✓ Approved</span>';
+    const actions = status === 'Pending'
+      ? `<button class="btn btn-green" style="padding:3px 8px;font-size:0.75rem" data-id="${escH(r[0])}" onclick="approveCand(this.dataset.id)">✓ Approve</button>
+         <button class="btn btn-red" style="padding:3px 8px;font-size:0.75rem;margin-left:4px" data-id="${escH(r[0])}" onclick="rejectCand(this.dataset.id)">✕ Reject</button>`
+      : status === 'Rejected'
+      ? `<button class="btn btn-green" style="padding:3px 8px;font-size:0.75rem" data-id="${escH(r[0])}" onclick="approveCand(this.dataset.id)">✓ Approve</button>`
+      : `<button class="btn btn-ghost" style="padding:3px 8px;font-size:0.75rem" data-id="${escH(r[0])}" onclick="rejectCand(this.dataset.id)">✕ Revoke</button>`;
     html += `<tr>
       <td><b>${hl(r[0])}</b></td>
       <td>${hl(r[1])}</td>
       <td>${escH(r[2])}</td>
       <td>${escH(r[3])}</td>
       <td>${escH(r[4])}</td>
+      <td>${statusBadge}</td>
       <td style="font-size:0.78rem;color:var(--ink3)">${formatDate(r[6])}</td>
       <td style="font-size:0.78rem;color:var(--ink3)">${formatDate(r[7])}</td>
+      <td style="white-space:nowrap">${actions}</td>
     </tr>`;
   });
   html += '</tbody></table></div>';
   wrap.innerHTML = html;
+}
+
+async function approveCand(candidateID) {
+  if (!confirm(`Approve ${candidateID}? They will be able to log in immediately.`)) return;
+  try {
+    const data = await callSheets({ action:'approveCandidate', candidateID });
+    if (data.success) { toast('✅ Approved.'); loadCandidates(); }
+    else alert(data.message || 'Failed to approve.');
+  } catch(e) { alert('Error: ' + e.message); }
+}
+
+async function rejectCand(candidateID) {
+  if (!confirm(`Reject ${candidateID}? They will not be able to log in until re-approved.`)) return;
+  try {
+    const data = await callSheets({ action:'rejectCandidate', candidateID });
+    if (data.success) { toast('Rejected.'); loadCandidates(); }
+    else alert(data.message || 'Failed to reject.');
+  } catch(e) { alert('Error: ' + e.message); }
 }
 
 
@@ -1106,6 +1146,7 @@ window.onload = () => {
   const saved = localStorage.getItem('ielts_admin_config');
   if (saved) { try { config = JSON.parse(saved); } catch(e){} }
   initDrivePanel();
+  loadCandidates(); // silent — populates the pending-approval badge on load
 };
 
 // PANEL NAVIGATION
