@@ -464,7 +464,7 @@ async function handleStep1() {
   }
 
   if (!/^[A-Z]{3}-\d{5}$/.test(id)) {
-    showErr('err1','Candidate ID must be 3 letters, a hyphen, then 5 digits — e.g. CWA-01234.');
+    showErr('err1','Candidate ID is not valid. Please contact administrator for further assistance.');
     return;
   }
   document.getElementById('candidateNum').value = id;
