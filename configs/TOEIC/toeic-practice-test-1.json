@@ -12,38 +12,38 @@
         "items": [
           {
             "num": 1,
-            "imgURL": "https://example.com/img/p1_q1.jpg",
-            "audioURL": "https://example.com/audio/p1_q1.mp3",
+            "imgURL": "https://imgur.com/tIvN6vH",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 2,
-            "imgURL": "https://example.com/img/p1_q2.jpg",
-            "audioURL": "https://example.com/audio/p1_q2.mp3",
+            "imgURL": "https://imgur.com/Z1stxYI",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 3,
-            "imgURL": "https://example.com/img/p1_q3.jpg",
-            "audioURL": "https://example.com/audio/p1_q3.mp3",
+            "imgURL": "https://imgur.com/YEgYGsl",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 4,
-            "imgURL": "https://example.com/img/p1_q4.jpg",
-            "audioURL": "https://example.com/audio/p1_q4.mp3",
+            "imgURL": "https://imgur.com/gwLAFet",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 5,
-            "imgURL": "https://example.com/img/p1_q5.jpg",
-            "audioURL": "https://example.com/audio/p1_q5.mp3",
+            "imgURL": "https://imgur.com/0GrUdll",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 6,
-            "imgURL": "https://example.com/img/p1_q6.jpg",
-            "audioURL": "https://example.com/audio/p1_q6.mp3",
+            "imgURL": "https://imgur.com/eyxhey0",
+            "audioURL": "",
             "answer": ""
           }
         ]
@@ -53,127 +53,127 @@
         "items": [
           {
             "num": 7,
-            "audioURL": "https://example.com/audio/p2_q7.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 8,
-            "audioURL": "https://example.com/audio/p2_q8.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 9,
-            "audioURL": "https://example.com/audio/p2_q9.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 10,
-            "audioURL": "https://example.com/audio/p2_q10.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 11,
-            "audioURL": "https://example.com/audio/p2_q11.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 12,
-            "audioURL": "https://example.com/audio/p2_q12.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 13,
-            "audioURL": "https://example.com/audio/p2_q13.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 14,
-            "audioURL": "https://example.com/audio/p2_q14.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 15,
-            "audioURL": "https://example.com/audio/p2_q15.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 16,
-            "audioURL": "https://example.com/audio/p2_q16.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 17,
-            "audioURL": "https://example.com/audio/p2_q17.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 18,
-            "audioURL": "https://example.com/audio/p2_q18.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 19,
-            "audioURL": "https://example.com/audio/p2_q19.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 20,
-            "audioURL": "https://example.com/audio/p2_q20.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 21,
-            "audioURL": "https://example.com/audio/p2_q21.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 22,
-            "audioURL": "https://example.com/audio/p2_q22.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 23,
-            "audioURL": "https://example.com/audio/p2_q23.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 24,
-            "audioURL": "https://example.com/audio/p2_q24.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 25,
-            "audioURL": "https://example.com/audio/p2_q25.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 26,
-            "audioURL": "https://example.com/audio/p2_q26.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 27,
-            "audioURL": "https://example.com/audio/p2_q27.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 28,
-            "audioURL": "https://example.com/audio/p2_q28.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 29,
-            "audioURL": "https://example.com/audio/p2_q29.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 30,
-            "audioURL": "https://example.com/audio/p2_q30.mp3",
+            "audioURL": "",
             "answer": ""
           },
           {
             "num": 31,
-            "audioURL": "https://example.com/audio/p2_q31.mp3",
+            "audioURL": "",
             "answer": ""
           }
         ]
@@ -183,7 +183,7 @@
         "groups": [
           {
             "groupID": "C1",
-            "audioURL": "https://example.com/audio/c1.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -223,7 +223,7 @@
           },
           {
             "groupID": "C2",
-            "audioURL": "https://example.com/audio/c2.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -263,7 +263,7 @@
           },
           {
             "groupID": "C3",
-            "audioURL": "https://example.com/audio/c3.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -303,7 +303,7 @@
           },
           {
             "groupID": "C4",
-            "audioURL": "https://example.com/audio/c4.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -343,8 +343,8 @@
           },
           {
             "groupID": "C5",
-            "audioURL": "https://example.com/audio/c5.mp3",
-            "imgURL": "https://example.com/img/c5_graphic.jpg",
+            "audioURL": "",
+            "imgURL": "",
             "items": [
               {
                 "num": 44,
@@ -383,7 +383,7 @@
           },
           {
             "groupID": "C6",
-            "audioURL": "https://example.com/audio/c6.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -423,7 +423,7 @@
           },
           {
             "groupID": "C7",
-            "audioURL": "https://example.com/audio/c7.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -463,7 +463,7 @@
           },
           {
             "groupID": "C8",
-            "audioURL": "https://example.com/audio/c8.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -503,7 +503,7 @@
           },
           {
             "groupID": "C9",
-            "audioURL": "https://example.com/audio/c9.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -543,8 +543,8 @@
           },
           {
             "groupID": "C10",
-            "audioURL": "https://example.com/audio/c10.mp3",
-            "imgURL": "https://example.com/img/c10_graphic.jpg",
+            "audioURL": "",
+            "imgURL": "",
             "items": [
               {
                 "num": 59,
@@ -583,7 +583,7 @@
           },
           {
             "groupID": "C11",
-            "audioURL": "https://example.com/audio/c11.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -623,8 +623,8 @@
           },
           {
             "groupID": "C12",
-            "audioURL": "https://example.com/audio/c12.mp3",
-            "imgURL": "",
+            "audioURL": "",
+            "imgURL": "https://imgur.com/Zcok6rS",
             "items": [
               {
                 "num": 65,
@@ -663,8 +663,8 @@
           },
           {
             "groupID": "C13",
-            "audioURL": "https://example.com/audio/c13.mp3",
-            "imgURL": "",
+            "audioURL": "",
+            "imgURL": "https://imgur.com/Dg22r1I",
             "items": [
               {
                 "num": 68,
@@ -708,7 +708,7 @@
         "groups": [
           {
             "groupID": "T1",
-            "audioURL": "https://example.com/audio/t1.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -748,7 +748,7 @@
           },
           {
             "groupID": "T2",
-            "audioURL": "https://example.com/audio/t2.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -788,8 +788,8 @@
           },
           {
             "groupID": "T3",
-            "audioURL": "https://example.com/audio/t3.mp3",
-            "imgURL": "https://example.com/img/t3_chart.jpg",
+            "audioURL": "",
+            "imgURL": "",
             "items": [
               {
                 "num": 77,
@@ -828,7 +828,7 @@
           },
           {
             "groupID": "T4",
-            "audioURL": "https://example.com/audio/t4.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -868,7 +868,7 @@
           },
           {
             "groupID": "T5",
-            "audioURL": "https://example.com/audio/t5.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -908,7 +908,7 @@
           },
           {
             "groupID": "T6",
-            "audioURL": "https://example.com/audio/t6.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -948,7 +948,7 @@
           },
           {
             "groupID": "T7",
-            "audioURL": "https://example.com/audio/t7.mp3",
+            "audioURL": "",
             "imgURL": "",
             "items": [
               {
@@ -988,8 +988,8 @@
           },
           {
             "groupID": "T8",
-            "audioURL": "https://example.com/audio/t8.mp3",
-            "imgURL": "https://example.com/img/t8_chart.jpg",
+            "audioURL": "",
+            "imgURL": "https://imgur.com/F60VoGl",
             "items": [
               {
                 "num": 92,
@@ -1028,8 +1028,8 @@
           },
           {
             "groupID": "T9",
-            "audioURL": "https://example.com/audio/t9.mp3",
-            "imgURL": "",
+            "audioURL": "",
+            "imgURL": "https://imgur.com/L3Xr3V9",
             "items": [
               {
                 "num": 95,
@@ -1068,8 +1068,8 @@
           },
           {
             "groupID": "T10",
-            "audioURL": "https://example.com/audio/t10.mp3",
-            "imgURL": "",
+            "audioURL": "",
+            "imgURL": "https://imgur.com/uiyPccc",
             "items": [
               {
                 "num": 98,
