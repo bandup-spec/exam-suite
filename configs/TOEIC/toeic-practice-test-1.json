@@ -5,7 +5,7 @@
     "generatedAt": "2026-08-18T08:57:38.919Z"
   },
   "listening": {
-    "audioURL": "https://github.com/bandup-spec/exam-suite/blob/499d1020284759478fe4ad5b59bcc42a60c0802e/src/toeic-t-aud/t1/TOEIC%201%20(1).mp3",
+    "audioURL": "https://raw.githubusercontent.com/bandup-spec/exam-suite/a08590ff28594db556e9418dd1f30357dca2b9cb/src/toeic-t-aud/t1/TOEIC%201%20(1).mp3",
     "parts": {
       "1": {
         "name": "Photographs",
