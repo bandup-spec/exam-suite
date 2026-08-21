@@ -513,15 +513,29 @@ function initTimer() {
   renderTimer();
 
   let tickCount = 0;
+  // Stagger periodic Sheets syncs across candidates — if a whole batch starts
+  // their test within the same minute, everyone's "every 90s" would otherwise
+  // land on the exact same tick and hit the server simultaneously. Each
+  // browser gets a fixed random offset (0-29s) so syncs spread out instead.
+  const syncJitter = getSyncJitter_();
   setInterval(()=>{
     if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); return; }
     timeLeft--;
     renderTimer();
     tickCount++;
     if (tickCount % 3 === 0) saveAnswersLocal();       // every ~3s — instant local backup
-    if (tickCount % 90 === 0) syncDraftToSheets();      // every ~90s — offsite backup, throttled for quota
+    if (tickCount % 90 === syncJitter) syncDraftToSheets(); // every ~90s, staggered — offsite backup, throttled for quota
     if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); }
   },1000);
+}
+function getSyncJitter_() {
+  const key = 'ielts_sync_jitter';
+  let j = localStorage.getItem(key);
+  if (j === null) {
+    j = Math.floor(Math.random() * 30); // stable per browser/device, not per session
+    localStorage.setItem(key, String(j));
+  }
+  return parseInt(j, 10);
 }
 
 function clearTimerStorage() {
