@@ -190,10 +190,10 @@
                 "num": 32,
                 "qText": "Where are the speakers?",
                 "options": [
-                  "(A) In an office",
-                  "(B) At a restaurant",
-                  "(C) At the airport",
-                  "(D) In the parade"
+                  "In an office",
+                  "At a restaurant",
+                  "At the airport",
+                  "In the parade"
                 ],
                 "answer": ""
               },
@@ -201,10 +201,10 @@
                 "num": 33,
                 "qText": "Why is the traffic jam expected?",
                 "options": [
-                  "(A) Many people are going on a picnic.",
-                  "(B) Construction is ongoing.",
-                  "(C) There will be a street parade.",
-                  "(D) There was an accident on the street."
+                  "Many people are going on a picnic.",
+                  "Construction is ongoing.",
+                  "There will be a street parade.",
+                  "There was an accident on the street."
                 ],
                 "answer": ""
               },
@@ -212,10 +212,10 @@
                 "num": 34,
                 "qText": "What time will the speakers leave?",
                 "options": [
-                  "(A) At 5 p.m.",
-                  "(B) At 6 p.m.",
-                  "(C) At 7 p.m.",
-                  "(D) At 9 p.m."
+                  "At 5 p.m.",
+                  "At 6 p.m.",
+                  "At 7 p.m.",
+                  "At 9 p.m."
                 ],
                 "answer": ""
               }
@@ -230,10 +230,10 @@
                 "num": 35,
                 "qText": "What is the purpose of the call?",
                 "options": [
-                  "(A) To promote a new service",
-                  "(B) To make a complaint",
-                  "(C) To inform a customer of unpaid bills",
-                  "(D) To confirm a schedule"
+                  "To promote a new service",
+                  "To make a complaint",
+                  "To inform a customer of unpaid bills",
+                  "To confirm a schedule"
                 ],
                 "answer": ""
               },
@@ -241,10 +241,10 @@
                 "num": 36,
                 "qText": "According to the woman, what was the problem?",
                 "options": [
-                  "(A) She was not aware of the new services.",
-                  "(B) She could not meet the deadline.",
-                  "(C) She was unfairly treated by a staff member.",
-                  "(D) She may have forgotten to notify some change."
+                  "She was not aware of the new services.",
+                  "She could not meet the deadline.",
+                  "She was unfairly treated by a staff member.",
+                  "She may have forgotten to notify some change."
                 ],
                 "answer": ""
               },
@@ -252,10 +252,10 @@
                 "num": 37,
                 "qText": "What will the man probably do next?",
                 "options": [
-                  "(A) Call a colleague",
-                  "(B) Provide her with a discount",
-                  "(C) Explain the procedure",
-                  "(D) Update some information"
+                  "Call a colleague",
+                  "Provide her with a discount",
+                  "Explain the procedure",
+                  "Update some information"
                 ],
                 "answer": ""
               }
@@ -270,10 +270,10 @@
                 "num": 38,
                 "qText": "Where do the speakers most likely work?",
                 "options": [
-                  "(A) At a bank",
-                  "(B) At a supermarket",
-                  "(C) At an employment firm",
-                  "(D) At a business school"
+                  "At a bank",
+                  "At a supermarket",
+                  "At an employment firm",
+                  "At a business school"
                 ],
                 "answer": ""
               },
@@ -281,10 +281,10 @@
                 "num": 39,
                 "qText": "What does the man say he wants to do?",
                 "options": [
-                  "(A) Register for a management class",
-                  "(B) Work as a cashier",
-                  "(C) Hire a new loan officer",
-                  "(D) Open a new account"
+                  "Register for a management class",
+                  "Work as a cashier",
+                  "Hire a new loan officer",
+                  "Open a new account"
                 ],
                 "answer": ""
               },
@@ -292,10 +292,10 @@
                 "num": 40,
                 "qText": "What do the women say they will send the man tomorrow?",
                 "options": [
-                  "(A) Handouts from a presentation",
-                  "(B) Brochures for financial services",
-                  "(C) An application for the new position",
-                  "(D) A list of some names"
+                  "Handouts from a presentation",
+                  "Brochures for financial services",
+                  "An application for the new position",
+                  "A list of some names"
                 ],
                 "answer": ""
               }
@@ -310,10 +310,10 @@
                 "num": 41,
                 "qText": "Where is the conversation probably taking place?",
                 "options": [
-                  "(A) In a restaurant",
-                  "(B) In the office",
-                  "(C) On the street",
-                  "(D) At the park"
+                  "In a restaurant",
+                  "In the office",
+                  "On the street",
+                  "At the park"
                 ],
                 "answer": ""
               },
@@ -321,10 +321,10 @@
                 "num": 42,
                 "qText": "What does the man say about the restaurant?",
                 "options": [
-                  "(A) It was too expensive.",
-                  "(B) It was as good as its reputation.",
-                  "(C) It was below his expectations.",
-                  "(D) It was far away from the office."
+                  "It was too expensive.",
+                  "It was as good as its reputation.",
+                  "It was below his expectations.",
+                  "It was far away from the office."
                 ],
                 "answer": ""
               },
@@ -332,10 +332,10 @@
                 "num": 43,
                 "qText": "What will the speakers probably do?",
                 "options": [
-                  "(A) Go out to eat",
-                  "(B) Leave for the day",
-                  "(C) Take a walk",
-                  "(D) Order some food"
+                  "Go out to eat",
+                  "Leave for the day",
+                  "Take a walk",
+                  "Order some food"
                 ],
                 "answer": ""
               }
@@ -350,10 +350,10 @@
                 "num": 44,
                 "qText": "Where does the woman work?",
                 "options": [
-                  "(A) At a theater",
-                  "(B) At a dental clinic",
-                  "(C) At a travel agency",
-                  "(D) At a restaurant"
+                  "At a theater",
+                  "At a dental clinic",
+                  "At a travel agency",
+                  "At a restaurant"
                 ],
                 "answer": ""
               },
@@ -361,10 +361,10 @@
                 "num": 45,
                 "qText": "How long did it take for the man to make a reservation?",
                 "options": [
-                  "(A) Three hours",
-                  "(B) Two weeks",
-                  "(C) One week",
-                  "(D) Three weeks"
+                  "Three hours",
+                  "Two weeks",
+                  "One week",
+                  "Three weeks"
                 ],
                 "answer": ""
               },
@@ -372,10 +372,10 @@
                 "num": 46,
                 "qText": "What does the man say he will do?",
                 "options": [
-                  "(A) Cancel his appointment with his client",
-                  "(B) Look for some reviews",
-                  "(C) Book another time",
-                  "(D) Finish the work early"
+                  "Cancel his appointment with his client",
+                  "Look for some reviews",
+                  "Book another time",
+                  "Finish the work early"
                 ],
                 "answer": ""
               }
@@ -390,10 +390,10 @@
                 "num": 47,
                 "qText": "What is the conversation mainly about?",
                 "options": [
-                  "(A) A vacation trip",
-                  "(B) Office supply purchase",
-                  "(C) Changes in personnel",
-                  "(D) Software installation"
+                  "A vacation trip",
+                  "Office supply purchase",
+                  "Changes in personnel",
+                  "Software installation"
                 ],
                 "answer": ""
               },
@@ -401,10 +401,10 @@
                 "num": 48,
                 "qText": "What does the woman mean when she says, \"I knew that he would be promoted soon.\"",
                 "options": [
-                  "(A) She was notified about the news before.",
-                  "(B) She is very close to Mr. Russell.",
-                  "(C) She wants to get promoted, too.",
-                  "(D) She thinks Mr. Russell has worked hard."
+                  "She was notified about the news before.",
+                  "She is very close to Mr. Russell.",
+                  "She wants to get promoted, too.",
+                  "She thinks Mr. Russell has worked hard."
                 ],
                 "answer": ""
               },
@@ -412,10 +412,10 @@
                 "num": 49,
                 "qText": "What will the woman do next?",
                 "options": [
-                  "(A) Call Mr. Russell",
-                  "(B) Talk to a former colleague",
-                  "(C) Interview an applicant",
-                  "(D) Make a reservation"
+                  "Call Mr. Russell",
+                  "Talk to a former colleague",
+                  "Interview an applicant",
+                  "Make a reservation"
                 ],
                 "answer": ""
               }
@@ -430,10 +430,10 @@
                 "num": 50,
                 "qText": "Why did the woman invite the man?",
                 "options": [
-                  "(A) To request a refund",
-                  "(B) To sign a business contract",
-                  "(C) To obtain more information",
-                  "(D) To rent some equipment"
+                  "To request a refund",
+                  "To sign a business contract",
+                  "To obtain more information",
+                  "To rent some equipment"
                 ],
                 "answer": ""
               },
@@ -441,10 +441,10 @@
                 "num": 51,
                 "qText": "What kind of company does the woman work for?",
                 "options": [
-                  "(A) A shipping company",
-                  "(B) A heavy equipment company",
-                  "(C) A real estate agency",
-                  "(D) A law firm"
+                  "A shipping company",
+                  "A heavy equipment company",
+                  "A real estate agency",
+                  "A law firm"
                 ],
                 "answer": ""
               },
@@ -452,10 +452,10 @@
                 "num": 52,
                 "qText": "What is the woman most likely to do next?",
                 "options": [
-                  "(A) Give a lecture",
-                  "(B) Prepare for shipment",
-                  "(C) Answer the questions",
-                  "(D) Sign a contract"
+                  "Give a lecture",
+                  "Prepare for shipment",
+                  "Answer the questions",
+                  "Sign a contract"
                 ],
                 "answer": ""
               }
@@ -470,10 +470,10 @@
                 "num": 53,
                 "qText": "Where most likely are the speakers?",
                 "options": [
-                  "(A) At a bus stop",
-                  "(B) In an auto repair shop",
-                  "(C) In an office",
-                  "(D) On the road"
+                  "At a bus stop",
+                  "In an auto repair shop",
+                  "In an office",
+                  "On the road"
                 ],
                 "answer": ""
               },
@@ -481,10 +481,10 @@
                 "num": 54,
                 "qText": "According to the woman, when does she expect to be back?",
                 "options": [
-                  "(A) By 5 p.m.",
-                  "(B) By 6 p.m.",
-                  "(C) By 6:30 p.m.",
-                  "(D) By 8 p.m."
+                  "By 5 p.m.",
+                  "By 6 p.m.",
+                  "By 6:30 p.m.",
+                  "By 8 p.m."
                 ],
                 "answer": ""
               },
@@ -492,10 +492,10 @@
                 "num": 55,
                 "qText": "What does the woman ask the man to do?",
                 "options": [
-                  "(A) Order more parts",
-                  "(B) Drop her keys off",
-                  "(C) Close the shop later than usual",
-                  "(D) Notify any change"
+                  "Order more parts",
+                  "Drop her keys off",
+                  "Close the shop later than usual",
+                  "Notify any change"
                 ],
                 "answer": ""
               }
@@ -510,10 +510,10 @@
                 "num": 56,
                 "qText": "Who is the man calling?",
                 "options": [
-                  "(A) A business owner",
-                  "(B) A job applicant",
-                  "(C) A photographer",
-                  "(D) A journalist"
+                  "A business owner",
+                  "A job applicant",
+                  "A photographer",
+                  "A journalist"
                 ],
                 "answer": ""
               },
@@ -521,10 +521,10 @@
                 "num": 57,
                 "qText": "Why does the woman say, \"It's a relief to hear the news\"?",
                 "options": [
-                  "(A) She's been sick for the last few days.",
-                  "(B) She had applied for this company before.",
-                  "(C) She is working for a newspaper company.",
-                  "(D) She was worried she might not get the job."
+                  "She's been sick for the last few days.",
+                  "She had applied for this company before.",
+                  "She is working for a newspaper company.",
+                  "She was worried she might not get the job."
                 ],
                 "answer": ""
               },
@@ -532,10 +532,10 @@
                 "num": 58,
                 "qText": "According to the man, why does the woman have to see him?",
                 "options": [
-                  "(A) To complete some documents",
-                  "(B) To submit a certification",
-                  "(C) To celebrate an anniversary",
-                  "(D) To start working"
+                  "To complete some documents",
+                  "To submit a certification",
+                  "To celebrate an anniversary",
+                  "To start working"
                 ],
                 "answer": ""
               }
@@ -550,10 +550,10 @@
                 "num": 59,
                 "qText": "What problem are the speakers mainly discussing?",
                 "options": [
-                  "(A) A flight has been canceled.",
-                  "(B) Tickets are all sold out.",
-                  "(C) The registration has not been completed.",
-                  "(D) Hotel rooms are unavailable."
+                  "A flight has been canceled.",
+                  "Tickets are all sold out.",
+                  "The registration has not been completed.",
+                  "Hotel rooms are unavailable."
                 ],
                 "answer": ""
               },
@@ -561,10 +561,10 @@
                 "num": 60,
                 "qText": "What solution does the woman suggest?",
                 "options": [
-                  "(A) Reserving rooms in another area",
-                  "(B) Postponing a business trip",
-                  "(C) Calling a travel agent",
-                  "(D) Taking public transportation"
+                  "Reserving rooms in another area",
+                  "Postponing a business trip",
+                  "Calling a travel agent",
+                  "Taking public transportation"
                 ],
                 "answer": ""
               },
@@ -572,10 +572,10 @@
                 "num": 61,
                 "qText": "What does the man imply when he says, \"That makes sense\"?",
                 "options": [
-                  "(A) They may be late for the conference.",
-                  "(B) They may not exceed the budget.",
-                  "(C) They may have missed the deadline.",
-                  "(D) The rooms may be too small for the group."
+                  "They may be late for the conference.",
+                  "They may not exceed the budget.",
+                  "They may have missed the deadline.",
+                  "The rooms may be too small for the group."
                 ],
                 "answer": ""
               }
@@ -590,10 +590,10 @@
                 "num": 62,
                 "qText": "What problem does the woman have?",
                 "options": [
-                  "(A) Her presentation materials are inaccessible.",
-                  "(B) There are a number of mistakes in her report.",
-                  "(C) The technical support team is out of the office all day.",
-                  "(D) The meeting is canceled due to the inclement weather."
+                  "Her presentation materials are inaccessible.",
+                  "There are a number of mistakes in her report.",
+                  "The technical support team is out of the office all day.",
+                  "The meeting is canceled due to the inclement weather."
                 ],
                 "answer": ""
               },
@@ -601,10 +601,10 @@
                 "num": 63,
                 "qText": "When was the technician supposed to arrive?",
                 "options": [
-                  "(A) This morning",
-                  "(B) This afternoon",
-                  "(C) Tomorrow morning",
-                  "(D) Tomorrow afternoon"
+                  "This morning",
+                  "This afternoon",
+                  "Tomorrow morning",
+                  "Tomorrow afternoon"
                 ],
                 "answer": ""
               },
@@ -612,10 +612,10 @@
                 "num": 64,
                 "qText": "What will the man do next?",
                 "options": [
-                  "(A) Make a call",
-                  "(B) Help her presentation",
-                  "(C) Contact her client",
-                  "(D) Repair her computer"
+                  "Make a call",
+                  "Help her presentation",
+                  "Contact her client",
+                  "Repair her computer"
                 ],
                 "answer": ""
               }
@@ -630,10 +630,10 @@
                 "num": 65,
                 "qText": "What do the speakers want to do?",
                 "options": [
-                  "(A) Plan a party for customers",
-                  "(B) Conduct a training session for employees",
-                  "(C) Mail out some information to participants",
-                  "(D) Show their appreciation to sponsors"
+                  "Plan a party for customers",
+                  "Conduct a training session for employees",
+                  "Mail out some information to participants",
+                  "Show their appreciation to sponsors"
                 ],
                 "answer": ""
               },
@@ -641,10 +641,10 @@
                 "num": 66,
                 "qText": "What did the organization send out last year?",
                 "options": [
-                  "(A) Thank you cards",
-                  "(B) Money orders",
-                  "(C) Picture frames",
-                  "(D) Monogrammed cups"
+                  "Thank you cards",
+                  "Money orders",
+                  "Picture frames",
+                  "Monogrammed cups"
                 ],
                 "answer": ""
               },
@@ -652,10 +652,10 @@
                 "num": 67,
                 "qText": "Look at the graphic. What number shows where the gift shop is located?",
                 "options": [
-                  "(A) 1",
-                  "(B) 2",
-                  "(C) 3",
-                  "(D) 4"
+                  "1",
+                  "2",
+                  "3",
+                  "4"
                 ],
                 "answer": ""
               }
@@ -670,10 +670,10 @@
                 "num": 68,
                 "qText": "What is the conversation mainly about?",
                 "options": [
-                  "(A) Taking a vacation",
-                  "(B) Winning a prize",
-                  "(C) Testing a program",
-                  "(D) Booking a flight"
+                  "Taking a vacation",
+                  "Winning a prize",
+                  "Testing a program",
+                  "Booking a flight"
                 ],
                 "answer": ""
               },
@@ -681,10 +681,10 @@
                 "num": 69,
                 "qText": "Look at the graphic. In which location has the woman decided to stay longer?",
                 "options": [
-                  "(A) At Bangkok",
-                  "(B) At Phuket",
-                  "(C) At Chiangmai",
-                  "(D) At home"
+                  "At Bangkok",
+                  "At Phuket",
+                  "At Chiangmai",
+                  "At home"
                 ],
                 "answer": ""
               },
@@ -692,10 +692,10 @@
                 "num": 70,
                 "qText": "What does the woman say was the problem with her vacation?",
                 "options": [
-                  "(A) Her flight was delayed.",
-                  "(B) She got too much sun.",
-                  "(C) Her schedule was too tight.",
-                  "(D) One of her friends got sick."
+                  "Her flight was delayed.",
+                  "She got too much sun.",
+                  "Her schedule was too tight.",
+                  "One of her friends got sick."
                 ],
                 "answer": ""
               }
@@ -715,10 +715,10 @@
                 "num": 71,
                 "qText": "When is the report being broadcasted?",
                 "options": [
-                  "(A) In the morning",
-                  "(B) At noon",
-                  "(C) In the afternoon",
-                  "(D) At midnight"
+                  "In the morning",
+                  "At noon",
+                  "In the afternoon",
+                  "At midnight"
                 ],
                 "answer": ""
               },
@@ -726,10 +726,10 @@
                 "num": 72,
                 "qText": "What is causing the traffic delay?",
                 "options": [
-                  "(A) Road construction",
-                  "(B) Electric repairs",
-                  "(C) Bad weather",
-                  "(D) An accident in a highway"
+                  "Road construction",
+                  "Electric repairs",
+                  "Bad weather",
+                  "An accident in a highway"
                 ],
                 "answer": ""
               },
@@ -737,10 +737,10 @@
                 "num": 73,
                 "qText": "What will people hear next?",
                 "options": [
-                  "(A) An interview with the guest",
-                  "(B) An emergency weather report",
-                  "(C) A presidential election",
-                  "(D) An advertisement"
+                  "An interview with the guest",
+                  "An emergency weather report",
+                  "A presidential election",
+                  "An advertisement"
                 ],
                 "answer": ""
               }
@@ -755,10 +755,10 @@
                 "num": 74,
                 "qText": "What is the purpose of the message?",
                 "options": [
-                  "(A) To explain a change in the invoice",
-                  "(B) To ask for the mailing address",
-                  "(C) To respond to a customer complaint",
-                  "(D) To report a problem with the order"
+                  "To explain a change in the invoice",
+                  "To ask for the mailing address",
+                  "To respond to a customer complaint",
+                  "To report a problem with the order"
                 ],
                 "answer": ""
               },
@@ -766,10 +766,10 @@
                 "num": 75,
                 "qText": "Why has the product been discontinued?",
                 "options": [
-                  "(A) The style was out of date.",
-                  "(B) The color was not popular.",
-                  "(C) The quality was below expectation.",
-                  "(D) The manufacturer has been changed."
+                  "The style was out of date.",
+                  "The color was not popular.",
+                  "The quality was below expectation.",
+                  "The manufacturer has been changed."
                 ],
                 "answer": ""
               },
@@ -777,10 +777,10 @@
                 "num": 76,
                 "qText": "What does the speaker suggest the customers do?",
                 "options": [
-                  "(A) Speak with a manager",
-                  "(B) Cancel the order",
-                  "(C) Wait for the new model",
-                  "(D) Visit the store"
+                  "Speak with a manager",
+                  "Cancel the order",
+                  "Wait for the new model",
+                  "Visit the store"
                 ],
                 "answer": ""
               }
@@ -795,10 +795,10 @@
                 "num": 77,
                 "qText": "Who most likely is the speaker?",
                 "options": [
-                  "(A) A well-known reporter",
-                  "(B) A radio host",
-                  "(C) A technical staff",
-                  "(D) A political commentator"
+                  "A well-known reporter",
+                  "A radio host",
+                  "A technical staff",
+                  "A political commentator"
                 ],
                 "answer": ""
               },
@@ -806,10 +806,10 @@
                 "num": 78,
                 "qText": "Why has the schedule changed?",
                 "options": [
-                  "(A) The election was delayed.",
-                  "(B) The live performance was cancelled.",
-                  "(C) A studio is not available at the moment.",
-                  "(D) Some equipment is not working."
+                  "The election was delayed.",
+                  "The live performance was cancelled.",
+                  "A studio is not available at the moment.",
+                  "Some equipment is not working."
                 ],
                 "answer": ""
               },
@@ -817,10 +817,10 @@
                 "num": 79,
                 "qText": "What has Barbara Fisher recently done?",
                 "options": [
-                  "(A) She joined a political party.",
-                  "(B) She wrote a book.",
-                  "(C) She moved to a suburb.",
-                  "(D) She received a prestigious award."
+                  "She joined a political party.",
+                  "She wrote a book.",
+                  "She moved to a suburb.",
+                  "She received a prestigious award."
                 ],
                 "answer": ""
               }
@@ -835,10 +835,10 @@
                 "num": 80,
                 "qText": "What is the problem with the fax message?",
                 "options": [
-                  "(A) It is blurring.",
-                  "(B) It is incomplete.",
-                  "(C) It has been damaged.",
-                  "(D) It's been sent to a wrong place."
+                  "It is blurring.",
+                  "It is incomplete.",
+                  "It has been damaged.",
+                  "It's been sent to a wrong place."
                 ],
                 "answer": ""
               },
@@ -846,10 +846,10 @@
                 "num": 81,
                 "qText": "What has the speaker requested?",
                 "options": [
-                  "(A) Give him a call",
-                  "(B) Fix the fax machine",
-                  "(C) Confirm the appointment time",
-                  "(D) Send the information again."
+                  "Give him a call",
+                  "Fix the fax machine",
+                  "Confirm the appointment time",
+                  "Send the information again."
                 ],
                 "answer": ""
               },
@@ -857,10 +857,10 @@
                 "num": 82,
                 "qText": "What is Peter asked to do?",
                 "options": [
-                  "(A) Contact Ms. Thompson for help",
-                  "(B) Deliver the item soon",
-                  "(C) Check the order form again",
-                  "(D) Place the coversheet on top of the document"
+                  "Contact Ms. Thompson for help",
+                  "Deliver the item soon",
+                  "Check the order form again",
+                  "Place the coversheet on top of the document"
                 ],
                 "answer": ""
               }
@@ -875,10 +875,10 @@
                 "num": 83,
                 "qText": "Who probably is making this announcement?",
                 "options": [
-                  "(A) A local farmer",
-                  "(B) A museum administrator",
-                  "(C) A tour leader",
-                  "(D) A store manager"
+                  "A local farmer",
+                  "A museum administrator",
+                  "A tour leader",
+                  "A store manager"
                 ],
                 "answer": ""
               },
@@ -886,10 +886,10 @@
                 "num": 84,
                 "qText": "What can be said about tulips?",
                 "options": [
-                  "(A) They are annual plants.",
-                  "(B) They are from tropical regions.",
-                  "(C) They have strange names.",
-                  "(D) They are the most popular flowers."
+                  "They are annual plants.",
+                  "They are from tropical regions.",
+                  "They have strange names.",
+                  "They are the most popular flowers."
                 ],
                 "answer": ""
               },
@@ -897,10 +897,10 @@
                 "num": 85,
                 "qText": "What does the speaker mean when she says, \"I'm going to walk you through\"?",
                 "options": [
-                  "(A) The tour will begin soon.",
-                  "(B) They'll move to another location.",
-                  "(C) She'll distribute some materials.",
-                  "(D) She'll give more information about the flowers."
+                  "The tour will begin soon.",
+                  "They'll move to another location.",
+                  "She'll distribute some materials.",
+                  "She'll give more information about the flowers."
                 ],
                 "answer": ""
               }
@@ -915,10 +915,10 @@
                 "num": 86,
                 "qText": "Who most likely are the listeners?",
                 "options": [
-                  "(A) Potential customers",
-                  "(B) New employees",
-                  "(C) Maintenance staff",
-                  "(D) Job applicants"
+                  "Potential customers",
+                  "New employees",
+                  "Maintenance staff",
+                  "Job applicants"
                 ],
                 "answer": ""
               },
@@ -926,10 +926,10 @@
                 "num": 87,
                 "qText": "According to the speaker, what contributes to the company's good reputation?",
                 "options": [
-                  "(A) Affordable prices",
-                  "(B) Scenic neighborhood",
-                  "(C) Convenient location",
-                  "(D) Capable staff"
+                  "Affordable prices",
+                  "Scenic neighborhood",
+                  "Convenient location",
+                  "Capable staff"
                 ],
                 "answer": ""
               },
@@ -937,10 +937,10 @@
                 "num": 88,
                 "qText": "What will the speaker give the listeners after the video?",
                 "options": [
-                  "(A) Individual presentations",
-                  "(B) A questionnaire",
-                  "(C) Viewing of the property",
-                  "(D) Sample products"
+                  "Individual presentations",
+                  "A questionnaire",
+                  "Viewing of the property",
+                  "Sample products"
                 ],
                 "answer": ""
               }
@@ -955,10 +955,10 @@
                 "num": 89,
                 "qText": "What is the report mainly about?",
                 "options": [
-                  "(A) A city park",
-                  "(B) A new city hall",
-                  "(C) Exercising equipment",
-                  "(D) A public swimming pool"
+                  "A city park",
+                  "A new city hall",
+                  "Exercising equipment",
+                  "A public swimming pool"
                 ],
                 "answer": ""
               },
@@ -966,10 +966,10 @@
                 "num": 90,
                 "qText": "Who is Elizabeth Greenfield?",
                 "options": [
-                  "(A) A news reporter",
-                  "(B) A building architect",
-                  "(C) A city official",
-                  "(D) An event coordinator"
+                  "A news reporter",
+                  "A building architect",
+                  "A city official",
+                  "An event coordinator"
                 ],
                 "answer": ""
               },
@@ -977,10 +977,10 @@
                 "num": 91,
                 "qText": "What does the man imply when he says, \"She expressed enthusiasm\"?",
                 "options": [
-                  "(A) She was eager to go to the park.",
-                  "(B) She is excited about the new project.",
-                  "(C) She wants to have a bigger family.",
-                  "(D) She is happy to be reelected as a mayor."
+                  "She was eager to go to the park.",
+                  "She is excited about the new project.",
+                  "She wants to have a bigger family.",
+                  "She is happy to be reelected as a mayor."
                 ],
                 "answer": ""
               }
@@ -995,10 +995,10 @@
                 "num": 92,
                 "qText": "What is the speaker doing?",
                 "options": [
-                  "(A) Introducing an actress of a movie",
-                  "(B) Explaining precautions before viewing",
-                  "(C) Selling tickets for an event",
-                  "(D) Cleaning up the area for the audience"
+                  "Introducing an actress of a movie",
+                  "Explaining precautions before viewing",
+                  "Selling tickets for an event",
+                  "Cleaning up the area for the audience"
                 ],
                 "answer": ""
               },
@@ -1006,10 +1006,10 @@
                 "num": 93,
                 "qText": "What are the listeners asked to do?",
                 "options": [
-                  "(A) Use a mobile phone",
-                  "(B) Take some notes",
-                  "(C) Put the receipt in the bag",
-                  "(D) Discard the trash in the can"
+                  "Use a mobile phone",
+                  "Take some notes",
+                  "Put the receipt in the bag",
+                  "Discard the trash in the can"
                 ],
                 "answer": ""
               },
@@ -1017,10 +1017,10 @@
                 "num": 94,
                 "qText": "Look at the graphic. What special gift will be available to a customer with this receipt?",
                 "options": [
-                  "(A) Price discount",
-                  "(B) Popcorns",
-                  "(C) Free programs",
-                  "(D) Autographs by celebrities"
+                  "Price discount",
+                  "Popcorns",
+                  "Free programs",
+                  "Autographs by celebrities"
                 ],
                 "answer": ""
               }
@@ -1035,10 +1035,10 @@
                 "num": 95,
                 "qText": "What will the inspectors do first?",
                 "options": [
-                  "(A) Meet with the supervisors",
-                  "(B) File a complaint to the authority",
-                  "(C) Check the updated records",
-                  "(D) Set up a follow-up meeting"
+                  "Meet with the supervisors",
+                  "File a complaint to the authority",
+                  "Check the updated records",
+                  "Set up a follow-up meeting"
                 ],
                 "answer": ""
               },
@@ -1046,10 +1046,10 @@
                 "num": 96,
                 "qText": "Why will the listeners meet next week?",
                 "options": [
-                  "(A) To meet with inspectors",
-                  "(B) To discuss some results",
-                  "(C) To learn about the procedures",
-                  "(D) To train new employees"
+                  "To meet with inspectors",
+                  "To discuss some results",
+                  "To learn about the procedures",
+                  "To train new employees"
                 ],
                 "answer": ""
               },
@@ -1057,10 +1057,10 @@
                 "num": 97,
                 "qText": "Look at the graphic. Which area should the managers be notified about?",
                 "options": [
-                  "(A) Record keeping procedures",
-                  "(B) Regular machine maintenance",
-                  "(C) Safety training for new employees",
-                  "(D) Aisle cleaning and maintenance"
+                  "Record keeping procedures",
+                  "Regular machine maintenance",
+                  "Safety training for new employees",
+                  "Aisle cleaning and maintenance"
                 ],
                 "answer": ""
               }
@@ -1075,10 +1075,10 @@
                 "num": 98,
                 "qText": "What has the speaker finished inspecting?",
                 "options": [
-                  "(A) Street lamps",
-                  "(B) First aid kits",
-                  "(C) Electricity lines",
-                  "(D) Building's exits"
+                  "Street lamps",
+                  "First aid kits",
+                  "Electricity lines",
+                  "Building's exits"
                 ],
                 "answer": ""
               },
@@ -1086,10 +1086,10 @@
                 "num": 99,
                 "qText": "Look at the graphic. Where does the man suggest signs to be checked?",
                 "options": [
-                  "(A) Area 1",
-                  "(B) Area 2",
-                  "(C) Area 3",
-                  "(D) Area 4"
+                  "Area 1",
+                  "Area 2",
+                  "Area 3",
+                  "Area 4"
                 ],
                 "answer": ""
               },
@@ -1097,10 +1097,10 @@
                 "num": 100,
                 "qText": "What will the speaker send in his e-mail?",
                 "options": [
-                  "(A) An estimate for the repair job",
-                  "(B) Suggestions for better conditions",
-                  "(C) A manual for emergency evacuation",
-                  "(D) Locations of problematic areas"
+                  "An estimate for the repair job",
+                  "Suggestions for better conditions",
+                  "A manual for emergency evacuation",
+                  "Locations of problematic areas"
                 ],
                 "answer": ""
               }
@@ -1119,10 +1119,10 @@
             "num": 101,
             "qText": "Please e-mail Ms. Matthews to let ------- know when you arrive in Birmingham.",
             "options": [
-              "(A) she",
-              "(B) her",
-              "(C) herself",
-              "(D) her own"
+              "she",
+              "her",
+              "herself",
+              "her own"
             ],
             "answer": ""
           },
@@ -1130,10 +1130,10 @@
             "num": 102,
             "qText": "Attendees who participate in this year's trade fair will be asked ------- a survey.",
             "options": [
-              "(A) be completed",
-              "(B) completion",
-              "(C) completing",
-              "(D) to complete"
+              "be completed",
+              "completion",
+              "completing",
+              "to complete"
             ],
             "answer": ""
           },
@@ -1141,10 +1141,10 @@
             "num": 103,
             "qText": "The position offered to Mr. Abraham includes attractive ------- such as stock options and flexible hours.",
             "options": [
-              "(A) benefit",
-              "(B) benefits",
-              "(C) beneficial",
-              "(D) beneficially"
+              "benefit",
+              "benefits",
+              "beneficial",
+              "beneficially"
             ],
             "answer": ""
           },
@@ -1152,10 +1152,10 @@
             "num": 104,
             "qText": "Employees hired this year are invited to a luncheon ------- the president of the company on this upcoming Friday.",
             "options": [
-              "(A) off",
-              "(B) throughout",
-              "(C) with",
-              "(D) among"
+              "off",
+              "throughout",
+              "with",
+              "among"
             ],
             "answer": ""
           },
@@ -1163,10 +1163,10 @@
             "num": 105,
             "qText": "Due to a computer malfunction, financial statements issued ------- the week of March first to seventh may contain errors.",
             "options": [
-              "(A) among",
-              "(B) during",
-              "(C) under",
-              "(D) above"
+              "among",
+              "during",
+              "under",
+              "above"
             ],
             "answer": ""
           },
@@ -1174,10 +1174,10 @@
             "num": 106,
             "qText": "Christie Corporation shareholders have been pleased with the ------- rate of return on their investment over the past ten years.",
             "options": [
-              "(A) steady",
-              "(B) steadily",
-              "(C) steadies",
-              "(D) steadiness"
+              "steady",
+              "steadily",
+              "steadies",
+              "steadiness"
             ],
             "answer": ""
           },
@@ -1185,10 +1185,10 @@
             "num": 107,
             "qText": "Giamatti's presentation lasted ------- three hours, so he was unable to answer any questions.",
             "options": [
-              "(A) variously",
-              "(B) nearly",
-              "(C) finely",
-              "(D) openly"
+              "variously",
+              "nearly",
+              "finely",
+              "openly"
             ],
             "answer": ""
           },
@@ -1196,10 +1196,10 @@
             "num": 108,
             "qText": "Mr. Liu will achieve his goal of utilizing Field Data technology, ------- will revolutionize the measurement programs.",
             "options": [
-              "(A) what",
-              "(B) where",
-              "(C) who",
-              "(D) which"
+              "what",
+              "where",
+              "who",
+              "which"
             ],
             "answer": ""
           },
@@ -1207,10 +1207,10 @@
             "num": 109,
             "qText": "All employees are ------- that the payment of union dues may be submitted at any time.",
             "options": [
-              "(A) recognized",
-              "(B) respected",
-              "(C) reacted",
-              "(D) reminded"
+              "recognized",
+              "respected",
+              "reacted",
+              "reminded"
             ],
             "answer": ""
           },
@@ -1218,10 +1218,10 @@
             "num": 110,
             "qText": "We are pleased to have you as a member and look forward to a ------- beneficial relationship.",
             "options": [
-              "(A) punctually",
-              "(B) lately",
-              "(C) precisely",
-              "(D) mutually"
+              "punctually",
+              "lately",
+              "precisely",
+              "mutually"
             ],
             "answer": ""
           },
@@ -1229,10 +1229,10 @@
             "num": 111,
             "qText": "Without Helen Mirren's strong leadership, Fanning Industries' expansion into the Asian market would have been -------.",
             "options": [
-              "(A) comparable",
-              "(B) eligible",
-              "(C) impossible",
-              "(D) unable"
+              "comparable",
+              "eligible",
+              "impossible",
+              "unable"
             ],
             "answer": ""
           },
@@ -1240,10 +1240,10 @@
             "num": 112,
             "qText": "To enter the laboratory for any reason, you must ------- your identification badge to the security guard at the door.",
             "options": [
-              "(A) place",
-              "(B) inspect",
-              "(C) present",
-              "(D) state"
+              "place",
+              "inspect",
+              "present",
+              "state"
             ],
             "answer": ""
           },
@@ -1251,10 +1251,10 @@
             "num": 113,
             "qText": "The main goal of the association is to ------- support quality academic advising to enhance the educational development of students.",
             "options": [
-              "(A) very",
-              "(B) highly",
-              "(C) roughly",
-              "(D) fully"
+              "very",
+              "highly",
+              "roughly",
+              "fully"
             ],
             "answer": ""
           },
@@ -1262,10 +1262,10 @@
             "num": 114,
             "qText": "The Melissa Manufacturing Company's management team has noticed a dramatic increase in productivity ------- workers began using the new machinery.",
             "options": [
-              "(A) despite",
-              "(B) since",
-              "(C) even",
-              "(D) besides"
+              "despite",
+              "since",
+              "even",
+              "besides"
             ],
             "answer": ""
           },
@@ -1273,10 +1273,10 @@
             "num": 115,
             "qText": "If an order for our products is placed after 6 P.M., the ------- will not appear on our computer records for one day.",
             "options": [
-              "(A) lateness",
-              "(B) disturbance",
-              "(C) transaction",
-              "(D) registration"
+              "lateness",
+              "disturbance",
+              "transaction",
+              "registration"
             ],
             "answer": ""
           },
@@ -1284,10 +1284,10 @@
             "num": 116,
             "qText": "Financial analysts at Yorkshire, Inc. in Toronto ------- the effects on shareholder value when a company sells a part of its assets.",
             "options": [
-              "(A) researches",
-              "(B) have researched",
-              "(C) researching",
-              "(D) will be researched"
+              "researches",
+              "have researched",
+              "researching",
+              "will be researched"
             ],
             "answer": ""
           },
@@ -1295,10 +1295,10 @@
             "num": 117,
             "qText": "This summer, Diogo Airlines is offering a ------- that allows passengers to fly to Frankfurt at a twenty percent discount.",
             "options": [
-              "(A) realization",
-              "(B) destination",
-              "(C) contribution",
-              "(D) promotion"
+              "realization",
+              "destination",
+              "contribution",
+              "promotion"
             ],
             "answer": ""
           },
@@ -1306,10 +1306,10 @@
             "num": 118,
             "qText": "The Gordon Museum will be closed until noon on Wednesday, November 17, ------- necessary building maintenance.",
             "options": [
-              "(A) due to",
-              "(B) instead of",
-              "(C) even though",
-              "(D) now that"
+              "due to",
+              "instead of",
+              "even though",
+              "now that"
             ],
             "answer": ""
           },
@@ -1317,10 +1317,10 @@
             "num": 119,
             "qText": "The new strategy implemented by the government is intended ------- local economic growth.",
             "options": [
-              "(A) facilitate",
-              "(B) facilitation",
-              "(C) to facilitate",
-              "(D) to be facilitated"
+              "facilitate",
+              "facilitation",
+              "to facilitate",
+              "to be facilitated"
             ],
             "answer": ""
           },
@@ -1328,120 +1328,120 @@
             "num": 120,
             "qText": "Sign up for Times Mirror Cable Television by April 5 to get five sports channels ------- your choice of three movie channels at no extra charge.",
             "options": [
-              "(A) in addition",
-              "(B) whichever",
-              "(C) plus",
-              "(D) whenever"
+              "in addition",
+              "whichever",
+              "plus",
+              "whenever"
             ],
             "answer": ""
           },
           {
             "num": 121,
-            "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
+            "qText": "The newly launched mobile services will encourage our customers to check their purchase information -------.",
             "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
+              "they",
+              "them",
+              "theirs",
+              "themselves"
             ],
             "answer": ""
           },
           {
             "num": 122,
-            "qText": "Employees are required to sign in ------- arriving at the main office building.",
+            "qText": "Returns of any clothing ordered from Laza Fashions online store must be made ------- 7 days of purchase for a full refund.",
             "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
+              "every",
+              "within",
+              "whenever",
+              "notwithstanding"
             ],
             "answer": ""
           },
           {
             "num": 123,
-            "qText": "The new software package offers a ------- range of features for data analysis.",
+            "qText": "Despite the early problems of ------- the project, the construction of the new stadium is currently ahead of schedule and on budget.",
             "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
+              "fund",
+              "funds",
+              "to fund",
+              "funding"
             ],
             "answer": ""
           },
           {
             "num": 124,
-            "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
+            "qText": "In his speech, the dean recognized the ------- that the professors had made in enhancing the quality of the courses being offered by the university.",
             "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
+              "repetitions",
+              "terminations",
+              "contributions",
+              "acquisitions"
             ],
             "answer": ""
           },
           {
             "num": 125,
-            "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
+            "qText": "The launch of the new MP3 player was far more successful than originally -------.",
             "options": [
-              "by",
-              "until",
-              "for",
-              "with"
+              "anticipated",
+              "anticipates",
+              "anticipating",
+              "anticipation"
             ],
             "answer": ""
           },
           {
             "num": 126,
-            "qText": "The regional manager ------- the quarterly financial report before submitting it to the board.",
+            "qText": "The board of directors agreed ------- to adopt the new marketing plan at the meeting yesterday.",
             "options": [
-              "reviewed",
-              "review",
-              "reviewing",
-              "to review"
+              "miscellaneously",
+              "unanimously",
+              "currently",
+              "beneficially"
             ],
             "answer": ""
           },
           {
             "num": 127,
-            "qText": "Employees are required to sign in ------- arriving at the main office building.",
+            "qText": "Research articles intended for publication must include descriptive statistics ------- an informed reader may accurately interpret and evaluate the findings.",
             "options": [
-              "upon",
-              "about",
-              "along",
-              "toward"
+              "in order",
+              "therefore",
+              "so that",
+              "whereas"
             ],
             "answer": ""
           },
           {
             "num": 128,
-            "qText": "The new software package offers a ------- range of features for data analysis.",
+            "qText": "------- the new agreement, 10 percent of the profits generated by the book will go to the author.",
             "options": [
-              "broad",
-              "broadly",
-              "broaden",
-              "breadth"
+              "According to",
+              "In case of",
+              "Resulting in",
+              "Away from"
             ],
             "answer": ""
           },
           {
             "num": 129,
-            "qText": "Ms. Patterson was selected to lead the committee because of her ------- experience in marketing.",
+            "qText": "The minimum hourly wage approved by the board of directors ------- as planned starting on September 1.",
             "options": [
-              "extensive",
-              "extensively",
-              "extend",
-              "extension"
+              "has been implementing",
+              "to implement",
+              "had implemented",
+              "will be implemented"
             ],
             "answer": ""
           },
           {
             "num": 130,
-            "qText": "Please submit all reimbursement requests ------- the end of the business day on Friday.",
+            "qText": "Unless ------- instructed, take this medicine three times daily after meals.",
             "options": [
-              "by",
-              "until",
-              "for",
-              "with"
+              "instead",
+              "somewhat",
+              "otherwise",
+              "rather"
             ],
             "answer": ""
           }
@@ -1452,46 +1452,46 @@
         "groups": [
           {
             "groupID": "P1",
-            "passageText": "Dear Valued Customer,\n\nWe are pleased to inform you that your recent order has been processed. The items will be [[131]] from our main fulfillment center tomorrow morning. Please [[132]] the tracking number sent to your email. If you have any questions regarding your invoice, feel free to [[133]] our customer support team.\n\nThank you for [[134]] Apex Logistics.",
+            "passageText": "Mr. Mack Goodman\n125 Piccadilly St.\nLondon NE4\n\nDear Mr. Goodman:\n\nCongratulations!\n\nThe admissions committee has listened to your tape, and I am pleased [[131]] that you have been selected to compete in our international piano competition. It will be held at the Hong Kong Music School from July 9 to 12. If you wish to participate in this event, please fill out the enclosed acceptance form and return it to our office. On receipt of your form, we will send you the [[132]] information you will need regarding performance requirements.\n\n[[133]]. If accommodations are a problem, we have several faculty members who have offered to have contestants as house guests. If you would like to stay with a faculty member during the competition, please let our office know as soon as possible. [[134]], simply fill out the acceptance form and return it to us.\n\nSincerely,\nYoung Li, International Piano Competition Chairman\nHong Kong Music School",
             "imgURL": "",
             "items": [
               {
                 "num": 131,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "confirm",
+                  "confirming",
+                  "to confirm",
+                  "to be confirmed"
                 ],
                 "answer": ""
               },
               {
                 "num": 132,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "substitute",
+                  "promising",
+                  "makeshift",
+                  "specific"
                 ],
                 "answer": ""
               },
               {
                 "num": 133,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "About 300 contestants representing 6 different countries attended the competition.",
+                  "Our brochure clearly explains the travel, accommodations available to your families.",
+                  "We also provide classes for people who are not good at playing the piano.",
+                  "Practice rooms with pianos will be made available to all contestants."
                 ],
                 "answer": ""
               },
               {
                 "num": 134,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "Therefore",
+                  "Otherwise",
+                  "Likewise",
+                  "Similarly"
                 ],
                 "answer": ""
               }
@@ -1499,46 +1499,46 @@
           },
           {
             "groupID": "P2",
-            "passageText": "Dear Valued Customer,\n\nWe are pleased to inform you that your recent order has been processed. The items will be [[135]] from our main fulfillment center tomorrow morning. Please [[136]] the tracking number sent to your email. If you have any questions regarding your invoice, feel free to [[137]] our customer support team.\n\nThank you for [[138]] Apex Logistics.",
+            "passageText": "October 15\n\nMs. Paula Dunn\n248 Woodford Ave.\nPlainville, Connecticut 06062\n\nDear Ms. Dunn,\n\nDuratonic Heating and Cooling's customer service team has received your request concerning [[135]] of the hot water heater, a product which you purchased in the previous month.\n\n[[136]].\n\nAccordingly, we are pleased to inform you that we are willing to offer you a new heater. [[137]], according to the conditions of the warranty, you have to forward the original receipt of your purchase.\n\nAs soon as [[138]] reaches us, we will immediately contact you so that we can set up a time as to when our technician can go to see you.\n\nWe thank you for choosing Duratonic Heating and Cooling.\n\nAlan Long\nCustomer Service Representative",
             "imgURL": "",
             "items": [
               {
                 "num": 135,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "installation",
+                  "preservation",
+                  "replacement",
+                  "assessment"
                 ],
                 "answer": ""
               },
               {
                 "num": 136,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "We are not responsible for any damage caused by misuse.",
+                  "We would like to express our apologies for any difficulties that the broken heater has given you.",
+                  "I am sorry to inform you that your request will not be accepted.",
+                  "Let us begin by saying that we appreciate your patronage of our products."
                 ],
                 "answer": ""
               },
               {
                 "num": 137,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "However",
+                  "Moreover",
+                  "Otherwise",
+                  "Namely"
                 ],
                 "answer": ""
               },
               {
                 "num": 138,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "it",
+                  "they",
+                  "he",
+                  "some"
                 ],
                 "answer": ""
               }
@@ -1546,46 +1546,46 @@
           },
           {
             "groupID": "P3",
-            "passageText": "Dear Valued Customer,\n\nWe are pleased to inform you that your recent order has been processed. The items will be [[139]] from our main fulfillment center tomorrow morning. Please [[140]] the tracking number sent to your email. If you have any questions regarding your invoice, feel free to [[141]] our customer support team.\n\nThank you for [[142]] Apex Logistics.",
+            "passageText": "ORDER INFORMATION\n\nPrices [[139]] in this catalog are in effect at the time of publication and are subject to change without notice.\n\nPayment: All orders must be prepaid. Credit cards are accepted. Shipping and handling charges will be added to all invoices [[140]] taxes.\n\nReturns: Any request for a return of merchandise must be submitted in writing. Include your invoice number and the reason for the return. [[141]].\n\n[[142]] merchandise can be exchanged for the same product. Merchandise that is not defective and is accepted for return must be received by us in new condition.",
             "imgURL": "",
             "items": [
               {
                 "num": 139,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "printed",
+                  "manufactured",
+                  "aimed",
+                  "designated"
                 ],
                 "answer": ""
               },
               {
                 "num": 140,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "on behalf of",
+                  "except for",
+                  "in spite of",
+                  "in addition to"
                 ],
                 "answer": ""
               },
               {
                 "num": 141,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "So please stop by or browse our selection online.",
+                  "The instructor will be handing out receipts for the class on the first day.",
+                  "No returns will be accepted three months after the date of the receipt of the order.",
+                  "Admittance is free, and you don't even have to register to attend!"
                 ],
                 "answer": ""
               },
               {
                 "num": 142,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "Underlying",
+                  "Untrue",
+                  "Deliberate",
+                  "Defective"
                 ],
                 "answer": ""
               }
@@ -1593,46 +1593,46 @@
           },
           {
             "groupID": "P4",
-            "passageText": "Dear Valued Customer,\n\nWe are pleased to inform you that your recent order has been processed. The items will be [[143]] from our main fulfillment center tomorrow morning. Please [[144]] the tracking number sent to your email. If you have any questions regarding your invoice, feel free to [[145]] our customer support team.\n\nThank you for [[146]] Apex Logistics.",
+            "passageText": "[[143]].\n\nPlease fill in the attached online form [[144]] your six-month limited membership and to continue to get the best quality music files in the country.\n\nTo be sure that your service continues without [[145]] in the future, we also recommend that you register for our automatic billing program. Once you are registered, you won't have to experience the inconvenience of renewing your membership again.\n\nCustomers who [[146]] in the program can download additional 20 music files for free.\n\nFor more information, please visit our Web site at www.lunamusic.com.",
             "imgURL": "",
             "items": [
               {
                 "num": 143,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "An invoice for your subscription renewal is attached to this e-mail.",
+                  "As you may have noticed, your Runa music download service will expire on May 20.",
+                  "The renewal term will not start until your present subscription is finished.",
+                  "Our premium services are available to those with a paid one-year membership."
                 ],
                 "answer": ""
               },
               {
                 "num": 144,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "renews",
+                  "renewed",
+                  "renew",
+                  "to renew"
                 ],
                 "answer": ""
               },
               {
                 "num": 145,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "division",
+                  "function",
+                  "interruption",
+                  "attraction"
                 ],
                 "answer": ""
               },
               {
                 "num": 146,
                 "options": [
-                  "dispatched",
-                  "dispatch",
-                  "dispatching",
-                  "to dispatch"
+                  "enroll",
+                  "succeed",
+                  "invest",
+                  "train"
                 ],
                 "answer": ""
               }
@@ -1645,28 +1645,28 @@
         "groups": [
           {
             "groupID": "R1",
-            "passageText": "NOTICE / MEMORANDUM (Group R1)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "Blue Ridge Mountain Sports\n458 Kensington Avenue\nHarrisburg, Pennsylvania\n\nHarrisburg's number one source for hiking gear is relocating to the new Somerset Plaza next month. To prepare for the move, we're offering huge discounts throughout the store. All items will be marked down 20-40% off. Bring in this advertisement to save an additional 5 percent on sale prices.\n\nHurry in! Sale ends on May 31st.\nCurrent location: 458 Kensington Avenue\nNew location: 120 Somerset Plaza, opens June 1\n\nFor directions to our current and new location, visit our online website www.blueridgesports.com or call us at (617)240-2568",
             "imgURL": "",
             "items": [
               {
                 "num": 147,
-                "qText": "What is the main purpose of the notice in passage R1?",
+                "qText": "What is mentioned about Blue Ridge Mountain Sports?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "It regularly holds sales.",
+                  "It is changing locations.",
+                  "It hosts sporting events.",
+                  "It is going out of business."
                 ],
                 "answer": ""
               },
               {
                 "num": 148,
-                "qText": "According to passage R1, what should employees do before Friday evening?",
+                "qText": "What is indicated in the advertisement?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "The sale will end before the new store opens.",
+                  "Blue Ridge Mountain Sports will open several new stores next year.",
+                  "The five-percent discount will be available only to items that are not on sale.",
+                  "Many shoppers visit the store on Kensington Avenue."
                 ],
                 "answer": ""
               }
@@ -1674,39 +1674,28 @@
           },
           {
             "groupID": "R2",
-            "passageText": "NOTICE / MEMORANDUM (Group R2)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "Gallow (11:39 A.M.): I finished typing all the letters you asked me to type the other day, Ms. Wright. Do you want me to do anything else?\n\nWright (11:43 A.M.): Not really. It's already 1:30, you can have your lunch now. By the way, can you take the letters to the mail room on your way to the cafeteria?\n\nGallow (11:45 A.M.): Sure, but I think it will take quite a long time at the mail room during the lunch break. Do you mind if I return back to the office at about 4 o'clock?\n\nWright (11:47 A.M.): Not at all. I've got some paper work that I have to do now but I don't think I will need your help. Just don't forget to call Ms. Green at the Boston branch to make sure of the schedule for tomorrow.",
             "imgURL": "",
             "items": [
               {
                 "num": 149,
-                "qText": "What is the main purpose of the notice in passage R2?",
+                "qText": "At 11:47, what does Ms. Wright mean when she writes, \"Not at all\"?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "She doesn't need any help from Mr. Gallow.",
+                  "She allows Mr. Gallow to get back later than usual.",
+                  "She doesn't want to contact Ms. Green.",
+                  "She thinks that she has to go to the cafeteria by herself."
                 ],
                 "answer": ""
               },
               {
                 "num": 150,
-                "qText": "According to passage R2, what should employees do before Friday evening?",
+                "qText": "What does Ms. Wright ask Mr. Gallow to make sure to do tomorrow?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 151,
-                "qText": "According to passage R2, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Finish the paper work for the meeting.",
+                  "Make a phone call to Ms. Green at Boston branch.",
+                  "Call the applicants for a new job opening.",
+                  "Leave a note for other workers."
                 ],
                 "answer": ""
               }
@@ -1714,39 +1703,28 @@
           },
           {
             "groupID": "R3",
-            "passageText": "NOTICE / MEMORANDUM (Group R3)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
-            "imgURL": "https://example.com/img/r3_chart.jpg",
+            "passageText": "Draper & Wells\nAttorneys at Law\nPaula McMichael\nSenior Attorney, Toronto Office\n\nSpecializing in Labor and Employment Litigation\n\nWe help our clients keep their workforce and their businesses running smoothly.\n\n525 Village Center Place Toronto, Ontario Tel (905) 360-1500",
+            "imgURL": "",
             "items": [
               {
+                "num": 151,
+                "qText": "Who most likely is Ms. McMichael?",
+                "options": [
+                  "A lawyer",
+                  "An accountant",
+                  "A travel agent",
+                  "A real estate agent"
+                ],
+                "answer": ""
+              },
+              {
                 "num": 152,
-                "qText": "What is the main purpose of the notice in passage R3?",
+                "qText": "What is indicated about Ms. McMichael?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 153,
-                "qText": "According to passage R3, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 154,
-                "qText": "According to passage R3, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "She practices criminal law.",
+                  "She works in Ontario.",
+                  "She can be reached by e-mail.",
+                  "She is a partner at the law firm."
                 ],
                 "answer": ""
               }
@@ -1754,39 +1732,28 @@
           },
           {
             "groupID": "R4",
-            "passageText": "NOTICE / MEMORANDUM (Group R4)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "To: Music Teachers\nFrom: Principal Caldwell\nDate: April 27\nSubject: Change of classrooms\n\nBecause the regional principal's conference has been moved from Hermitage High School to our school on short notice, the auditorium will be unavailable during the second week of May. If you had planned for your band or chorus class to use the auditorium during this time, Ms. Willis will assist you in finding an alternative room. There are a few empty classrooms on the second floor that are available. If you have a larger class and need more space, Ms. Willis is in the process of working out an arrangement with the gym teachers to use the gym since the physical education classes can meet outdoors. Details will follow shortly.",
             "imgURL": "",
             "items": [
               {
-                "num": 155,
-                "qText": "What is the main purpose of the notice in passage R4?",
+                "num": 153,
+                "qText": "What is the purpose of the memo?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "To announce a conference at Hermitage High School",
+                  "To describe a change in auditorium availability",
+                  "To invite staff to a chorus concert",
+                  "To introduce a new gym teacher"
                 ],
                 "answer": ""
               },
               {
-                "num": 156,
-                "qText": "According to passage R4, what should employees do before Friday evening?",
+                "num": 154,
+                "qText": "What is the course of action suggested in the memo?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 157,
-                "qText": "According to passage R4, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Exercising outdoors",
+                  "Rescheduling the principal's meeting",
+                  "Booking the auditorium",
+                  "Contacting Ms. Willis"
                 ],
                 "answer": ""
               }
@@ -1794,39 +1761,39 @@
           },
           {
             "groupID": "R5",
-            "passageText": "NOTICE / MEMORANDUM (Group R5)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "Stockyard Building Supply, Inc.\nWeekend shifts required where indicated\n\nLoss Prevention Manager\nMust have a university degree, good communication, leadership, and people skills. Prefer at least 2 years of loss prevention experience. Basic working knowledge of retail policies and procedures is required. Some weekend work is required for this position.\n\nDelivery Driver\nMust have a Commercial Driver's License, be able to read maps and follow specific directions and delivery instructions. Must be able to handle and move items weighing up to 30 kg without assistance. Require availability 7 days a week.\n\nCustomer Service Coordinator\nMust have at least one year of call center or customer service experience. Associate's degree is preferred. Computer knowledge and proficiency is required. Weekend work is required.\n\nAdministrative Assistants\nMust have strong written and verbal communication skills, organizational skills and abilities to multi-task. Computer knowledge and proficiency is required.\n\nPlease send resume to: Human resources\nStockyard Building Supply, Inc\n655 Bremo Road\nMarietta, GA 78240\n\nNo phone calls or e-mails, please.",
             "imgURL": "",
             "items": [
               {
-                "num": 158,
-                "qText": "What is the main purpose of the notice in passage R5?",
+                "num": 155,
+                "qText": "What is a requirement for Loss Prevention Manager position?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Excellent accounting experience",
+                  "A willingness to work at night",
+                  "A degree in communication",
+                  "Some knowledge of retail procedures"
                 ],
                 "answer": ""
               },
               {
-                "num": 159,
-                "qText": "According to passage R5, what should employees do before Friday evening?",
+                "num": 156,
+                "qText": "What position does NOT involve weekend shifts?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Administrative Assistant",
+                  "Loss Prevention Manager",
+                  "Delivery Driver",
+                  "Customer Service Coordinator"
                 ],
                 "answer": ""
               },
               {
-                "num": 160,
-                "qText": "According to passage R5, what should employees do before Friday evening?",
+                "num": 157,
+                "qText": "How will candidates apply for the position?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Online",
+                  "By telephone",
+                  "By mail",
+                  "In person"
                 ],
                 "answer": ""
               }
@@ -1834,39 +1801,39 @@
           },
           {
             "groupID": "R6",
-            "passageText": "NOTICE / MEMORANDUM (Group R6)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "Experience the Shenandoah Valley with Appalachian Tours\n\nEnjoy the beauty of the state park and charming sight of downtown Shenandoah during a four-hour tour by Appalachian Tours. The 75-acre park features majestic forests, a natural waterfall, giant meadows, and great hiking trails. In the morning, you can explore the park on your own or join a guided tour led by one of our professional guides. At noon, we will visit the historic business district. After a delicious lunch at the famous Valley Dinner, the tour concludes with a visit to the Farmers' Market, which offers a wide assortment of fresh fruits and vegetables.\n\nThe tour buses depart at 10:00 A.M. from Shenandoah Station, and return at 2:00 P.M., Friday through Sunday. Tickets are $25 for adults, $15 for students with a valid student ID, and $10 for children under the age of 10.\n\nFor details and reservations, call Appalachian Tours at 540-619-1877 or visit our website at www.appalachiantours.com\n\nAppalachian Tours",
             "imgURL": "",
             "items": [
               {
-                "num": 161,
-                "qText": "What is the main purpose of the notice in passage R6?",
+                "num": 158,
+                "qText": "For whom is the brochure most likely intended?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Local farmers",
+                  "Tourists",
+                  "Historians",
+                  "Teachers"
                 ],
                 "answer": ""
               },
               {
-                "num": 162,
-                "qText": "According to passage R6, what should employees do before Friday evening?",
+                "num": 159,
+                "qText": "According to the brochure, where will people first board the bus?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "At Shenandoah Station",
+                  "At Appalachian Tours' office",
+                  "At the Valley Diner",
+                  "At the farmers' market"
                 ],
                 "answer": ""
               },
               {
-                "num": 163,
-                "qText": "According to passage R6, what should employees do before Friday evening?",
+                "num": 160,
+                "qText": "How much is a fee for an 8-year-old?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "$10",
+                  "$15",
+                  "$20",
+                  "$25"
                 ],
                 "answer": ""
               }
@@ -1874,39 +1841,50 @@
           },
           {
             "groupID": "R7",
-            "passageText": "NOTICE / MEMORANDUM (Group R7)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
-            "imgURL": "https://example.com/img/r7_chart.jpg",
+            "passageText": "Leanne (2:15 P.M.): Dayton Paper and Box Company is offering a 15% discount on large orders. That's a great discount, but do you know if our orders are large enough to qualify for it?\n\nScott (2:20 P.M.): That's a good question, Leanne. I assume it requires a pretty large shipment, so if we increase the size of our orders, we might get the lower price.\n\nLeanne (2:25 P.M.): I'm all for it! We could buy a few months' worth of paper all at once. Why don't you give Dayton a call and find out what their minimum bulk order is?\n\nScott (2:26 P.M.): I'll do that right away. If it turns out that we'll save money, should I place an order immediately?",
+            "imgURL": "",
             "items": [
               {
+                "num": 161,
+                "qText": "Why is Leanne doubtful?",
+                "options": [
+                  "Scott works too slowly.",
+                  "Dayton's prices are too high.",
+                  "They cannot receive a large shipment.",
+                  "Their orders may be too small."
+                ],
+                "answer": ""
+              },
+              {
+                "num": 162,
+                "qText": "What does Scott hope to do?",
+                "options": [
+                  "Ship an order of paper",
+                  "Receive a different offer",
+                  "Place the next order",
+                  "Save the company money"
+                ],
+                "answer": ""
+              },
+              {
+                "num": 163,
+                "qText": "At 2:25, what does Leanne mean when she writes, \"I'm all for it!\"?",
+                "options": [
+                  "Dayton Paper is organizing a big deal.",
+                  "Bulk orders are necessary for discounts.",
+                  "If meeting the needs, her company can save the expenditures.",
+                  "Maximum bulk orders are ideal for benefits."
+                ],
+                "answer": ""
+              },
+              {
                 "num": 164,
-                "qText": "What is the main purpose of the notice in passage R7?",
+                "qText": "What will Scott probably do next?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 165,
-                "qText": "According to passage R7, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 166,
-                "qText": "According to passage R7, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Send a large shipment",
+                  "Call the paper company",
+                  "Accept the offer",
+                  "Place an order"
                 ],
                 "answer": ""
               }
@@ -1914,39 +1892,39 @@
           },
           {
             "groupID": "R8",
-            "passageText": "NOTICE / MEMORANDUM (Group R8)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "In-Shape Fitness Center\n1450 Lexington Parkway\nTucson, Arizona 85701\nA Fitness and Weight Loss Center designed for Women\n\nDecember 14\n\nMs. Heather Blankenship\n704 Weldon Drive\nTucson, Arizona 85708\n\nDear Ms. Blankenship,\n\nI enjoyed speaking with you about a fitness instructor position at In-Shape Fitness Center. I would like to offer you a full-time position beginning in March. Currently, we offer aerobics, yoga, and cycling classes. Since your specialty is pilates, we want to feature some new pilates classes taught by you in the spring.\n\nI would also like to see if you would be interested in substitute-teaching in the meantime to fill in for our yoga instructor who is scheduled to be on vacation in February. This will help you familiarize yourself with our facility before your classes begin in March.\n\nI am looking forward to working with you. We feel that your teaching experience will be a valuable addition to our center. Please contact me at 387-423-7769 by the end of January so that we can set up a time to finalize your paperwork and make your spring class schedule.\n\nSincerely,\nJulie Hawthorne\nDirector",
             "imgURL": "",
             "items": [
               {
+                "num": 165,
+                "qText": "What is the purpose of the letter?",
+                "options": [
+                  "To make an offer of employment",
+                  "To announce the opening of a new gym",
+                  "To schedule a job interview",
+                  "To advertise fitness classes"
+                ],
+                "answer": ""
+              },
+              {
+                "num": 166,
+                "qText": "According to the letter, what is true about Ms. Blankenship?",
+                "options": [
+                  "She has experience teaching fitness classes.",
+                  "She is a cyclist.",
+                  "She is currently a substitute teacher.",
+                  "She will be on vacation in February."
+                ],
+                "answer": ""
+              },
+              {
                 "num": 167,
-                "qText": "What is the main purpose of the notice in passage R8?",
+                "qText": "What fitness classes are not currently offered at In-Shape Fitness Center?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 168,
-                "qText": "According to passage R8, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 169,
-                "qText": "According to passage R8, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "Yoga",
+                  "Pilates",
+                  "Cycling",
+                  "Aerobics"
                 ],
                 "answer": ""
               }
@@ -1954,39 +1932,50 @@
           },
           {
             "groupID": "R9",
-            "passageText": "NOTICE / MEMORANDUM (Group R9)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "Workplace Etiquette Essentials\n\nIn David Tanner's book, Office Etiquette Do's and Don'ts, Tanner offers great advice on how individuals can avoid conflicts in the workplace by following some simple guidelines. — [1] —. Mr. Tanner argues that many employees have their bleak future and eliminate themselves from considerations for their promotion because of their inability to manage their office behavior effectively.\n\nFor instance, whenever you have issues in the workplace, you're better off thinking through your words before you communicate your thoughts, or suggestions. Assess the situation carefully. — [2] —. In the instance, if you find yourself in a workplace conflict, proceed in a professional and polite manner. If the gains outweigh the losses, be sure to protect your issues that relate to self-preservation and protection of job security through thorough documentation. — [3] —.\n\nMr. Tanner is a workplace psychologist and bestselling author who has won numerous awards for his research and writings on workplace issues. — [4] —. Two of his earlier books have sold more than one million copies worldwide. Office Etiquette Do's and Don'ts has already sold 20,000 copies since being released by Bramberton Press only five months ago. It is available in bookstores and on the company's website, www.bramberton.com.",
             "imgURL": "",
             "items": [
               {
-                "num": 170,
-                "qText": "What is the main purpose of the notice in passage R9?",
+                "num": 168,
+                "qText": "What does the article primarily discuss?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "A brochure for solving problems among employees",
+                  "A publication about how to avoid being laid off",
+                  "A report about company's employee training program",
+                  "A book about appropriate behavior for employees"
+                ],
+                "answer": ""
+              },
+              {
+                "num": 169,
+                "qText": "According to the article, what does Mr. Tanner recommend to an employee who has a dispute at work?",
+                "options": [
+                  "The employee should keep detailed records in writing.",
+                  "The employee should complain to the boss.",
+                  "The employee should call security.",
+                  "The employee should file a lawsuit."
+                ],
+                "answer": ""
+              },
+              {
+                "num": 170,
+                "qText": "What does the article suggest about Mr. Tanner?",
+                "options": [
+                  "He owns Bramberton Press.",
+                  "He is a very successful writer.",
+                  "He represents employees in lawsuits.",
+                  "He wrote his latest book in five months."
                 ],
                 "answer": ""
               },
               {
                 "num": 171,
-                "qText": "According to passage R9, what should employees do before Friday evening?",
+                "qText": "In which of the positions marked [1], [2], [3] and [4] does the following sentence best belong?\n\"Strategize and assess your gains and losses.\"",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
-                ],
-                "answer": ""
-              },
-              {
-                "num": 172,
-                "qText": "According to passage R9, what should employees do before Friday evening?",
-                "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "[1]",
+                  "[2]",
+                  "[3]",
+                  "[4]"
                 ],
                 "answer": ""
               }
@@ -1994,39 +1983,50 @@
           },
           {
             "groupID": "R10",
-            "passageText": "NOTICE / MEMORANDUM (Group R10)\n\nAll staff members are hereby notified that the facility maintenance is scheduled for this coming weekend. Power to the East Wing will be temporarily cut off from 8:00 AM to 2:00 PM on Saturday. Please ensure all electronic devices are shut down before leaving on Friday.",
+            "passageText": "Costen Floors, Inc.\nFebruary 11\n\nDear Ms. Rodriguez,\n\nI am writing to inform all our valued customers about some exciting news at Costen Floors, Inc., your premier flooring store. — [1] —. Next month, we will be relocating our Seven Springs store to a larger space in nearby Hanover, at 508 Idlewood Road. We have posted directions to our new location on our website at www.costenfloors.com. — [2] —. The move will allow us to carry more products and keep our prices low since we will be closer to our suppliers. We look forward to seeing you again at our new Hanover location.\n\nAs aforementioned, we will be adding some new flooring products to our inventory. Beginning in April, we will stock some exotic hardwood flooring, including Brazilian Cherry, Australian Cypress, and American Walnut. — [3] —. To celebrate the grand opening of our new location, all vinyl and tile flooring purchased during the month of April will be 10% off.\n\n— [4] —. We hope you will keep Costen Floors in mind for all of your flooring needs. Don't forget, we also offer installation for all of our products.\n\nSincerely,\nWinston Reed\nManager, Costen Floors",
             "imgURL": "",
             "items": [
               {
-                "num": 173,
-                "qText": "What is the main purpose of the notice in passage R10?",
+                "num": 172,
+                "qText": "What is implied about Ms. Rodriguez?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "She lives in Seven Springs.",
+                  "She has purchased flooring before.",
+                  "She works in the flooring business.",
+                  "She prefers imported flooring."
+                ],
+                "answer": ""
+              },
+              {
+                "num": 173,
+                "qText": "What does the letter say about the Hanover location?",
+                "options": [
+                  "It is closer to Costen Floors' suppliers.",
+                  "It opened in February.",
+                  "It is a brand new building.",
+                  "It has no other flooring stores nearby."
                 ],
                 "answer": ""
               },
               {
                 "num": 174,
-                "qText": "According to passage R10, what should employees do before Friday evening?",
+                "qText": "According to the letter, what is NOT going to happen at Costen Floors in April?",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "More employees will be in the store.",
+                  "Some flooring materials will go on sale.",
+                  "New flooring products will be available.",
+                  "Prices for exotic flooring will be discounted."
                 ],
                 "answer": ""
               },
               {
                 "num": 175,
-                "qText": "According to passage R10, what should employees do before Friday evening?",
+                "qText": "In which of the positions marked [1], [2], [3] and [4] does the following sentence best belong?\n\"We will also be increasing the size of our staff to better serve you.\"",
                 "options": [
-                  "To announce a change in schedule",
-                  "To request assistance with maintenance",
-                  "To inform staff about a planned power disruption",
-                  "To promote a new company policy"
+                  "[1]",
+                  "[2]",
+                  "[3]",
+                  "[4]"
                 ],
                 "answer": ""
               }
@@ -2034,61 +2034,61 @@
           },
           {
             "groupID": "R11",
-            "passageText": "DOCUMENT 1: EMAIL\nFrom: J. Miller <jmiller@techcorp.com>\nTo: Sales Team\nSubject: Q3 Performance Overview\n\nDear Team, please review the attached sales data for Q3...\n\n---\nDOCUMENT 2: SALES CHART\n[Chart showing quarterly revenue across North, South, East, and West branches]\n\n---\nDOCUMENT 3: MEMO\nFollow-up actions required for underperforming branches.",
+            "passageText": "Quest Laboratories, Inc. cordially invites you to attend the annual Research and Development Awards Ceremony to honor outstanding achievement in our research and development departments over the past year.\n\nWhere: Lincoln Events Center, Portland, Oregon\nWhen: Wednesday, May 15\n\nProgram\n7:00 p.m.: Welcome Reception\n8:00 p.m.: Presentation of Awards to developers\n8:30 p.m.: Presentation of Awards to researchers\n9:15 p.m.: Dinner and Musical Entertainment\n\nAwards Recipients\nMs. Gwyneth Hopkins, Director of Product Development, Portland\nDr. Mari Tanaka, Senior Researcher, Tokyo\nDr. Duane Purdue, Senior Researcher, Portland\nDr. Ryo Kobayashi, Senior Researcher, Osaka\n\nPlease respond to this invitation by returning this enclosed form by March 30.\n\n---\n\nTo: Teresa Reed\nFrom: Curtis Norwood\nDate: March 17 03:28\nRe: Awards ceremony gifts\n\nDear Teresa,\n\nI just placed the order for the awards and I am sending you the details, as requested. I ordered a platinum crystal trophy engraved with the company logo, recipient's name, and a personal inscription for the developer award. For the researchers, I ordered three plaques engraved with the company logo, recipient's name, and a personal inscription.\n\nThe awards come individually wrapped, and they are due to arrive by the end of next week. I am sending over a copy of the order confirmation to your office for your records. As we discussed previously, the developer award will be accompanied by a $1,000 bonus check, which will be included in an envelope containing a letter from the company president.\n\nRegards,\nCurtis",
             "imgURL": "",
             "items": [
               {
                 "num": 176,
-                "qText": "Question 176: According to the first document, why was the email sent?",
+                "qText": "Who will receive a trophy at the ceremony?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Ryo",
+                  "Gwyneth",
+                  "Mari",
+                  "Duane"
                 ],
                 "answer": ""
               },
               {
                 "num": 177,
-                "qText": "Question 177: What is indicated about the Western branch in Document 2?",
+                "qText": "What is suggested about Quest Laboratories?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "It will open a new office in Japan.",
+                  "It will soon merge with another company.",
+                  "It only has offices in Portland.",
+                  "It holds an awards ceremony each year."
                 ],
                 "answer": ""
               },
               {
                 "num": 178,
-                "qText": "Question 178: What is indicated about the Western branch in Document 2?",
+                "qText": "At what time will the plaques be presented at the ceremony?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "7:00 p.m.",
+                  "8:00 p.m.",
+                  "8:30 p.m.",
+                  "9:15 p.m."
                 ],
                 "answer": ""
               },
               {
                 "num": 179,
-                "qText": "Question 179: What is indicated about the Western branch in Document 2?",
+                "qText": "In the e-mail, what does Curtis Norwood offer to do?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Provide a copy of the order confirmation",
+                  "Choose the award presenters",
+                  "Write the bonus check",
+                  "Ask the president to write a letter to the award winner"
                 ],
                 "answer": ""
               },
               {
                 "num": 180,
-                "qText": "Question 180: What is indicated about the Western branch in Document 2?",
+                "qText": "What is NOT stated about the gifts?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "They will be inscribed for each award winner.",
+                  "They will be engraved with the company logo.",
+                  "They will be presented by the company president.",
+                  "They will be wrapped individually."
                 ],
                 "answer": ""
               }
@@ -2096,61 +2096,61 @@
           },
           {
             "groupID": "R12",
-            "passageText": "DOCUMENT 1: EMAIL\nFrom: J. Miller <jmiller@techcorp.com>\nTo: Sales Team\nSubject: Q3 Performance Overview\n\nDear Team, please review the attached sales data for Q3...\n\n---\nDOCUMENT 2: SALES CHART\n[Chart showing quarterly revenue across North, South, East, and West branches]\n\n---\nDOCUMENT 3: MEMO\nFollow-up actions required for underperforming branches.",
+            "passageText": "DOCUMENT 1: E-MAIL\nTo: Timothy Rinaldi <trinaldi@vistatelecom.net>\nFrom: Courtney Lee <clee2@vistatelecom.net>\nSubject: Vista Screen Touch Phones\nDate: March 3\n\nDear Tim,\n\nIt has been brought to my attention that several negative reviews about our new Screen Touch Phones are being posted on popular electronics product review websites. Two of those websites are www.electronicreviews.com and www.productinfo.com. The complaints seem to be about the battery life of the phones.\n\nWe need to move quickly to address this problem because the Screen Touch Phones are a very important part of this year's marketing campaign. To adequately address this matter, however, we need more details. Can you have your team do some research for us on this issue?\n\nAlso, please find out if our customers have any other concerns about the Screen Touch product line. I'd appreciate it if you could get back to me with an initial assessment by the end of next week.\n\nThanks for your help.\nCourtney\n\n---\n\nDOCUMENT 2: E-MAIL\nTo: Courtney Lee <clee2@vistatelecom.net>\nFrom: Timothy Rinaldi <trinaldi@vistatelecom.net>\nSubject: Vista Screen Touch Phones\nDate: March 9\n\nDear Courtney,\n\nWe've done some research into the problem you mentioned in your e-mail on March 3. We have found that customers indeed are not satisfied with the battery life of the Screen Touch phones compared with other models. The battery is running out in less than two hours of talk time. Fortunately, it seems that the problem is mostly restricted to the ST 750 model. So, you and other managers in product development need to address this issue.\n\nIn addition, there seems to be some dissatisfaction among buyers with the Screen Touch ST 1000 model. Customers are not happy with the antenna's signal strength; they are reporting a higher rate of dropped calls than a normal one. I'll send you a more detailed report of our findings within a week.\n\nThere is some good news, however. Our market research indicates that customers are quite satisfied with the price and features of both of these models. So if your teams can solve the problems we have indicated, I think things will just be fine.\n\nTim",
             "imgURL": "",
             "items": [
               {
                 "num": 181,
-                "qText": "Question 181: According to the first document, why was the email sent?",
+                "qText": "Why does Ms. Lee write to Mr. Rinaldi?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "To discuss the marketing campaign",
+                  "To promote the new websites",
+                  "To ask him to research the complaint",
+                  "To propose a solution to the problem"
                 ],
                 "answer": ""
               },
               {
                 "num": 182,
-                "qText": "Question 182: What is indicated about the Western branch in Document 2?",
+                "qText": "In what field does Ms. Lee work?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Advertising",
+                  "Distribution",
+                  "Customer relations",
+                  "Product Development"
                 ],
                 "answer": ""
               },
               {
                 "num": 183,
-                "qText": "Question 183: What is indicated about the Western branch in Document 2?",
+                "qText": "What is NOT stated about Vista Telecom?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "It also manufactures computers.",
+                  "Its product is reviewed on two electronics websites.",
+                  "It researches customer complaints.",
+                  "It produces mobile phones."
                 ],
                 "answer": ""
               },
               {
                 "num": 184,
-                "qText": "Question 184: What is indicated about the Western branch in Document 2?",
+                "qText": "What does Mr. Rinaldi note about the ST 1000 model?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "The price that the stores are charging is too high.",
+                  "The antenna is not as powerful as the manufacturer would like.",
+                  "The customers are disappointed with the features.",
+                  "The battery life is too short."
                 ],
                 "answer": ""
               },
               {
                 "num": 185,
-                "qText": "Question 185: What is indicated about the Western branch in Document 2?",
+                "qText": "In the second e-mail, the word \"restricted\" in paragraph 1, line 4 is closest in meaning to",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "reduced",
+                  "limited",
+                  "unauthorized",
+                  "prohibited"
                 ],
                 "answer": ""
               }
@@ -2158,61 +2158,61 @@
           },
           {
             "groupID": "R13",
-            "passageText": "DOCUMENT 1: EMAIL\nFrom: J. Miller <jmiller@techcorp.com>\nTo: Sales Team\nSubject: Q3 Performance Overview\n\nDear Team, please review the attached sales data for Q3...\n\n---\nDOCUMENT 2: SALES CHART\n[Chart showing quarterly revenue across North, South, East, and West branches]\n\n---\nDOCUMENT 3: MEMO\nFollow-up actions required for underperforming branches.",
+            "passageText": "DOCUMENT 1: ADVERTISEMENT\n\nMake your business successful!\n\nHow efficiently is your business operating? Trying to maximize your income?\n\nJoin Bains Small Business Resource (BSBR) and receive comprehensive training and resources to manage your business in the financial aspects and others! We have specialized in helping small business owners nationwide achieve financial success for the last eleven years. If you want to seize the unique opportunity, you can find out the information about what a business owner can learn from BSBR on our website, http://www.bsbr.com, right now.\n\nAlso, receive immediate access to BSBR now for a one-time registration of just $49.90 plus a monthly membership fee of $22 (Professional) or $30 (Exclusive).\n\n---\n\nDOCUMENT 2: WEB PAGE - http://www.bsbr.com/service\n[Tabs: Home | SERVICE | Register | Community]\n\nInformational Resources: Access to a wide variety of articles, reports, and reviews written by industry experts and aimed at helping business owners achieve long-term profitability. They are updated every week to provide members with the most up-to-date information available.\n\nTemplates & Training Manual: A very large database of free downloadable worksheets, forms, and reporting templates is available. Just click and download the templates that best suit your needs. Training manual will be provided by mail.\n\nOnline Community Service: Participate in our online community to share ideas and insights from thousands of members who operate their own business.\n\nSpecialized workshops: Join our new series of online classes covering business plans, strategies for marketing and personnel management for small businesses and start-ups. This program is available only to exclusive members.\n\n---\n\nDOCUMENT 3: WEB PAGE - http://www.bsbr.com/register\n[Tabs: Home | Service | REGISTER | Community]\n\nBSBR's Application\nFirst Name: Jane\nLast Name: Meyer\nCompany Name: Columbus Wear\nStreet: 1958 Deer Hollow Dr\nCity: Fort Worth\nPhone Number: 817-552-5034\nState: Texas\nPostal Code: 76051\n\nE-mail Address: jmeyer@columbuswear.com\nCreate Username: Jmeyer\nCreate Password: *******\nVerify Password: *******\n\nSelect Payment Type: $49 registration plus\n[ ] $22 a month   [x] $30 a month\n\nIf you are not satisfied with the BSBR training manual or benefits of membership, you may return the training manual to us within 7 days for a full refund of your membership fee.\n\n[Submit]",
             "imgURL": "",
             "items": [
               {
                 "num": 186,
-                "qText": "Question 186: According to the first document, why was the email sent?",
+                "qText": "What is the purpose of the service page information?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "To promote a new product",
+                  "To describe the benefits of a membership",
+                  "To explain how to make attractive web pages",
+                  "To provide a guideline for working with a small company"
                 ],
                 "answer": ""
               },
               {
                 "num": 187,
-                "qText": "Question 187: What is indicated about the Western branch in Document 2?",
+                "qText": "What is true about BSBR?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "It has multiple locations.",
+                  "It is based in Fort Worth, Texas.",
+                  "It has operated its business for over a decade.",
+                  "Its services are available to small business owners for free."
                 ],
                 "answer": ""
               },
               {
                 "num": 188,
-                "qText": "Question 188: What is indicated about the Western branch in Document 2?",
+                "qText": "According to the service page information, what changes weekly?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "The informational resources",
+                  "The worksheet templates",
+                  "The location of BSBR's training workshop",
+                  "The consultants for BSBR's members"
                 ],
                 "answer": ""
               },
               {
                 "num": 189,
-                "qText": "Question 189: What is indicated about the Western branch in Document 2?",
+                "qText": "What is suggested about Ms. Meyer?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "She plans to relocate her business.",
+                  "She would like to take online classes.",
+                  "She wants to find a less expensive shipping company.",
+                  "She is interested in joining as a professional member."
                 ],
                 "answer": ""
               },
               {
                 "num": 190,
-                "qText": "Question 190: What is indicated about the Western branch in Document 2?",
+                "qText": "When does BSBR provide a full refund?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "When a workshop is canceled",
+                  "When a shipment is damaged",
+                  "When the wrong manuals are given",
+                  "When a member returns the training manual within a week"
                 ],
                 "answer": ""
               }
@@ -2220,61 +2220,61 @@
           },
           {
             "groupID": "R14",
-            "passageText": "DOCUMENT 1: EMAIL\nFrom: J. Miller <jmiller@techcorp.com>\nTo: Sales Team\nSubject: Q3 Performance Overview\n\nDear Team, please review the attached sales data for Q3...\n\n---\nDOCUMENT 2: SALES CHART\n[Chart showing quarterly revenue across North, South, East, and West branches]\n\n---\nDOCUMENT 3: MEMO\nFollow-up actions required for underperforming branches.",
+            "passageText": "DOCUMENT 1: E-MAIL\nFrom: Kathryn Perez\nTo: All department managers\nSubject: Leadership Training Courses and Seminars\nDate: August 11\n\nAnnually, all the department managers here at Boardex Inc. are required to attend a series of training courses and seminars for them to attain proficiency in directing their respective groups. This year, we have invited renowned speakers from outside our company. Attendance of two or more sessions is mandatory for all managers, and those who fail to follow through will have to be present at a make-up session on August 30. A feedback form is attached to this mail that you need to complete and turn in to Kevin Jacobs at the end of all sessions.\n\nAdditionally, enclosed is the complete schedule of all sessions in this e-mail. Please consult the information and I hope that this session will be informative and helpful for your management. See you that day.\n\nThank you,\nKathryn Perez\nHuman Resources\n\n---\n\nDOCUMENT 2: SCHEDULE\nLeadership Training Courses and Seminars\nSession | Presenter | Date and Time\nCritical Thinking | Steve Uejio | August 17, 12:30 P.M.-1:15 P.M.\nSituational Leadership | Jerry Hoffman | August 23, 11:50 A.M.-12:45 P.M.\nCollaborative Leadership | Tanner James | August 19, 1:15 P.M.-2:10 P.M.\nLeadership for Women | Lindsay Parks | August 25, 11:50 A.M.-12:30 P.M.\n\nNote that the time listed may change within the range of five minutes, so please plan accordingly.\nAll the sessions will take place in Marcus Hall.\nRefreshments will be provided at courses that begin in the afternoon.\n\n---\n\nDOCUMENT 3: FEEDBACK FORM\nLeadership Training Feedback Form\nName: Dane Green\n\nSessions attended:\n[x] Critical Thinking  [ ] Situational Leadership  [x] Collaborative Leadership  [ ] Leadership for Women\n\nWhich session did you find the most helpful? Why?\nNot only the critical thinking was the most effective of all sessions but it was also very entertaining as the speaker allowed me to think out of the box with the lateral thinking questions listed on the sheet he gave us. This session was especially helpful for me since creative thinking is an essential skill in advertising, and I also learned about new ways to approach problems that may occur in my department.\n\nHow could the courses be improved?\nIt was mentioned in the schedule that we may be let go just a bit past the scheduled time, but the session on August 19 ended fifteen minutes late. I ended up showing up late at a meeting I scheduled for 2:20. If the speaker does not exceed their given time, it would be much more helpful.",
             "imgURL": "",
             "items": [
               {
                 "num": 191,
-                "qText": "Question 191: According to the first document, why was the email sent?",
+                "qText": "Why was the email written?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "To invite all employees to leadership training courses",
+                  "To recommend the managers to participate in an annual event",
+                  "To notify the schedule of a series of informative courses",
+                  "To announce the change in a meeting location"
                 ],
                 "answer": ""
               },
               {
                 "num": 192,
-                "qText": "Question 192: What is indicated about the Western branch in Document 2?",
+                "qText": "What is true about the sessions?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Employees who attend them will receive snacks.",
+                  "Department managers are required to attend all of them.",
+                  "They will begin in the afternoon.",
+                  "Their schedules is subject to change."
                 ],
                 "answer": ""
               },
               {
                 "num": 193,
-                "qText": "Question 193: What is indicated about the Western branch in Document 2?",
+                "qText": "What is suggested about Mr. Green?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "He works under the supervision of Kathryn Perez.",
+                  "He left a session early to attend a meeting.",
+                  "He is the manager of the advertising department.",
+                  "He was able to show up to all the courses."
                 ],
                 "answer": ""
               },
               {
                 "num": 194,
-                "qText": "Question 194: What is indicated about the Western branch in Document 2?",
+                "qText": "Who distributed a sheet of paper during a session?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Steve Uejio",
+                  "Jerry Hoffman",
+                  "Tanner James",
+                  "Lindsay Parks"
                 ],
                 "answer": ""
               },
               {
                 "num": 195,
-                "qText": "Question 195: What is indicated about the Western branch in Document 2?",
+                "qText": "From what session did Mr. Green leave late?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "The critical thinking session",
+                  "The leadership for women session",
+                  "The situational leadership session",
+                  "The collaborative leadership session"
                 ],
                 "answer": ""
               }
@@ -2282,61 +2282,61 @@
           },
           {
             "groupID": "R15",
-            "passageText": "DOCUMENT 1: EMAIL\nFrom: J. Miller <jmiller@techcorp.com>\nTo: Sales Team\nSubject: Q3 Performance Overview\n\nDear Team, please review the attached sales data for Q3...\n\n---\nDOCUMENT 2: SALES CHART\n[Chart showing quarterly revenue across North, South, East, and West branches]\n\n---\nDOCUMENT 3: MEMO\nFollow-up actions required for underperforming branches.",
+            "passageText": "DOCUMENT 1: NOTICE\n\nRenew your Augusta Science Museum Membership Now\n\nIf you haven't been to the Augusta Science Museum recently, you will notice some upgrades to our facility upon your next visit: our lobby has been renovated, new seats have been installed in the dome theater, and we've added a cafe. As a past member of the museum, you know that our memberships offer great benefits. So if you want to enjoy the more newly upgraded experiences, please renew your membership at this moment. Basic benefits of membership include a year of unlimited free admission, the opportunity to purchase tickets in advance for special exhibitions, a 20% discount at the gift shop, and subscription to our Science and Technology Magazine. For more details, you can visit our website and sign up for this service.\n\n---\n\nDOCUMENT 2: MEMBERSHIP LEVEL TABLE\n\nIndividual - $60\nIncludes all basic benefits for one person.\n\nFamily - $120\nIncludes all basic benefits and free admission for all lectures for 4 people. Also includes 4 guest passes for museum admission.\n\nIndividual Plus - $100\nIncludes all basic benefits and free admission for all lectures for one person. Also includes 2 guest passes for museum admission.\n\nFamily Plus - $200\nIncludes all benefits of the family membership plus 6 guest passes. Also, Basic benefits of membership include a 20% discount at the gift shop, the opportunity to purchase tickets in advance for special exhibitions, and a private tour of one special exhibition of your choice.\n\nNote:\nNext year's first special exhibition \"Inventions of Benjamin Franklin\" will run from Jan. 5 to Feb. 28. Tickets go on sale for members beginning on Nov 15 and for non-members beginning on Dec. 1.\n\n---\n\nDOCUMENT 3: LETTER\n\nAugusta Science Museum\n\nMr. Todd Pollard\n725 Lauderdale Drive\nAugusta, GA 47816\n\nDear Mr. Pollard:\n\nThank you for renewing your Augusta Science Museum membership. Your membership helps to support the museum and its programs. Your new membership card and six guest passes are enclosed.\n\nPlease note that there is an update to the information that was included in the membership renewal notice that was sent to you. The opening date of the special exhibition \"Inventions of Benjamin Franklin\" has been changed to January 15. We apologize for any inconvenience that this may cause.\n\nWe hope you enjoy your membership, and we look forward to seeing you at the museum soon.\n\nSincerely,\nBeth Lennon",
             "imgURL": "",
             "items": [
               {
                 "num": 196,
-                "qText": "Question 196: According to the first document, why was the email sent?",
+                "qText": "What is indicated about Augusta Science Museum?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "It was closed to public for its renovations.",
+                  "It has a special exhibition every month.",
+                  "It has a cafe exclusively for members.",
+                  "It publishes a magazine."
                 ],
                 "answer": ""
               },
               {
                 "num": 197,
-                "qText": "Question 197: What is indicated about the Western branch in Document 2?",
+                "qText": "What is NOT mentioned about benefits of Family Plus membership?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Members will receive a discount when they make a purchase at the gift shop.",
+                  "Members receive six tickets to the dome theater.",
+                  "Members receive a private tour of a special exhibition.",
+                  "Members can have a chance to purchase tickets in advance."
                 ],
                 "answer": ""
               },
               {
                 "num": 198,
-                "qText": "Question 198: What is indicated about the Western branch in Document 2?",
+                "qText": "When will the Benjamin Franklin exhibition open?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "November 15",
+                  "December 1",
+                  "January 5",
+                  "January 15"
                 ],
                 "answer": ""
               },
               {
                 "num": 199,
-                "qText": "Question 199: What is indicated about the Western branch in Document 2?",
+                "qText": "What is stated in the letter?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "The beginning date of the exhibition has been changed.",
+                  "The membership Mr. Pollard was going to renew is no longer available.",
+                  "The membership fee should be paid by January 15.",
+                  "The guest passes should be picked up at the museum membership office."
                 ],
                 "answer": ""
               },
               {
                 "num": 200,
-                "qText": "Question 200: What is indicated about the Western branch in Document 2?",
+                "qText": "At which level did Mr. Pollard renew his membership?",
                 "options": [
-                  "To schedule an urgent sales conference",
-                  "To summarize regional revenue for Q3",
-                  "To announce the resignation of a manager",
-                  "To introduce a revised commission structure"
+                  "Individual",
+                  "Individual Plus",
+                  "Family",
+                  "Family Plus"
                 ],
                 "answer": ""
               }
