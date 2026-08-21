@@ -14,37 +14,37 @@
             "num": 1,
             "imgURL": "https://i.imgur.com/tIvN6vH.jpeg",
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 2,
             "imgURL": "https://i.imgur.com/Z1stxYI.jpeg",
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 3,
             "imgURL": "https://i.imgur.com/YEgYGsl.jpeg",
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 4,
             "imgURL": "https://i.imgur.com/gwLAFet.jpeg",
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 5,
             "imgURL": "https://i.imgur.com/0GrUdll.jpeg",
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 6,
             "imgURL": "https://i.imgur.com/eyxhey0.jpeg",
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           }
         ]
       },
@@ -54,127 +54,127 @@
           {
             "num": 7,
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 8,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 9,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 10,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 11,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 12,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 13,
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 14,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 15,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 16,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 17,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 18,
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 19,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 20,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 21,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 22,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 23,
             "audioURL": "",
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 24,
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 25,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 26,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 27,
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 28,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 29,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 30,
             "audioURL": "",
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 31,
             "audioURL": "",
-            "answer": ""
+            "answer": "A"
           }
         ]
       },
@@ -195,7 +195,7 @@
                   "At the airport",
                   "In the parade"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 33,
@@ -206,7 +206,7 @@
                   "There will be a street parade.",
                   "There was an accident on the street."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 34,
@@ -217,7 +217,7 @@
                   "At 7 p.m.",
                   "At 9 p.m."
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -235,7 +235,7 @@
                   "To inform a customer of unpaid bills",
                   "To confirm a schedule"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 36,
@@ -246,7 +246,7 @@
                   "She was unfairly treated by a staff member.",
                   "She may have forgotten to notify some change."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 37,
@@ -257,7 +257,7 @@
                   "Explain the procedure",
                   "Update some information"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -275,7 +275,7 @@
                   "At an employment firm",
                   "At a business school"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 39,
@@ -286,7 +286,7 @@
                   "Hire a new loan officer",
                   "Open a new account"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 40,
@@ -297,7 +297,7 @@
                   "An application for the new position",
                   "A list of some names"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -315,7 +315,7 @@
                   "On the street",
                   "At the park"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 42,
@@ -326,7 +326,7 @@
                   "It was below his expectations.",
                   "It was far away from the office."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 43,
@@ -337,7 +337,7 @@
                   "Take a walk",
                   "Order some food"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -355,7 +355,7 @@
                   "At a travel agency",
                   "At a restaurant"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 45,
@@ -366,7 +366,7 @@
                   "One week",
                   "Three weeks"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 46,
@@ -377,7 +377,7 @@
                   "Book another time",
                   "Finish the work early"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -395,7 +395,7 @@
                   "Changes in personnel",
                   "Software installation"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 48,
@@ -406,7 +406,7 @@
                   "She wants to get promoted, too.",
                   "She thinks Mr. Russell has worked hard."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 49,
@@ -417,7 +417,7 @@
                   "Interview an applicant",
                   "Make a reservation"
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -435,7 +435,7 @@
                   "To obtain more information",
                   "To rent some equipment"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 51,
@@ -446,7 +446,7 @@
                   "A real estate agency",
                   "A law firm"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 52,
@@ -457,7 +457,7 @@
                   "Answer the questions",
                   "Sign a contract"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -475,7 +475,7 @@
                   "In an office",
                   "On the road"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 54,
@@ -486,7 +486,7 @@
                   "By 6:30 p.m.",
                   "By 8 p.m."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 55,
@@ -497,7 +497,7 @@
                   "Close the shop later than usual",
                   "Notify any change"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -515,7 +515,7 @@
                   "A photographer",
                   "A journalist"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 57,
@@ -526,7 +526,7 @@
                   "She is working for a newspaper company.",
                   "She was worried she might not get the job."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 58,
@@ -537,7 +537,7 @@
                   "To celebrate an anniversary",
                   "To start working"
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           },
@@ -555,7 +555,7 @@
                   "The registration has not been completed.",
                   "Hotel rooms are unavailable."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 60,
@@ -566,7 +566,7 @@
                   "Calling a travel agent",
                   "Taking public transportation"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 61,
@@ -577,7 +577,7 @@
                   "They may have missed the deadline.",
                   "The rooms may be too small for the group."
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -595,7 +595,7 @@
                   "The technical support team is out of the office all day.",
                   "The meeting is canceled due to the inclement weather."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 63,
@@ -606,7 +606,7 @@
                   "Tomorrow morning",
                   "Tomorrow afternoon"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 64,
@@ -617,7 +617,7 @@
                   "Contact her client",
                   "Repair her computer"
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           },
@@ -635,7 +635,7 @@
                   "Mail out some information to participants",
                   "Show their appreciation to sponsors"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 66,
@@ -646,7 +646,7 @@
                   "Picture frames",
                   "Monogrammed cups"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 67,
@@ -657,7 +657,7 @@
                   "3",
                   "4"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -675,7 +675,7 @@
                   "Testing a program",
                   "Booking a flight"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 69,
@@ -686,7 +686,7 @@
                   "At Chiangmai",
                   "At home"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 70,
@@ -697,7 +697,7 @@
                   "Her schedule was too tight.",
                   "One of her friends got sick."
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           }
@@ -720,7 +720,7 @@
                   "In the afternoon",
                   "At midnight"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 72,
@@ -731,7 +731,7 @@
                   "Bad weather",
                   "An accident in a highway"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 73,
@@ -742,7 +742,7 @@
                   "A presidential election",
                   "An advertisement"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -760,7 +760,7 @@
                   "To respond to a customer complaint",
                   "To report a problem with the order"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 75,
@@ -771,7 +771,7 @@
                   "The quality was below expectation.",
                   "The manufacturer has been changed."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 76,
@@ -782,7 +782,7 @@
                   "Wait for the new model",
                   "Visit the store"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -800,7 +800,7 @@
                   "A technical staff",
                   "A political commentator"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 78,
@@ -811,7 +811,7 @@
                   "A studio is not available at the moment.",
                   "Some equipment is not working."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 79,
@@ -822,7 +822,7 @@
                   "She moved to a suburb.",
                   "She received a prestigious award."
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -840,7 +840,7 @@
                   "It has been damaged.",
                   "It's been sent to a wrong place."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 81,
@@ -851,7 +851,7 @@
                   "Confirm the appointment time",
                   "Send the information again."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 82,
@@ -862,7 +862,7 @@
                   "Check the order form again",
                   "Place the coversheet on top of the document"
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           },
@@ -880,7 +880,7 @@
                   "A tour leader",
                   "A store manager"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 84,
@@ -891,7 +891,7 @@
                   "They have strange names.",
                   "They are the most popular flowers."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 85,
@@ -902,7 +902,7 @@
                   "She'll distribute some materials.",
                   "She'll give more information about the flowers."
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -920,7 +920,7 @@
                   "Maintenance staff",
                   "Job applicants"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 87,
@@ -931,7 +931,7 @@
                   "Convenient location",
                   "Capable staff"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 88,
@@ -942,7 +942,7 @@
                   "Viewing of the property",
                   "Sample products"
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -960,7 +960,7 @@
                   "Exercising equipment",
                   "A public swimming pool"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 90,
@@ -971,7 +971,7 @@
                   "A city official",
                   "An event coordinator"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 91,
@@ -982,7 +982,7 @@
                   "She wants to have a bigger family.",
                   "She is happy to be reelected as a mayor."
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -1000,7 +1000,7 @@
                   "Selling tickets for an event",
                   "Cleaning up the area for the audience"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 93,
@@ -1011,7 +1011,7 @@
                   "Put the receipt in the bag",
                   "Discard the trash in the can"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 94,
@@ -1022,7 +1022,7 @@
                   "Free programs",
                   "Autographs by celebrities"
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -1040,7 +1040,7 @@
                   "Check the updated records",
                   "Set up a follow-up meeting"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 96,
@@ -1051,7 +1051,7 @@
                   "To learn about the procedures",
                   "To train new employees"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 97,
@@ -1062,7 +1062,7 @@
                   "Safety training for new employees",
                   "Aisle cleaning and maintenance"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1080,7 +1080,7 @@
                   "Electricity lines",
                   "Building's exits"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 99,
@@ -1091,7 +1091,7 @@
                   "Area 3",
                   "Area 4"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 100,
@@ -1102,7 +1102,7 @@
                   "A manual for emergency evacuation",
                   "Locations of problematic areas"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           }
@@ -1124,7 +1124,7 @@
               "herself",
               "her own"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 102,
@@ -1135,7 +1135,7 @@
               "completing",
               "to complete"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 103,
@@ -1146,7 +1146,7 @@
               "beneficial",
               "beneficially"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 104,
@@ -1157,7 +1157,7 @@
               "with",
               "among"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 105,
@@ -1168,7 +1168,7 @@
               "under",
               "above"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 106,
@@ -1179,7 +1179,7 @@
               "steadies",
               "steadiness"
             ],
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 107,
@@ -1190,7 +1190,7 @@
               "finely",
               "openly"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 108,
@@ -1201,7 +1201,7 @@
               "who",
               "which"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 109,
@@ -1212,7 +1212,7 @@
               "reacted",
               "reminded"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 110,
@@ -1223,7 +1223,7 @@
               "precisely",
               "mutually"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 111,
@@ -1234,7 +1234,7 @@
               "impossible",
               "unable"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 112,
@@ -1245,7 +1245,7 @@
               "present",
               "state"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 113,
@@ -1256,7 +1256,7 @@
               "roughly",
               "fully"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 114,
@@ -1267,7 +1267,7 @@
               "even",
               "besides"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 115,
@@ -1278,7 +1278,7 @@
               "transaction",
               "registration"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 116,
@@ -1289,7 +1289,7 @@
               "researching",
               "will be researched"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 117,
@@ -1300,7 +1300,7 @@
               "contribution",
               "promotion"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 118,
@@ -1311,7 +1311,7 @@
               "even though",
               "now that"
             ],
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 119,
@@ -1322,7 +1322,7 @@
               "to facilitate",
               "to be facilitated"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 120,
@@ -1333,7 +1333,7 @@
               "plus",
               "whenever"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 121,
@@ -1344,7 +1344,7 @@
               "theirs",
               "themselves"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 122,
@@ -1355,7 +1355,7 @@
               "whenever",
               "notwithstanding"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 123,
@@ -1366,7 +1366,7 @@
               "to fund",
               "funding"
             ],
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 124,
@@ -1377,7 +1377,7 @@
               "contributions",
               "acquisitions"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 125,
@@ -1388,7 +1388,7 @@
               "anticipating",
               "anticipation"
             ],
-            "answer": ""
+            "answer": "A"
           },
           {
             "num": 126,
@@ -1399,7 +1399,7 @@
               "currently",
               "beneficially"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 127,
@@ -1410,7 +1410,7 @@
               "so that",
               "whereas"
             ],
-            "answer": ""
+            "answer": "C"
           },
           {
             "num": 128,
@@ -1421,7 +1421,7 @@
               "Resulting in",
               "Away from"
             ],
-            "answer": ""
+            "answer": "B"
           },
           {
             "num": 129,
@@ -1432,7 +1432,7 @@
               "had implemented",
               "will be implemented"
             ],
-            "answer": ""
+            "answer": "D"
           },
           {
             "num": 130,
@@ -1443,7 +1443,7 @@
               "otherwise",
               "rather"
             ],
-            "answer": ""
+            "answer": "C"
           }
         ]
       },
@@ -1463,7 +1463,7 @@
                   "to confirm",
                   "to be confirmed"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 132,
@@ -1473,7 +1473,7 @@
                   "makeshift",
                   "specific"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 133,
@@ -1483,7 +1483,7 @@
                   "We also provide classes for people who are not good at playing the piano.",
                   "Practice rooms with pianos will be made available to all contestants."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 134,
@@ -1493,7 +1493,7 @@
                   "Likewise",
                   "Similarly"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -1510,7 +1510,7 @@
                   "replacement",
                   "assessment"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 136,
@@ -1520,7 +1520,7 @@
                   "I am sorry to inform you that your request will not be accepted.",
                   "Let us begin by saying that we appreciate your patronage of our products."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 137,
@@ -1530,7 +1530,7 @@
                   "Otherwise",
                   "Namely"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 138,
@@ -1540,7 +1540,7 @@
                   "he",
                   "some"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1557,7 +1557,7 @@
                   "aimed",
                   "designated"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 140,
@@ -1567,7 +1567,7 @@
                   "in spite of",
                   "in addition to"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 141,
@@ -1577,7 +1577,7 @@
                   "No returns will be accepted three months after the date of the receipt of the order.",
                   "Admittance is free, and you don't even have to register to attend!"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 142,
@@ -1587,7 +1587,7 @@
                   "Deliberate",
                   "Defective"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1604,7 +1604,7 @@
                   "The renewal term will not start until your present subscription is finished.",
                   "Our premium services are available to those with a paid one-year membership."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 144,
@@ -1614,7 +1614,7 @@
                   "renew",
                   "to renew"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 145,
@@ -1624,7 +1624,7 @@
                   "interruption",
                   "attraction"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 146,
@@ -1634,7 +1634,7 @@
                   "invest",
                   "train"
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           }
@@ -1657,7 +1657,7 @@
                   "It hosts sporting events.",
                   "It is going out of business."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 148,
@@ -1668,7 +1668,7 @@
                   "The five-percent discount will be available only to items that are not on sale.",
                   "Many shoppers visit the store on Kensington Avenue."
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           },
@@ -1686,7 +1686,7 @@
                   "She doesn't want to contact Ms. Green.",
                   "She thinks that she has to go to the cafeteria by herself."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 150,
@@ -1697,7 +1697,7 @@
                   "Call the applicants for a new job opening.",
                   "Leave a note for other workers."
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -1715,7 +1715,7 @@
                   "A travel agent",
                   "A real estate agent"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 152,
@@ -1726,7 +1726,7 @@
                   "She can be reached by e-mail.",
                   "She is a partner at the law firm."
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -1744,7 +1744,7 @@
                   "To invite staff to a chorus concert",
                   "To introduce a new gym teacher"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 154,
@@ -1755,7 +1755,7 @@
                   "Booking the auditorium",
                   "Contacting Ms. Willis"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1773,7 +1773,7 @@
                   "A degree in communication",
                   "Some knowledge of retail procedures"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 156,
@@ -1784,7 +1784,7 @@
                   "Delivery Driver",
                   "Customer Service Coordinator"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 157,
@@ -1795,7 +1795,7 @@
                   "By mail",
                   "In person"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1813,7 +1813,7 @@
                   "Historians",
                   "Teachers"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 159,
@@ -1824,7 +1824,7 @@
                   "At the Valley Diner",
                   "At the farmers' market"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 160,
@@ -1835,7 +1835,7 @@
                   "$20",
                   "$25"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -1853,7 +1853,7 @@
                   "They cannot receive a large shipment.",
                   "Their orders may be too small."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 162,
@@ -1864,7 +1864,7 @@
                   "Place the next order",
                   "Save the company money"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 163,
@@ -1875,7 +1875,7 @@
                   "If meeting the needs, her company can save the expenditures.",
                   "Maximum bulk orders are ideal for benefits."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 164,
@@ -1886,7 +1886,7 @@
                   "Accept the offer",
                   "Place an order"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1904,7 +1904,7 @@
                   "To schedule a job interview",
                   "To advertise fitness classes"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 166,
@@ -1915,7 +1915,7 @@
                   "She is currently a substitute teacher.",
                   "She will be on vacation in February."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 167,
@@ -1926,7 +1926,7 @@
                   "Cycling",
                   "Aerobics"
                 ],
-                "answer": ""
+                "answer": "B"
               }
             ]
           },
@@ -1944,7 +1944,7 @@
                   "A report about company's employee training program",
                   "A book about appropriate behavior for employees"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 169,
@@ -1955,7 +1955,7 @@
                   "The employee should call security.",
                   "The employee should file a lawsuit."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 170,
@@ -1966,7 +1966,7 @@
                   "He represents employees in lawsuits.",
                   "He wrote his latest book in five months."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 171,
@@ -1977,7 +1977,7 @@
                   "[3]",
                   "[4]"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -1995,7 +1995,7 @@
                   "She works in the flooring business.",
                   "She prefers imported flooring."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 173,
@@ -2006,7 +2006,7 @@
                   "It is a brand new building.",
                   "It has no other flooring stores nearby."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 174,
@@ -2017,7 +2017,7 @@
                   "New flooring products will be available.",
                   "Prices for exotic flooring will be discounted."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 175,
@@ -2028,7 +2028,7 @@
                   "[3]",
                   "[4]"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -2046,7 +2046,7 @@
                   "Mari",
                   "Duane"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 177,
@@ -2057,7 +2057,7 @@
                   "It only has offices in Portland.",
                   "It holds an awards ceremony each year."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 178,
@@ -2068,7 +2068,7 @@
                   "8:30 p.m.",
                   "9:15 p.m."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 179,
@@ -2079,7 +2079,7 @@
                   "Write the bonus check",
                   "Ask the president to write a letter to the award winner"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 180,
@@ -2090,7 +2090,7 @@
                   "They will be presented by the company president.",
                   "They will be wrapped individually."
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           },
@@ -2108,7 +2108,7 @@
                   "To ask him to research the complaint",
                   "To propose a solution to the problem"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 182,
@@ -2119,7 +2119,7 @@
                   "Customer relations",
                   "Product Development"
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 183,
@@ -2130,7 +2130,7 @@
                   "It researches customer complaints.",
                   "It produces mobile phones."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 184,
@@ -2141,7 +2141,7 @@
                   "The customers are disappointed with the features.",
                   "The battery life is too short."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 185,
@@ -2152,7 +2152,7 @@
                   "unauthorized",
                   "prohibited"
                 ],
-                "answer": ""
+                "answer": "A"
               }
             ]
           },
@@ -2170,7 +2170,7 @@
                   "To explain how to make attractive web pages",
                   "To provide a guideline for working with a small company"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 187,
@@ -2181,7 +2181,7 @@
                   "It has operated its business for over a decade.",
                   "Its services are available to small business owners for free."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 188,
@@ -2192,7 +2192,7 @@
                   "The location of BSBR's training workshop",
                   "The consultants for BSBR's members"
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 189,
@@ -2203,7 +2203,7 @@
                   "She wants to find a less expensive shipping company.",
                   "She is interested in joining as a professional member."
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 190,
@@ -2214,7 +2214,7 @@
                   "When the wrong manuals are given",
                   "When a member returns the training manual within a week"
                 ],
-                "answer": ""
+                "answer": "C"
               }
             ]
           },
@@ -2232,7 +2232,7 @@
                   "To notify the schedule of a series of informative courses",
                   "To announce the change in a meeting location"
                 ],
-                "answer": ""
+                "answer": "C"
               },
               {
                 "num": 192,
@@ -2243,7 +2243,7 @@
                   "They will begin in the afternoon.",
                   "Their schedules is subject to change."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 193,
@@ -2254,7 +2254,7 @@
                   "He is the manager of the advertising department.",
                   "He was able to show up to all the courses."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 194,
@@ -2265,7 +2265,7 @@
                   "Tanner James",
                   "Lindsay Parks"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 195,
@@ -2276,7 +2276,7 @@
                   "The situational leadership session",
                   "The collaborative leadership session"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           },
@@ -2294,7 +2294,7 @@
                   "It has a cafe exclusively for members.",
                   "It publishes a magazine."
                 ],
-                "answer": ""
+                "answer": "D"
               },
               {
                 "num": 197,
@@ -2305,7 +2305,7 @@
                   "Members receive a private tour of a special exhibition.",
                   "Members can have a chance to purchase tickets in advance."
                 ],
-                "answer": ""
+                "answer": "B"
               },
               {
                 "num": 198,
@@ -2316,7 +2316,7 @@
                   "January 5",
                   "January 15"
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 199,
@@ -2327,7 +2327,7 @@
                   "The membership fee should be paid by January 15.",
                   "The guest passes should be picked up at the museum membership office."
                 ],
-                "answer": ""
+                "answer": "A"
               },
               {
                 "num": 200,
@@ -2338,7 +2338,7 @@
                   "Family",
                   "Family Plus"
                 ],
-                "answer": ""
+                "answer": "D"
               }
             ]
           }
