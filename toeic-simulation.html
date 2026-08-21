@@ -249,15 +249,49 @@ function initTimer(which){
   endTime = parseInt(endTime, 10);
 
   clearInterval(timerInterval);
+  let tickCount = 0;
+  // Staggered per-browser offset so many candidates starting around the same
+  // time don't all sync to Sheets on the exact same tick — same approach as
+  // the IELTS engine (simulation.html).
+  const syncJitter = getSyncJitter_();
   timerInterval = setInterval(() => {
     const remaining = Math.max(0, Math.round((endTime - Date.now())/1000));
     renderTimer(remaining);
+    tickCount++;
+    if (tickCount % 90 === syncJitter) syncDraftToSheets();
     if(remaining <= 0){
       clearInterval(timerInterval);
       stageTimeUp(which);
     }
   }, 1000);
   renderTimer(Math.max(0, Math.round((endTime-Date.now())/1000)));
+}
+function getSyncJitter_() {
+  const key = 'toeic_sync_jitter';
+  let j = localStorage.getItem(key);
+  if (j === null) {
+    j = Math.floor(Math.random() * 30);
+    localStorage.setItem(key, String(j));
+  }
+  return parseInt(j, 10);
+}
+let lastSyncedSnapshot = '';
+async function syncDraftToSheets(){
+  const snapshot = JSON.stringify(answers);
+  if (snapshot === lastSyncedSnapshot) return; // nothing changed — save the quota
+  const candidateData = JSON.parse(sessionStorage.getItem('candidateData')||'{}');
+  try {
+    await callSheets({
+      action: 'saveDraft',
+      candidateID: candidateData.candidateID || getCandidateID(),
+      fullName: candidateData.fullName || sessionStorage.getItem('candidateName') || '',
+      testSetID: activeTestSet.setID || '',
+      lAnswers: snapshot,
+      rAnswers: '{}',
+      writingVals: '{}'
+    });
+    lastSyncedSnapshot = snapshot;
+  } catch(e) { /* best-effort — local autosave already covers the common case */ }
 }
 
 function renderTimer(sec){
