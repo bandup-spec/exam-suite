@@ -8,6 +8,7 @@ const SHEET_SETS        = 'TestSets';
 const SHEET_SETTINGS    = 'Settings';
 const SHEET_OTP         = 'OTP_Tokens';
 const SHEET_ANSWERKEYS  = 'AnswerKeys';
+const SHEET_DRAFTS      = 'Drafts';
 
 const API_SECRET = 'ielts-sim-x7k2m9-change-me';
 
@@ -280,40 +281,41 @@ function handleRequest(p, callback) {
         case 'setup':                     result = { success: true, message: setupSheets() }; break;
 
         case 'checkCandidate':            result = checkCandidate(p); break;
-        case 'registerCandidate':         result = registerCandidate(p); break;
+        case 'registerCandidate':         result = withLock_(() => registerCandidate(p)); break;
         case 'loginCandidate':            result = loginCandidate(p); break;
-        case 'updateProfile':             result = updateProfile(p); break;
-        case 'updateProfilePhoto':        result = updateProfilePhoto(p); break;
+        case 'updateProfile':             result = withLock_(() => updateProfile(p)); break;
+        case 'updateProfilePhoto':        result = withLock_(() => updateProfilePhoto(p)); break;
 
-        case 'saveScore':                 result = saveScore(p); break;
+        case 'saveScore':                 result = withLock_(() => saveScore(p)); break;
         case 'getScores':                 result = getScores(p); break;
         case 'getCandidateScores':        result = getCandidateScores(p); break;
-        case 'gradeWriting':              result = gradeWriting(p); break;
+        case 'gradeWriting':              result = withLock_(() => gradeWriting(p)); break;
+        case 'saveDraft':                 result = withLock_(() => saveDraft(p)); break;
 
         case 'getCandidates':             result = getCandidates(); break;
-        case 'approveCandidate':          result = approveCandidate(p); break;
-        case 'rejectCandidate':           result = rejectCandidate(p); break;
+        case 'approveCandidate':          result = withLock_(() => approveCandidate(p)); break;
+        case 'rejectCandidate':           result = withLock_(() => rejectCandidate(p)); break;
 
         case 'getTestSets':               result = getTestSets(); break;
-        case 'saveTestSet':               result = saveTestSet(p); break;
-        case 'deleteTestSet':             result = deleteTestSet(p); break;
-        case 'setActiveSet':              result = setActiveSet(p); break;
+        case 'saveTestSet':               result = withLock_(() => saveTestSet(p)); break;
+        case 'deleteTestSet':             result = withLock_(() => deleteTestSet(p)); break;
+        case 'setActiveSet':              result = withLock_(() => setActiveSet(p)); break;
         case 'getActiveSet':              result = getActiveSet(); break;
 
         case 'getAnswerKey':              result = getAnswerKey(p); break;
-        case 'saveAnswerKey':             result = saveAnswerKey(p); break;
+        case 'saveAnswerKey':             result = withLock_(() => saveAnswerKey(p)); break;
 
         case 'getSettings':               result = getSettings(); break;
-        case 'saveSettings':              result = saveSettings(p); break;
+        case 'saveSettings':              result = withLock_(() => saveSettings(p)); break;
 
         case 'verifyAdmin':               result = verifyAdmin(p); break;
-        case 'changeAdminPassword':       result = changeAdminPassword(p); break;
+        case 'changeAdminPassword':       result = withLock_(() => changeAdminPassword(p)); break;
 
         case 'sendOTP':                   result = handleSendOTP(p); break;
-        case 'verifyOTPAndRegister':      result = handleVerifyOTPAndRegister(p); break;
-        case 'verifyOTPAndResetPassword': result = handleVerifyOTPAndResetPassword(p); break;
-        case 'changePassword':            result = handleChangePassword(p); break;
-        case 'verifyOTPAndUpdateEmail':   result = handleVerifyOTPAndUpdateEmail(p); break;
+        case 'verifyOTPAndRegister':      result = withLock_(() => handleVerifyOTPAndRegister(p)); break;
+        case 'verifyOTPAndResetPassword': result = withLock_(() => handleVerifyOTPAndResetPassword(p)); break;
+        case 'changePassword':            result = withLock_(() => handleChangePassword(p)); break;
+        case 'verifyOTPAndUpdateEmail':   result = withLock_(() => handleVerifyOTPAndUpdateEmail(p)); break;
 
         default:
           result = { success: false, message: 'Unknown action: ' + action };
@@ -338,6 +340,28 @@ function handleRequest(p, callback) {
 
 function checkApiKey(p) {
   return p.key === API_SECRET;
+}
+
+// ============================================================
+//  CONCURRENCY GUARD — serializes writes so two near-simultaneous
+//  requests (e.g. many candidates' periodic draft-saves firing close
+//  together) can't race each other on a read-then-write to the same
+//  sheet. Waits briefly for the lock; if the server is genuinely
+//  overloaded it fails fast with a clear "try again" message instead
+//  of corrupting a row.
+// ============================================================
+function withLock_(fn) {
+  const lock = LockService.getScriptLock();
+  try {
+    lock.waitLock(15000); // wait up to 15s for another request to finish
+  } catch (e) {
+    return { success: false, message: 'Server is busy right now — please try again in a few seconds.' };
+  }
+  try {
+    return fn();
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 // ============================================================
@@ -863,6 +887,55 @@ function saveAnswerKey(p) {
   ]);
 
   return { success: true, message: 'Answer key created.' };
+}
+
+// ============================================================
+//  DRAFTS (periodic in-progress-answer backup, written every ~90s
+//  while a candidate is testing, in case their browser crashes or
+//  they lose connection before final submit)
+// ============================================================
+const DRAFT_HEADERS = [
+  'CandidateID',
+  'TestSetID',
+  'FullName',
+  'ListeningAnswers',
+  'ReadingAnswers',
+  'WritingVals',
+  'UpdatedAt'
+];
+
+function findDraftRow_(sheet, candidateID, testSetID) {
+  const data = sheet.getDataRange().getValues();
+  const cid = normalize_(candidateID), sid = String(testSetID || '');
+  for (let i = 1; i < data.length; i++) {
+    if (normalize_(data[i][0]) === cid && String(data[i][1] || '') === sid) return i;
+  }
+  return -1;
+}
+
+function saveDraft(p) {
+  if (!p.candidateID) return { success: false, message: 'No candidateID.' };
+
+  const sheet = getOrCreateSheet_(SHEET_DRAFTS, DRAFT_HEADERS);
+  const now = new Date().toISOString();
+  const row = [
+    String(p.candidateID).toUpperCase(),
+    String(p.testSetID || ''),
+    String(p.fullName || ''),
+    typeof p.lAnswers === 'string' ? p.lAnswers : JSON.stringify(p.lAnswers || {}),
+    typeof p.rAnswers === 'string' ? p.rAnswers : JSON.stringify(p.rAnswers || {}),
+    typeof p.writingVals === 'string' ? p.writingVals : JSON.stringify(p.writingVals || {}),
+    now
+  ];
+
+  const rowIdx = findDraftRow_(sheet, p.candidateID, p.testSetID);
+  if (rowIdx !== -1) {
+    sheet.getRange(rowIdx + 1, 1, 1, DRAFT_HEADERS.length).setValues([row]);
+  } else {
+    sheet.appendRow(row);
+  }
+
+  return { success: true, savedAt: now };
 }
 
 // ============================================================
