@@ -64,6 +64,13 @@
   .item-text{font-size:0.9rem;margin-bottom:10px;line-height:1.6}
   .item-img{max-width:100%;max-height:280px;border-radius:8px;margin-bottom:10px;display:block}
   audio{width:100%;max-width:420px;margin-bottom:10px;display:block}
+  .audio-lock-wrap{max-width:420px;margin-bottom:10px}
+  .audio-play-btn{width:100%;padding:10px;border:none;border-radius:8px;background:var(--blue);color:#fff;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;margin-top:6px}
+  .audio-play-btn:hover{background:var(--blue2)}
+  .audio-play-btn:disabled{opacity:0.7;cursor:default}
+  .audio-progress-track{width:100%;height:6px;background:var(--paper3);border-radius:3px;margin-top:8px;overflow:hidden}
+  .audio-progress-fill{height:100%;width:0%;background:var(--gold);transition:width 0.2s linear}
+  .audio-played-box{max-width:420px;margin-bottom:10px;padding:10px 14px;background:var(--paper2);border:1px solid var(--paper3);border-radius:8px;font-size:0.82rem;color:var(--ink3)}
   .opts{display:flex;flex-direction:column;gap:7px}
   .opt{display:flex;align-items:center;gap:9px;padding:8px 12px;border:1px solid var(--paper3);border-radius:8px;cursor:pointer;font-size:0.86rem}
   .opt:hover{background:var(--paper2)}
@@ -391,6 +398,11 @@ function optLabel(i){ return ['A','B','C','D'][i]; }
 // unlisted just means "not searchable", it still embeds fine. A plain
 // <audio src="youtu.be/...">  does NOT work since YouTube isn't a raw media
 // file, so YouTube URLs get an <iframe> embed instead.
+//
+// PLAY-ONCE LOCK: matches the real TOEIC listening test — each clip plays
+// exactly once, with no seeking or replay. Once played, the player is
+// replaced with a "already played" placeholder, and that state is persisted
+// so refreshing the page doesn't grant a second listen.
 // ═══════════════════════════════════════
 function getYoutubeID(url){
   if(!url) return null;
@@ -402,13 +414,80 @@ function getYoutubeID(url){
   if(m) return m[1];
   return null;
 }
+
+let playedAudioKeys = {};
+function audioStorageKey(){ return `toeic_played_audio_${getCandidateID()}_${activeTestSet.setID||'default'}`; }
+function loadPlayedAudio(){
+  try { const raw = localStorage.getItem(audioStorageKey()); if(raw) playedAudioKeys = JSON.parse(raw); } catch(e){}
+}
+function markAudioPlayed_(key){
+  playedAudioKeys[key] = true;
+  try { localStorage.setItem(audioStorageKey(), JSON.stringify(playedAudioKeys)); } catch(e){}
+}
+function audioKeyFor_(url){
+  let h = 0;
+  for (let i=0;i<url.length;i++){ h = ((h<<5)-h+url.charCodeAt(i))|0; }
+  return 'a'+Math.abs(h);
+}
+
 function renderAudioPlayer(url){
   if(!url) return '';
+  const key = audioKeyFor_(url);
+  if(playedAudioKeys[key]){
+    return `<div class="audio-played-box">✓ Audio already played for this question — plays once only, as in the real test.</div>`;
+  }
   const ytID = getYoutubeID(url);
   if(ytID){
-    return `<div style="max-width:420px;margin-bottom:10px"><iframe width="100%" height="70" src="https://www.youtube.com/embed/${ytID}?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen style="border-radius:8px"></iframe></div>`;
+    // controls=0 hides YouTube's native seek bar/controls entirely — the
+    // only way to play it is via our own one-time button below.
+    return `<div class="audio-lock-wrap" id="wrap-${key}">
+      <iframe id="yt-${key}" width="100%" height="70" src="https://www.youtube.com/embed/${ytID}?enablejsapi=1&controls=0&modestbranding=1&rel=0" frameborder="0" allow="autoplay; encrypted-media" style="border-radius:8px;pointer-events:none"></iframe>
+      <button type="button" class="audio-play-btn" onclick="playYoutubeOnce_('${key}', this)">▶ Play Audio (plays once)</button>
+    </div>`;
   }
-  return `<audio controls src="${escH(url)}"></audio>`;
+  return `<div class="audio-lock-wrap" id="wrap-${key}">
+    <audio id="native-${key}" src="${escH(url)}" preload="none"></audio>
+    <button type="button" class="audio-play-btn" onclick="playNativeOnce_('${key}', this)">▶ Play Audio (plays once)</button>
+    <div class="audio-progress-track" id="prog-${key}" style="display:none"><div class="audio-progress-fill" id="progfill-${key}"></div></div>
+  </div>`;
+}
+
+function playNativeOnce_(key, btn){
+  if(playedAudioKeys[key]) return;
+  const audio = document.getElementById('native-'+key);
+  if(!audio) return;
+  btn.disabled = true;
+  btn.textContent = '🔊 Playing...';
+  const track = document.getElementById('prog-'+key);
+  const fill = document.getElementById('progfill-'+key);
+  track.style.display = 'block';
+  audio.addEventListener('timeupdate', () => {
+    if(audio.duration) fill.style.width = (audio.currentTime/audio.duration*100) + '%';
+  });
+  audio.addEventListener('ended', () => {
+    markAudioPlayed_(key);
+    const wrap = document.getElementById('wrap-'+key);
+    if(wrap) wrap.outerHTML = `<div class="audio-played-box">✓ Audio played — plays once only, as in the real test.</div>`;
+  });
+  audio.play().catch(()=>{
+    btn.disabled = false;
+    btn.textContent = '▶ Play Audio (plays once)';
+    alert('Could not play this audio file. Please check the file URL.');
+  });
+}
+
+function playYoutubeOnce_(key, btn){
+  if(playedAudioKeys[key]) return;
+  const iframe = document.getElementById('yt-'+key);
+  if(!iframe) return;
+  btn.disabled = true;
+  btn.textContent = '🔊 Playing (one-time)...';
+  iframe.contentWindow.postMessage(JSON.stringify({event:'command', func:'playVideo', args:[]}), '*');
+  // YouTube's postMessage API needs the full IFrame API script loaded to
+  // reliably report "ended" — to keep this lightweight we lock right after
+  // triggering play instead. Native controls are hidden (controls=0), so
+  // this one trigger is the only way the candidate can interact with it.
+  markAudioPlayed_(key);
 }
 
 function itemQHeader(num){
@@ -694,6 +773,7 @@ function escH(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&
 (async function boot(){
   initUser();
   loadAutosave();
+  loadPlayedAudio();
   const ok = await loadConfig();
   if(!ok) return;
   showStartGate();
