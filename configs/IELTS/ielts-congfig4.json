@@ -1,0 +1,927 @@
+{
+  "listening": {
+    "sections": [
+      {
+        "from": 1,
+        "to": 10,
+        "audioName": "",
+        "audioData": "",
+        "imgData": "",
+        "formCompletion": false,
+        "fcImgData": "",
+        "fcFrom": 1,
+        "fcTo": 10,
+        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio1.mp3"
+      },
+      {
+        "from": 11,
+        "to": 20,
+        "audioName": "",
+        "audioData": "",
+        "imgData": "",
+        "formCompletion": false,
+        "fcImgData": "",
+        "fcFrom": 11,
+        "fcTo": 20,
+        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio2.mp3",
+        "imgURL": "https://raw.githubusercontent.com/danofthursday99/ielts-sim/refs/heads/main/img/62126/map-ielts16t1listening.png"
+      },
+      {
+        "from": 21,
+        "to": 30,
+        "audioName": "",
+        "audioData": "",
+        "imgData": "",
+        "formCompletion": false,
+        "fcImgData": "",
+        "fcFrom": 21,
+        "fcTo": 30,
+        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio3.mp3"
+      },
+      {
+        "from": 31,
+        "to": 40,
+        "audioName": "",
+        "audioData": "",
+        "imgData": "",
+        "formCompletion": false,
+        "fcImgData": "",
+        "fcFrom": 31,
+        "fcTo": 40,
+        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio4.mp3"
+      }
+    ],
+    "questions": {},
+    "qBlocks": {
+      "1": [
+        {
+          "type": "fc",
+          "part": "",
+          "instr": "Questions 1-3\nComplete the form below.\nWrite ONE WORD OR A NUMBER for each answer.\n\nQuestions 4-7\nComplete the table below.\nWrite ONE WORD AND/OR A NUMBER for each answer.",
+          "fcHtml": "<h3><center>University Accommodation Dept.</center></h3>\n<p><center>Customer Information</center></p>\n<p><em>Example:</em><br>The caller wants accommodation for <u>international</u> students.</p><hr><br>\n<p><strong>Student Name:</strong> Maria Teresa <strong>1</strong>{{1}} Vila</p>\n<p><strong>Student Number:</strong> <strong>2</strong>{{2}}</p>\n<p><strong>Faculty:</strong> Modern <strong>3</strong>{{3}}</p>\n<p><strong>Starting:</strong> September 1</p><br>\n<h4>Questions 4-7</h4>\n<table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;width:100%\">\n<tr><th>Name of Block</th><th>Location</th><th>Rent</th></tr>\n<tr><td>The Trigon</td><td>Located near <strong>4</strong>{{4}} and main campus</td><td>£<strong>5</strong>{{5}} per week</td></tr>\n<tr><td>The Cube</td><td>Located near <strong>6</strong>{{6}} entrance to campus</td><td><strong>7</strong>{{7}} room options<br>-1 bedroom = £180 per week<br>-2 bedrooms = £110 per week per person</td></tr>\n</table>",
+          "fcInstr": "Questions 1-3\nComplete the form below.\nWrite ONE WORD OR A NUMBER for each answer.\n\nQuestions 4-7\nComplete the table below.\nWrite ONE WORD AND/OR A NUMBER for each answer.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 1,
+              "answer": ""
+            },
+            {
+              "num": 2,
+              "answer": ""
+            },
+            {
+              "num": 3,
+              "answer": ""
+            },
+            {
+              "num": 4,
+              "answer": ""
+            },
+            {
+              "num": 5,
+              "answer": ""
+            },
+            {
+              "num": 6,
+              "answer": ""
+            },
+            {
+              "num": 7,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 1,
+          "fcTo": 7
+        },
+        {
+          "type": "ct3",
+          "part": "",
+          "instr": "Questions 8-10\nChoose THREE letters, A-E.",
+          "qFrom": 8,
+          "qTo": 10,
+          "qText": "Which THREE of the following are features of accommodation at The Cube?",
+          "pick": 3,
+          "options": [
+            "parking garage",
+            "laundry room",
+            "ensuite bathroom",
+            "kitchen",
+            "study bedroom"
+          ],
+          "answers": []
+        }
+      ],
+      "2": [
+        {
+          "type": "fc",
+          "part": "Part 2",
+          "instr": "Questions 11-16\nComplete the notes below.\nWrite NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+          "fcHtml": "<h4><center>Barker's Country Safaris</center></h4>\n<p>Established: <strong>11</strong>{{11}} years ago by John and Nancy Barker.</p><br>\n<p>As teens the Barkers enjoyed:</p>\n<p>climbing<br>kayaking<br>white-water rafting<br>pot-holing<br><strong>12</strong>{{12}}</p><br>\n<p>At university they organized:</p>\n<p>motor trips<br><strong>13</strong>{{13}} tours</p><br>\n<p>5 years ago they <strong>14</strong>{{14}} their regular jobs</p>\n<p><strong>15</strong>{{15}} years later they began running activity tours</p>\n<p>1 year ago they started activities for <strong>16</strong>{{16}} groups</p>",
+          "fcInstr": "Questions 11-16\nComplete the notes below.\nWrite NO MORE THAN TWO WORDS AND/OR A NUMBER for each answer.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 11,
+              "answer": ""
+            },
+            {
+              "num": 12,
+              "answer": ""
+            },
+            {
+              "num": 13,
+              "answer": ""
+            },
+            {
+              "num": 14,
+              "answer": ""
+            },
+            {
+              "num": 15,
+              "answer": ""
+            },
+            {
+              "num": 16,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 11,
+          "fcTo": 16
+        },
+        {
+          "type": "fc",
+          "part": "Part 2",
+          "instr": "Questions 17-20\nComplete the table below.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
+          "fcHtml": "<h4>Tour Options</h4>\n<table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;width:100%\">\n<tr><th>Name</th><th>Size</th><th>Times</th></tr>\n<tr><td>Woodland tour and trail</td><td>10 jeeps <strong>17</strong>{{17}} people per jeep</td><td>Morning: 8 AM<br>Afternoon: <strong>18</strong>{{18}} PM to 6PM<br>Evening: 7-11 PM</td></tr>\n<tr><td>Family <strong>19</strong>{{19}}</td><td>1 jeep/jeeps if <strong>20</strong>{{20}} party</td><td>Whole Day<br>From 10 AM till 11 PM</td></tr>\n</table>",
+          "fcInstr": "Questions 17-20\nComplete the table below.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 17,
+              "answer": ""
+            },
+            {
+              "num": 18,
+              "answer": ""
+            },
+            {
+              "num": 19,
+              "answer": ""
+            },
+            {
+              "num": 20,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 17,
+          "fcTo": 20
+        }
+      ],
+      "3": [
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "Questions 21-27\nChoose the correct answer, A, B or C.\nWrite your answers in boxes 21-27 on your answer sheet.",
+          "qNum": 21,
+          "qText": "Jess wants to start the meeting by",
+          "options": [
+            "organizing his notes",
+            "taking a photo",
+            "reviewing the objectives for the project"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "",
+          "qNum": 22,
+          "qText": "What are Matt and Jess planning to study?",
+          "options": [
+            "different species of insects",
+            "different species of plants",
+            "old photos"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "",
+          "qNum": 23,
+          "qText": "How far apart are the plots supposed to be?",
+          "options": [
+            "12 feet apart",
+            "10 meters apart",
+            "10 miles apart"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "",
+          "qNum": 24,
+          "qText": "Where can the bamboo sticks be purchased?",
+          "options": [
+            "department stores",
+            "toy shops",
+            "gardening centres"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "",
+          "qNum": 25,
+          "qText": "One person throws the frame and the other person",
+          "options": [
+            "turns on the spot",
+            "smiles and waves",
+            "marks out the squares"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "",
+          "qNum": 26,
+          "qText": "The instructions sound complicated because",
+          "options": [
+            "they are in writing",
+            "there is so much turning around",
+            "there are so many squares"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 3",
+          "instr": "",
+          "qNum": 27,
+          "qText": "Jess thinks Matt should do the throwing because",
+          "options": [
+            "he has more experience",
+            "he has a stronger arm",
+            "he is more accurate"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "match",
+          "part": "Part 3",
+          "instr": "Questions 28-30\nWhat do Matt and Jess decide about each of the possible locations?\nWrite the correct letter, A, B or C, in boxes 28-30 on your answer sheet.",
+          "matchPrompt": "LOCATIONS",
+          "matchChoices": [
+            "they will go there",
+            "they might go there",
+            "they will not go there"
+          ],
+          "matchItems": [
+            {
+              "num": "28",
+              "label": "the lowland around the marsh",
+              "answer": ""
+            },
+            {
+              "num": "29",
+              "label": "behind the beach",
+              "answer": ""
+            },
+            {
+              "num": "30",
+              "label": "behind the headland near the bay",
+              "answer": ""
+            }
+          ]
+        }
+      ],
+      "4": [
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "Questions 31-34\nChoose the correct answer, A, B or C.\nWrite your answers in boxes 31-34 on your answer sheet.",
+          "qNum": 31,
+          "qText": "Compared to other industries, tourism has",
+          "options": [
+            "the most young customers.",
+            "the biggest impact on people.",
+            "only indirect impact."
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "",
+          "qNum": 32,
+          "qText": "In global tourism there is",
+          "options": [
+            "97% economic leakage.",
+            "a 9 in 10 chance of failure.",
+            "about 9% economic failure."
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "",
+          "qNum": 33,
+          "qText": "Some countries with high levels of tourism still have",
+          "options": [
+            "poor accommodation.",
+            "great poverty.",
+            "large national debt."
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "",
+          "qNum": 34,
+          "qText": "Geo-tourism is all about",
+          "options": [
+            "reducing pollution from industry.",
+            "increasing numbers of travellers.",
+            "providing a fair reward for service."
+          ],
+          "answer": ""
+        },
+        {
+          "type": "fc",
+          "part": "Part 4",
+          "instr": "Questions 35-40\nComplete the notes below.\nWrite ONE WORD AND/OR A NUMBER ONLY for each answer.",
+          "fcHtml": "<h4><center>Project with World Bank</center></h4>\n<p>Developing technology platform</p>\n<p>brings grassroots products to locals</p>\n<p>avoids <strong>35</strong>{{35}} men</p><br>\n<p>Volunteering</p>\n<p>many teens schedule <strong>36</strong>{{36}} -year between school and university</p>\n<p>volunteering organizations charge up to £<strong>37</strong>{{37}}</p><br>\n<p>Geo-Tourism</p>\n<p>customers are looking for organizations that can suggest <strong>38</strong>{{38}} projects</p>\n<p>organizers would charge flat <strong>39</strong>{{39}}</p>\n<p>this would make for a good <strong>40</strong>{{40}} for each customer</p>",
+          "fcInstr": "Questions 35-40\nComplete the notes below.\nWrite ONE WORD AND/OR A NUMBER ONLY for each answer.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 35,
+              "answer": ""
+            },
+            {
+              "num": 36,
+              "answer": ""
+            },
+            {
+              "num": 37,
+              "answer": ""
+            },
+            {
+              "num": 38,
+              "answer": ""
+            },
+            {
+              "num": 39,
+              "answer": ""
+            },
+            {
+              "num": 40,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 35,
+          "fcTo": 40
+        }
+      ]
+    }
+  },
+  "reading": {
+    "passages": [
+      {
+        "num": 1,
+        "title": "What Makes Us Happy?",
+        "from": 1,
+        "to": 13,
+        "html": "<h3><center>What Makes Us Happy?</center></h3>\n<p>Do you seriously want to be happy? Of course you do! But what does it take to be happy? Many psychologists are now using scientific methods to try to understand the nature and origins of happiness. Their results may surprise you.</p>\n<p>Surprisingly, happiness has been shown to be a constitutional trait. The study of different types of twins; identical and non-identical, has enabled scientists to calculate that 50-60% of self-identified happiness &ndash; and what other sort is there? &ndash; is down to genes. Of course, there is no one specific gene that determines happiness, but a great many and they tend to overlap with the genes that determine personality. People who are emotionally stable, sociable and conscientious, tend to be happier according to the research.</p>\n<p>Now, many people believe that money makes us happy. However, there is no clear relationship between wealth and happiness. Once out of poverty, increases in wealth do not automatically turn into relative increases in happiness. For example, winning the lottery may give a rush of joy and excitement but does not ensure long-term contentment. In fact, studies have shown that lottery winners take less pleasure in everyday events following their win. It seems that they soon get habituated to their money, while at the same time they have distanced themselves from their former lives and identities by leaving jobs, friends and lifestyle.</p>\n<p>Nor does a steady increase in income make for greater happiness. The more we have, the more we seem to want, so we are always stuck at the same level of satisfaction/dissatisfaction. The perception of wealth is a relative thing: we are discontented when those who we compare ourselves with are better off than ourselves. This goes someway to explain why, in most Western countries, average incomes have increased considerably but without any increase in the average levels of happiness.</p>\n<p>If wealth does not bring happiness, what about spending it? There is no doubt that shopping gives us a short lived burst of pleasure &ndash; but very little more than that. The only type of shopping that might provide longer term happiness is when we buy things for other people.</p>\n<p>Nor does happiness come in liquid or tablet form. A couple of drinks at a party may lighten our mood and be good for us medically and mentally, but alcohol abuse destroys our body, mind and relationships. Similarly drugs like cocaine and ecstasy give brief bursts of joy but there is a massive price to be paid when the high is over.</p>\n<p>So, what can we do to improve our sense of well-being? First we need to realise that we are not passive victims of external events. We can and should take control of our life to make it rewarding and satisfying. We should adopt a positive attitude, and overcome feelings of worthlessness and build our own self-confidence and self-esteem.</p>\n<p>We should try to reduce the burden of unnecessary worry. If there is something that can be done about a problem we are worrying about then we should do it, and stop worrying. And of course there is no point in worrying about things we can't change. A sense of humour is good protection against adversity and a strong antidote to depression. One of the key symptoms of depression is the loss of the ability to laugh.</p>\n<p>A key feature of happy and contented people is that they have a sense of meaning and purpose in life. Rather than just drifting through life, they have a clear set of values and goals that they are trying to achieve. This could be associated with faith, humanitarianism and family values, artistic or scientific aspirations and career ambitions. All these things provide a sense of identity as well as something to work towards or look forward to.</p>\n<p>Happiness is a positive by-product of keeping active. But not just being busy, we need to be doing things that raise self-esteem and bring us satisfaction; controlling our own schedule and prioritising activities that satisfy our own needs. And saying 'no' to other people if necessary. Of course, this doesn't mean we have to be selfish. Being active members of the community or volunteering for a charity or helping your family can all create happiness &ndash; particularly for older people.</p>\n<p>So, should we actively pursue happiness? Curiously, the happiest people seem to be those who do not actively see it &ndash; indeed the 'pursuit of happiness' may be counterproductive. To a large extent, happiness emerges as a by-product of who we are and what we do. Conversely, people who focus on making others happy usually make themselves happy in the process.</p>",
+        "imgData": ""
+      },
+      {
+        "num": 2,
+        "title": "The Business of Space",
+        "from": 14,
+        "to": 26,
+        "html": "<h3><center>The Business of Space</center></h3>\n<p>Up until very recently space travel and exploration were solely the preserve of governments, most notably the Russian and American. However, with the decline of government wealth and the dramatic increase in personal wealth, the whole landscape of space travel is changing.</p>\n<p>The first tentative steps into the commercialisation of personal space travel began when billionaire Dennis Tito paid $20 million to ride on a Russian Soyuz spacecraft for a week's holiday on a space station. Since then, there have been seven space tourists who have paid large sums of money for a space experience. Yet, collectively, their financial contribution is minute, and certainly would not appear to represent a feasible business.</p>\n<p>Richard Branson, billionaire and entrepreneur, has formed Virgin Galactic, a spaceship company with some very ambitious plans for space travel. Surprisingly, he is not alone; there are some 12 or 13 other space organizations worldwide with similar plans. Of course, there are setbacks, but Virgin Galactic plan to have paying flights beginning in late 2017, with tickets at $250,000 each. Expensive? Yes! But there are over 20,000 people who have expressed interest, despite the tragic death of a co-pilot during a test flight accident.</p>\n<p>It seems that people who want to take short zero gravity suborbital flights are fully aware of the dangers and are willing to take the risk. It is also worth noting that there were almost 2000 billionaires in the world in 2016, and that number is growing. So entrepreneurs like Richard Branson may represent the tip of the iceberg of young rich investors who want to make their childhood dreams of space travel come true.</p>\n<p>Obviously, the key to the success of any business venture is to ensure that the price of the product maximises sales and to reduce the very high costs of the vehicles and rockets needed to do this. Currently, space vehicles can only be used once, so the race is on to develop reusable space vehicles. It is this reusability that will break the 'cost-barrier' and bring this activity into the price bracket where middle class and moderately wealthy people can afford it.</p>\n<p>So what would you pay for a zero-gravity sub-orbital space trip? A recent, unscientific study, amongst US millennials (people who became adults around the year 2000) suggested that if the price of the flights was reduced by a factor of five &ndash; a figure entirely possible given the progress being made with reusable vehicles &ndash; the yield would be about $20 billion a year of revenues for the space tourism industry.</p>\n<p>Twenty billion dollars is an interesting figure, as it is about the same amount generated each year by the film industry in the US through ticket, DVD and other sales. So now it is possible to make an analogy between the business model of Hollywood and space travel. Which do you think is more expensive? A Hollywood blockbuster, or the cost of a space launch? Back in the 1960s and 1970s, a space launch cost hundreds of times more than a Hollywood film. But as more money came to be spent on Hollywood movies, the cost of space travel has been decreasing. One particularly illustrative example is the comparison between the film Avatar, a movie about life on an 'exomoon,' and the Kepler spacecraft. Both of these cost about $400 million dollars. So for about half a billion dollars you can either get a film about life on other planets, or you can pay for a mission, which may actually find earth-like worlds. As a scientist, which is the better deal?</p>\n<p>So what really is in the future for space travel? Probably offers of suborbital travel by companies like Virgin Galactic will become fairly common after the initial teething phase is over. Other companies are developing space hotels, so people who can afford more than just the space trips, can spend their money holidaying in space. All the technologies allowing this to happen are advancing very rapidly and most of this is happening in the private sector.</p>\n<p>Space is going to get commercialised and this may not be a good thing. Do we really want to see massive advertising signs in space? The moon littered with commercial rubbish? If this happens it will be very hard to regulate. While there is in existence a Treaty of the Moon, to acknowledge that no one can own the Moon or Mars, not one space faring country has signed it.</p>\n<p>The future of space travel has never been more exciting than it is now. Young children with pictures of planets and space rockets on their bedroom have a greater chance than ever of actually going into space than ever before. But at what cost?</p>",
+        "imgData": ""
+      },
+      {
+        "num": 3,
+        "title": "Using Mathematics to Secure Our Money",
+        "from": 27,
+        "to": 40,
+        "html": "<h3><center>Using Mathematics to Secure Our Money</center></h3>\n<p><strong>A</strong> Up until very recently people's wealth, mostly coins and jewels, was kept safe under lock and key. Rich medieval families would keep a strong box with a large key, both of which were carefully hidden in different places. Later the box may have been kept in a bank. In either case, potential thieves would need to find both the box and the key. A similar principle was used for sending secret diplomatic and military messages. The messages were written in code with both the sender and the receiver having the key to the code. Thus, while the message could be discovered its meaning could only be found if the 'key' was also known. And so began a long-running battle between code-makers who tried to make better keys, and code-breakers who sought ways of finding them.</p>\n<p><strong>B</strong> Nowadays, cryptography is central to how our money is kept secure, even though we may not be aware of it. Our money is no longer in a tangible form, but in the form of information kept with our banks. To keep everyone involved happy, the messages initiated by our plastic cards have to be sent and received safely and the entire operation must be carried out with a high level of confidentiality and security.</p>\n<p><strong>C</strong> On a practical level, it is clear that the work of code-makers has been introduced into our daily financial lives. Our credit cards have 16-digit numbers on the front and a 3-digit number on the back. They also contain a 'chip' that can do all sorts of mysterious operations with these numbers. Finally, we also have a Personal Identification Number which we all need to memorize. All these numbers form a type of cryptographic key. However, as we shall see, the modern crypto systems are very different in the way the keys are used.</p>\n<p><strong>D</strong> The main feature of the traditional systems was that only one key was needed by both the sender and the receiver to understand the message. However the main problem was that the key itself needed to be communicated to both parties before they could use it. Obviously a major security risk. A very different approach was developed in the 1970s, based on a different way of using the keys. Now the main idea is that the typical user, let us call him Amir, has two keys; a 'public key' and a 'private key'. The public key is used to encrypt messages that other people wish to send to Amir, and the private key is used by Amir to decrypt these messages. The security of the system is based on keeping Amir's private key secret.</p>\n<p><strong>E</strong> This system of public-key cryptography, known as RSA &ndash; from the names of the developers (Ronald Rivest, Adi Shamir and Leonard Adleman) &ndash; was developed in the late 1970s and is based on a collection of several mathematical algorithms. The first is a process that allows the user, Amir, to calculate two numerical keys: private and public, based on two prime numbers. To complete the RSA system, two more algorithms are then needed: one for encrypting messages and one for decrypting them.</p>\n<p><strong>F</strong> The effectiveness of RSA depends on two things. It is efficient, because the encryption and decryption algorithms used by participants are easy, in a technical sense they can be made precise. On the other hand, it is believed to be secure, because no one has found an easy way of decrypting the encrypted message without knowing Amir's private key.</p>\n<p><strong>G</strong> When the RSA system was first written about in Scientific American, the strength of the system was shown by challenging the readers to find the prime factors &ndash; the two original numbers &ndash; of a certain number with 129 digits. It took 17 years to solve this problem, using the combined efforts of over 600 people. So clearly it is a very secure system. Using mathematics in this way, scientists and technologists have enabled us to keep our money as secure as the rich medieval barons with their strong boxes and hidden keys.</p>",
+        "imgData": ""
+      }
+    ],
+    "qBlocks": {
+      "1": [
+        {
+          "type": "mc",
+          "part": "",
+          "instr": "Questions 1-3\nChoose the correct letter A, B, C or D.\nWrite the correct letter in boxes 1-3 on your answer sheet.",
+          "qNum": 1,
+          "qText": "The main topic discussed in the text is:",
+          "options": [
+            "the danger of worrying about things beyond our control",
+            "the difficult task of identifying what makes us happy",
+            "key indicators of depression",
+            "activities which can make us happy"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "",
+          "instr": "",
+          "qNum": 2,
+          "qText": "A study of different types of twins suggests",
+          "options": [
+            "happiness is mostly a genetic trait.",
+            "'happiness' and 'personality' are not related.",
+            "identical twins are more emotional than non-identical twins.",
+            "scientists are not happy people."
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "",
+          "instr": "",
+          "qNum": 3,
+          "qText": "According to the text, a steady rise in income",
+          "options": [
+            "increases anyone's level of happiness.",
+            "creates a steady decline in happiness.",
+            "happens frequently in Western cultures.",
+            "does not necessarily lead to greater happiness."
+          ],
+          "answer": ""
+        },
+        {
+          "type": "fc",
+          "part": "",
+          "instr": "Questions 4-6\nComplete the sentences below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 4-6 on your answer sheet.",
+          "fcHtml": "<p>4. Observation of lottery winners suggests that there is no relationship between happiness and {{4}}.</p>\n<p>5. When we compare ourselves to others we discover that the concept of 'wealth' is {{5}}.</p>\n<p>6. The types of purchases which are most likely to provide us with happiness are those purchased for {{6}}.</p>",
+          "fcInstr": "Questions 4-6\nComplete the sentences below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 4-6 on your answer sheet.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 4,
+              "answer": ""
+            },
+            {
+              "num": 5,
+              "answer": ""
+            },
+            {
+              "num": 6,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 4,
+          "fcTo": 6
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "Questions 7-9\nDo the following statements agree with the information given in Reading Passage 1?\nWrite\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this",
+          "qNum": 7,
+          "qText": "We are all unwilling participants in events beyond our control.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "",
+          "qNum": 8,
+          "qText": "A crucial determiner of happiness is starting each day by writing a 'to-do' list.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "",
+          "qNum": 9,
+          "qText": "'Happiness' has a strong relationship with our actions and attitudes.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "fc",
+          "part": "",
+          "instr": "Questions 10-13\nComplete the summary using the list of words, A-I, below.\nWrite the correct letter, A-I, in boxes 10-13 on your answer sheet.",
+          "fcHtml": "<table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse\">\n<tr><td><strong>A</strong> lifestyle</td></tr>\n<tr><td><strong>B</strong> important</td></tr>\n<tr><td><strong>C</strong> by-product</td></tr>\n<tr><td><strong>D</strong> related</td></tr>\n<tr><td><strong>E</strong> independent</td></tr>\n<tr><td><strong>F</strong> relevant</td></tr>\n<tr><td><strong>G</strong> scientific</td></tr>\n<tr><td><strong>H</strong> selfish</td></tr>\n<tr><td><strong>I</strong> exclusive</td></tr>\n</table><br>\n<p>In this article, the author gives us a discussion of 'happiness' from a <strong>10</strong>{{10}} perspective. The investigation into the influence of money on happiness suggests that the two are not <strong>11</strong>{{11}}. We should be able to say 'no' to other people, but this doesn't require us to be <strong>12</strong>{{12}}. The author concludes that happiness is the <strong>13</strong>{{13}} of activity focused on making others happy.</p>",
+          "fcInstr": "Questions 10-13\nComplete the summary using the list of words, A-I, below.\nWrite the correct letter, A-I, in boxes 10-13 on your answer sheet.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 10,
+              "answer": ""
+            },
+            {
+              "num": 11,
+              "answer": ""
+            },
+            {
+              "num": 12,
+              "answer": ""
+            },
+            {
+              "num": 13,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 10,
+          "fcTo": 13
+        }
+      ],
+      "2": [
+        {
+          "type": "ct5",
+          "part": "",
+          "instr": "Questions 14-18\nChoose FIVE letters, A-I.\nWrite the correct letters in boxes 14-18 on your answer sheet.\nNB Your answers may be given in any order.\nBelow are listed some popular beliefs about commercial space travel.",
+          "qFrom": 14,
+          "qTo": 18,
+          "qText": "Which five of these are reported by the writer of the text?",
+          "pick": 5,
+          "options": [
+            "Space travel today is no different than space travel in the 1960's.",
+            "To date, the amount of space travel undertaken by private individuals could not sustain a business.",
+            "Richard Branson's plans for commercial space travel may be described as 'daring.'",
+            "It is not surprising that Branson's company is not the only company interested in commercial space travel.",
+            "Virgin Galactic's proposed fares will be highly affordable to many.",
+            "Individuals who want to fly into space are gamblers.",
+            "Parallels can be drawn between space travel and the Hollywood movie industry.",
+            "The rise of companies like Virgin Galactic is unconditionally positive.",
+            "Laws governing space travel will be difficult to enforce."
+          ],
+          "answers": []
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "Questions 19-26\nDo the following statements agree with the information given in Reading Passage 2?\nWrite\nTRUE if the statement agrees with the information\nFALSE if the statement contradicts the information\nNOT GIVEN if there is no information on this",
+          "qNum": 19,
+          "qText": "Space travel today remains under the control of the Russian and American governments.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 20,
+          "qText": "The first commercial space passenger was Richard Branson.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 21,
+          "qText": "The Virgin Group was established by Richard Branson in 1970.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 22,
+          "qText": "Space vehicles are presently capable of being used more than once.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 23,
+          "qText": "$20 billion is the amount that millennials currently spend on space travel.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 24,
+          "qText": "The film 'Avatar' cost about $400 million to make.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 25,
+          "qText": "It is unlikely that recycling will become common practice on the moon.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "tfng",
+          "part": "",
+          "instr": "",
+          "qNum": 26,
+          "qText": "Children today have a better chance of realizing their dreams of space travel than children in the 1960's did.",
+          "options": [
+            "TRUE",
+            "FALSE",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        }
+      ],
+      "3": [
+        {
+          "type": "match",
+          "part": "",
+          "instr": "Questions 27-32\nReading Passage 3 has seven paragraphs, A-G.\nChoose the correct heading for paragraphs B-G from the list of headings below.\nWrite the correct number, i-x, in boxes 27-32 on your answer sheet.\n\nExample: Paragraph A -- Answer: iii",
+          "matchPrompt": "List of Headings",
+          "matchChoices": [
+            "i. The prevalence of numerical 'codes' in modern life",
+            "ii. How RSA works",
+            "iii. A brief history of keeping things safe",
+            "iv. 'New math' vs 'medieval math'",
+            "v. Proof that RSA is effective",
+            "vi. The illusion of security",
+            "vii. Cryptography: the modern key for the lock",
+            "viii. Why RSA is effective",
+            "ix. In defence of medieval security systems",
+            "x. A new approach to system security"
+          ],
+          "matchItems": [
+            {
+              "num": "27",
+              "label": "Paragraph B",
+              "answer": ""
+            },
+            {
+              "num": "28",
+              "label": "Paragraph C",
+              "answer": ""
+            },
+            {
+              "num": "29",
+              "label": "Paragraph D",
+              "answer": ""
+            },
+            {
+              "num": "30",
+              "label": "Paragraph E",
+              "answer": ""
+            },
+            {
+              "num": "31",
+              "label": "Paragraph F",
+              "answer": ""
+            },
+            {
+              "num": "32",
+              "label": "Paragraph G",
+              "answer": ""
+            }
+          ]
+        },
+        {
+          "type": "fc",
+          "part": "",
+          "instr": "Questions 33-36\nComplete the notes below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 33-36 on your answer sheet.",
+          "fcHtml": "<p>Through the use of cryptography banks keep money <strong>33</strong>{{33}}.</p>\n<p>The way credit cards work is an example of the influence of <strong>34</strong>{{34}}.</p>\n<p>Crypto systems developed in the 1970's relied on 2 keys: the <strong>35</strong>{{35}} and the <strong>36</strong>{{36}}.</p>",
+          "fcInstr": "Questions 33-36\nComplete the notes below.\nChoose NO MORE THAN TWO WORDS from the passage for each answer.\nWrite your answers in boxes 33-36 on your answer sheet.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 33,
+              "answer": ""
+            },
+            {
+              "num": 34,
+              "answer": ""
+            },
+            {
+              "num": 35,
+              "answer": ""
+            },
+            {
+              "num": 36,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 33,
+          "fcTo": 36
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "Questions 37-40\nDo the following statements agree with the views of the writer in Reading Passage 3?\nWrite\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this",
+          "qNum": 37,
+          "qText": "Online banking makes most people nervous",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "",
+          "qNum": 38,
+          "qText": "The way keys are used in modern cryptograph is quite different from the past",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "",
+          "qNum": 39,
+          "qText": "The main problem with traditional cryptography systems is that neither party can decode the message.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        },
+        {
+          "type": "ynng",
+          "part": "",
+          "instr": "",
+          "qNum": 40,
+          "qText": "The RSA system represents the most secure cryptography we are ever likely to develop.",
+          "options": [
+            "YES",
+            "NO",
+            "NOT GIVEN"
+          ],
+          "answer": ""
+        }
+      ]
+    }
+  },
+  "writing": {
+    "tasks": {
+      "1": {
+        "prompt": "The table below gives details of world electricity production by renewable sources in the four years between 2009 and 2012.\n\nSummarise the information by selecting and reporting the main features and making comparisons where relevant.\n\nYou should write at least 150 words.",
+        "imgData": "",
+        "minWords": 150,
+        "imgURL": "",
+        "tableHtml": "<table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;width:100%\">\n<caption>World electricity production by renewable sources in Trillion Watt Hours (TWh)</caption>\n<tr><th>Source</th><th>2009</th><th>2010</th><th>2011</th><th>2012</th></tr>\n<tr><td>Geothermal</td><td>67.4</td><td>68.5</td><td>69.3</td><td>70.4</td></tr>\n<tr><td>Wind</td><td>276.4</td><td>351.2</td><td>451.5</td><td>534</td></tr>\n<tr><td>Solar</td><td>21</td><td>33.5</td><td>53.1</td><td>104.5</td></tr>\n<tr><td>Hydraulic</td><td>3329</td><td>3514.3</td><td>3530.8</td><td>3663.4</td></tr>\n<tr><td>Bio-mass</td><td>246.8</td><td>288.9</td><td>307.6</td><td>326.2</td></tr>\n</table>"
+      },
+      "2": {
+        "prompt": "Discuss both these views and give your own opinion.\n\nChildhood obesity is becoming a problem throughout the developed world. Because of this, some people think that adverts for fast food, sweets and sugary snacks should not be allowed in schools and colleges.\n\nTo what extent do you agree or disagree with this?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nYou should write at least 250 words.",
+        "imgData": "",
+        "minWords": 250
+      }
+    }
+  },
+  "answerKey": {
+    "L": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+      "7": "",
+      "8": "",
+      "9": "",
+      "10": "",
+      "11": "",
+      "12": "",
+      "13": "",
+      "14": "",
+      "15": "",
+      "16": "",
+      "17": "",
+      "18": "",
+      "19": "",
+      "20": "",
+      "21": "",
+      "22": "",
+      "23": "",
+      "24": "",
+      "25": "",
+      "26": "",
+      "27": "",
+      "28": "",
+      "29": "",
+      "30": "",
+      "31": "",
+      "32": "",
+      "33": "",
+      "34": "",
+      "35": "",
+      "36": "",
+      "37": "",
+      "38": "",
+      "39": "",
+      "40": ""
+    },
+    "R": {
+      "1": "",
+      "2": "",
+      "3": "",
+      "4": "",
+      "5": "",
+      "6": "",
+      "7": "",
+      "8": "",
+      "9": "",
+      "10": "",
+      "11": "",
+      "12": "",
+      "13": "",
+      "14": "",
+      "15": "",
+      "16": "",
+      "17": "",
+      "18": "",
+      "19": "",
+      "20": "",
+      "21": "",
+      "22": "",
+      "23": "",
+      "24": "",
+      "25": "",
+      "26": "",
+      "27": "",
+      "28": "",
+      "29": "",
+      "30": "",
+      "31": "",
+      "32": "",
+      "33": "",
+      "34": "",
+      "35": "",
+      "36": "",
+      "37": "",
+      "38": "",
+      "39": "",
+      "40": ""
+    }
+  },
+  "_driveURL": "",
+  "_meta": {
+    "setID": "",
+    "setName": "",
+    "setDesc": "",
+    "exportedAt": ""
+  }
+}
