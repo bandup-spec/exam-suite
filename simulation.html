@@ -363,6 +363,18 @@ function extractYouTubeId(url) {
   return id;
 }
 
+// A raw Google Drive "share" link (…/file/d/ID/view?usp=sharing) is an HTML
+// preview page, not a media stream — <audio src> can't play it. Convert it
+// to the direct-download form here too, as a safety net for any section
+// audioURL saved before question-maker.html started converting these itself.
+function resolvePlayableAudioURL(url) {
+  if (!url) return url;
+  if (url.includes('export=download') || url.includes('uc?id=')) return url;
+  if (!url.includes('drive.google.com')) return url;
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : url;
+}
+
 // Load config from localStorage (set by admin)
 // ══════════════════════════════════════
 // CONFIG LOADER — tries Google Drive first, falls back to localStorage
@@ -701,7 +713,7 @@ function loadAudioForSection(sec, n, autoplay) {
       // Direct audio URL (mp3 etc.) — still routed through our custom button
       currentAudioMode = 'file';
       const el = document.getElementById('audio-el');
-      el.src = sec.audioURL;
+      el.src = resolvePlayableAudioURL(sec.audioURL);
       btn.disabled = alreadyDone;
       status.innerText = autoplay ? 'Playing — listen carefully' : (alreadyDone ? 'Recording finished' : 'Ready to play');
       if (autoplay) { el.play(); progressInterval = setInterval(updateProgress, 400); }
