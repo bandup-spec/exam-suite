@@ -710,16 +710,8 @@ async function doSubmitTest(autoSubmit){
   const submitBtn = document.getElementById('submit-btn');
   submitBtn.textContent = 'Saving...'; submitBtn.disabled = true;
 
-  // JSON backup download — best-effort, must never block submission.
-  try {
-    const blob = new Blob([JSON.stringify({...candidateData, examType:'TOEIC', testSetID:activeTestSet.setID, testSetName:activeTestSet.setName, answers}, null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = `toeic_response_${candidateData.candidateID||'unknown'}_${Date.now()}.json`;
-    a.click();
-  } catch(e){}
-
   let result = null;
+  let sheetsFailed = false;
   try {
     result = await callSheets({
       action: 'saveScore',
@@ -731,7 +723,21 @@ async function doSubmitTest(autoSubmit){
       listeningAnswers: JSON.stringify(listeningAnswers),
       readingAnswers: JSON.stringify(readingAnswers)
     });
-  } catch(e){ /* Sheets save optional — JSON backup already attempted above. */ }
+    if (!result || !result.success) sheetsFailed = true;
+  } catch(e) { sheetsFailed = true; }
+
+  // Only download a local JSON backup if the Sheets save didn't actually
+  // succeed — most submissions save fine, so there's no need to surprise
+  // every candidate with a download popup on every single submit.
+  if (sheetsFailed) {
+    try {
+      const blob = new Blob([JSON.stringify({...candidateData, examType:'TOEIC', testSetID:activeTestSet.setID, testSetName:activeTestSet.setName, answers}, null, 2)], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `toeic_response_${candidateData.candidateID||'unknown'}_${Date.now()}.json`;
+      a.click();
+    } catch(e){}
+  }
 
   clearStageTimer('listening');
   clearStageTimer('reading');
