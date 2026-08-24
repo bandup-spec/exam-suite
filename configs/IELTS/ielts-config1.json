@@ -11,7 +11,7 @@
         "fcImgData": "",
         "fcFrom": 1,
         "fcTo": 10,
-        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio1.mp3"
+        "audioURL": "https://www.image2url.com/r2/default/files/1787614229200-df24874d-1212-4fcb-b71c-1c0b9ca4748f.mp3"
       },
       {
         "from": 11,
@@ -23,7 +23,7 @@
         "fcImgData": "",
         "fcFrom": 11,
         "fcTo": 20,
-        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio2.mp3",
+        "audioURL": "",
         "imgURL": "https://raw.githubusercontent.com/danofthursday99/ielts-sim/refs/heads/main/img/62126/map-ielts16t1listening.png"
       },
       {
@@ -36,7 +36,7 @@
         "fcImgData": "",
         "fcFrom": 21,
         "fcTo": 30,
-        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio3.mp3"
+        "audioURL": ""
       },
       {
         "from": 31,
@@ -48,7 +48,7 @@
         "fcImgData": "",
         "fcFrom": 31,
         "fcTo": 40,
-        "audioURL": "https://d1z803pryv3vab.cloudfront.net/IELTS16/IELTS16_test1_audio4.mp3"
+        "audioURL": ""
       }
     ],
     "questions": {},
