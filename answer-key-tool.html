@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Answer Key Tool — BandUp</title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'DM Sans',sans-serif;background:#f2f0ec;color:#1a1a2e;min-height:100vh}
+  .hdr{background:#002f5f;color:#fff;padding:16px 24px;border-bottom:3px solid #c8a84b}
+  .hdr h1{font-family:'Source Serif 4',serif;font-size:1.15rem;font-weight:600}
+  .hdr p{font-size:0.8rem;opacity:0.8;margin-top:2px}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 20px 60px}
+  .card{background:#faf9f7;border:1px solid #e0ddd6;border-radius:12px;padding:20px;margin-bottom:16px}
+  .card-title{font-family:'Source Serif 4',serif;font-size:1rem;font-weight:600;color:#002f5f;margin-bottom:6px}
+  .card-desc{font-size:0.82rem;color:#8888aa;margin-bottom:14px;line-height:1.5}
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:0.8rem;font-weight:600;color:#4a4a6a;margin-bottom:5px}
+  input[type=text],select{width:100%;padding:9px 11px;border:1px solid #e0ddd6;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.87rem}
+  textarea{width:100%;min-height:140px;padding:10px;border:1px solid #e0ddd6;border-radius:7px;font-family:monospace;font-size:0.85rem;resize:vertical}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .btn{padding:10px 20px;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:0.87rem;font-weight:600;cursor:pointer}
+  .btn-blue{background:#002f5f;color:#fff}
+  .btn-blue:hover{background:#1a5fa8}
+  .btn-green{background:#2e7d4f;color:#fff}
+  .count-chip{display:inline-block;background:#e8f0ff;color:#002f5f;border:1px solid #c0d0f0;border-radius:6px;padding:4px 10px;font-size:0.78rem;font-weight:700;margin-top:6px}
+  .count-chip.warn{background:rgba(217,164,65,0.15);color:#8a6414;border-color:rgba(217,164,65,0.4)}
+  #msg{margin-top:14px;font-size:0.85rem;padding:10px 14px;border-radius:8px}
+  .ok{background:#eafaf0;color:#2e7d4f;border:1px solid rgba(46,125,79,0.3)}
+  .err{background:#fdeceb;color:#c0392b;border:1px solid rgba(192,57,43,0.3)}
+  code{background:#f2f0ec;padding:1px 6px;border-radius:4px;font-size:0.8rem}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <h1>🔑 Answer Key Tool</h1>
+  <p>Push an answer key straight to the protected AnswerKeys sheet — works for any IELTS or TOEIC test set, now or in the future.</p>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <div class="card-title">1. Test Details</div>
+    <div class="row2">
+      <div class="field">
+        <label>Exam Type</label>
+        <select id="exam-type" onchange="updateHints()">
+          <option value="IELTS">IELTS (Reading 1–40)</option>
+          <option value="TOEIC">TOEIC (Reading 101–200)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Test Set ID</label>
+        <input type="text" id="test-set-id" placeholder="e.g. SET-1755000000000">
+      </div>
+    </div>
+    <div style="font-size:0.75rem;color:#8888aa">
+      Find the Test Set ID in <code>admin.html</code> → Test Sets panel (or create the test set there first if it doesn't exist yet).
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">2. Listening Answers</div>
+    <div class="card-desc" id="listening-hint">Paste answers in "number.letter" format, in any order, separated by spaces or newlines — e.g. <code>1.A 2.C 3.B</code> or one per line. Numbers should run 1–40 (IELTS) or 1–100 (TOEIC).</div>
+    <textarea id="listening-input" placeholder="1.A 2.C 3.B 4.A 5.C ..." oninput="updateCounts()"></textarea>
+    <div class="count-chip" id="listening-count">0 answers parsed</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">3. Reading Answers</div>
+    <div class="card-desc" id="reading-hint">Same format. For TOEIC, paste the REAL numbers as printed on your answer key (101–200) — this tool converts them automatically to match how the test engine checks them internally.</div>
+    <textarea id="reading-input" placeholder="101.B 102.D 103.B ..." oninput="updateCounts()"></textarea>
+    <div class="count-chip" id="reading-count">0 answers parsed</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">4. Send</div>
+    <button class="btn btn-green" onclick="send()">🔑 Send Answer Key to Sheets</button>
+    <div id="msg"></div>
+  </div>
+
+</div>
+
+<script>
+function updateHints(){
+  const type = document.getElementById('exam-type').value;
+  document.getElementById('reading-hint').innerHTML = type === 'TOEIC'
+    ? 'Same format. For TOEIC, paste the REAL numbers as printed on your answer key (101–200) — this tool converts them automatically to match how the test engine checks them internally.'
+    : 'Same format. IELTS Reading uses numbers 1–40 directly, exactly as printed on your answer key.';
+  updateCounts();
+}
+
+// Parses flexible "1.A 2.C" / "1:A" / "1) A" / "1. (A)" / "1. [A]" / one-per-line formats
+function parseAnswerText(text){
+  const result = {};
+  const matches = text.matchAll(/(\d+)\s*[.:\)]\s*[\(\[]?([A-Za-z0-9]+)[\)\]]?/g);
+  for (const m of matches){
+    result[parseInt(m[1],10)] = m[2].toUpperCase();
+  }
+  return result;
+}
+
+function updateCounts(){
+  const lParsed = parseAnswerText(document.getElementById('listening-input').value);
+  const rParsed = parseAnswerText(document.getElementById('reading-input').value);
+  const type = document.getElementById('exam-type').value;
+  const maxN = type === 'TOEIC' ? 100 : 40;
+
+  const lCount = Object.keys(lParsed).length;
+  const rCount = Object.keys(rParsed).length;
+
+  const lChip = document.getElementById('listening-count');
+  lChip.textContent = `${lCount} answers parsed` + (lCount && lCount!==maxN ? ` (expected ${maxN})` : '');
+  lChip.className = 'count-chip' + (lCount===maxN ? '' : ' warn');
+
+  const rChip = document.getElementById('reading-count');
+  rChip.textContent = `${rCount} answers parsed` + (rCount && rCount!==maxN ? ` (expected ${maxN})` : '');
+  rChip.className = 'count-chip' + (rCount===maxN ? '' : ' warn');
+}
+
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOWjeZlhj3HWA9C7W8j7GVh9OlVunuMgp6cvGfCFAW_RSZlsjpHvL4Ihqpbo0huwfdSg/exec';
+const API_KEY = 'ielts-sim-x7k2m9-change-me';
+
+function callSheets(payload){
+  return new Promise((resolve, reject) => {
+    const cbName = 'cb_' + Date.now() + '_' + Math.floor(Math.random()*9999);
+    const timeout = setTimeout(() => { delete window[cbName]; reject(new Error('Timeout — could not reach the server.')); }, 20000);
+    window[cbName] = (data) => { clearTimeout(timeout); delete window[cbName]; resolve(data); };
+    const params = new URLSearchParams({ ...payload, key: API_KEY, callback: cbName });
+    const script = document.createElement('script');
+    script.src = APPS_SCRIPT_URL + '?' + params.toString();
+    script.onerror = () => { clearTimeout(timeout); delete window[cbName]; reject(new Error('Network error.')); };
+    document.head.appendChild(script);
+    setTimeout(() => { try { document.head.removeChild(script); } catch(e){} }, 25000);
+  });
+}
+
+async function send(){
+  const testSetID = document.getElementById('test-set-id').value.trim();
+  const type = document.getElementById('exam-type').value;
+  const msg = document.getElementById('msg');
+
+  if(!testSetID){ msg.className='err'; msg.textContent='Please enter the Test Set ID first.'; return; }
+
+  const lParsed = parseAnswerText(document.getElementById('listening-input').value);
+  const rParsedRaw = parseAnswerText(document.getElementById('reading-input').value);
+
+  if (Object.keys(lParsed).length === 0 && Object.keys(rParsedRaw).length === 0){
+    if(!confirm('No answers were parsed from either box — send an empty key anyway?')) return;
+  }
+
+  // Listening key stays as-is. Reading key: TOEIC numbers are printed as
+  // 101-200 but the generic server-side scorer checks keys 1..100 for BOTH
+  // sections, so convert TOEIC reading numbers to relative (num - 100).
+  // IELTS reading is already 1-40, no conversion needed.
+  const listeningKey = {};
+  Object.keys(lParsed).forEach(n => listeningKey[n] = lParsed[n]);
+
+  const readingKey = {};
+  Object.keys(rParsedRaw).forEach(n => {
+    const num = parseInt(n,10);
+    const key = (type === 'TOEIC' && num > 100) ? (num - 100) : num;
+    readingKey[key] = rParsedRaw[n];
+  });
+
+  msg.className=''; msg.textContent='⏳ Sending...';
+  try {
+    const res = await callSheets({
+      action: 'saveAnswerKey',
+      testSetID,
+      listeningKey: JSON.stringify(listeningKey),
+      readingKey: JSON.stringify(readingKey),
+      updatedBy: 'answer-key-tool'
+    });
+    if(res.success){
+      msg.className='ok';
+      msg.textContent = `✅ Answer key saved for ${testSetID} (Listening: ${Object.keys(listeningKey).length}, Reading: ${Object.keys(readingKey).length}). The test will now grade correctly.`;
+    } else {
+      msg.className='err';
+      msg.textContent = 'Failed: ' + (res.message||'Unknown error');
+    }
+  } catch(err){
+    msg.className='err';
+    msg.textContent = 'Could not reach the backend: ' + err.message;
+  }
+}
+
+updateHints();
+</script>
+</body>
+</html>
