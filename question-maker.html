@@ -908,6 +908,19 @@ function buildLSecHTML(n) {
     </div>`;
 }
 
+// Convert a Google Drive "share" link (…/file/d/ID/view?usp=sharing) into
+// the direct-download form that actually works as a fetchable audio/video
+// source. The UI's own help text tells admins to paste a Drive share link
+// for audio, but without this conversion that link never plays for
+// candidates — it points at Drive's HTML preview page, not a media stream.
+function convertDriveAudioURL(url) {
+  if (!url) return '';
+  if (url.includes('export=download') || url.includes('uc?id=')) return url;
+  if (!url.includes('drive.google.com')) return url;
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+  return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : url;
+}
+
 function buildURLPreview(url) {
   if (!url) return '';
   if (url.includes('youtube.com') || url.includes('youtu.be')) {
@@ -916,7 +929,8 @@ function buildURLPreview(url) {
     else if (url.includes('youtu.be/')) embedURL = 'https://www.youtube.com/embed/'+url.split('youtu.be/')[1].split('?')[0];
     return `<iframe src="${escH(embedURL)}" style="width:100%;height:160px;border:none;border-radius:7px" allowfullscreen></iframe>`;
   }
-  return `<audio controls src="${escH(url)}" style="width:100%;margin-top:4px;border-radius:6px"></audio>`;
+  const playableURL = convertDriveAudioURL(url);
+  return `<audio controls src="${escH(playableURL)}" style="width:100%;margin-top:4px;border-radius:6px"></audio>`;
 }
 
 function switchAudioSrc(n, mode) {
@@ -925,18 +939,22 @@ function switchAudioSrc(n, mode) {
   document.getElementById('audio-url-panel-'+n).style.display  = isURL ? '' : 'none';
   document.getElementById('audio-src-file-'+n).classList.toggle('active', !isURL);
   document.getElementById('audio-src-url-'+n).classList.toggle('active',   isURL);
-  if (!isURL) config.listening.sections[n-1].audioURL = '';
+  // Note: the saved audioURL is intentionally left alone here — it's only
+  // cleared once a file actually finishes uploading (see loadSectionAudio).
+  // Clearing it just from switching tabs used to wipe a pasted link the
+  // moment someone clicked "Upload File", even with nothing uploaded yet.
 }
 
 function saveAudioURL(n, val) {
-  config.listening.sections[n-1].audioURL = val.trim();
+  config.listening.sections[n-1].audioURL = convertDriveAudioURL(val.trim());
 }
 
 function previewAudioURL(n) {
   const url  = document.getElementById('audio-url-input-'+n).value.trim();
   const wrap = document.getElementById('audio-url-preview-'+n);
   if (!url) { wrap.innerHTML='<span style="color:var(--red);font-size:0.8rem">Please enter a URL first.</span>'; return; }
-  config.listening.sections[n-1].audioURL = url;
+  const converted = convertDriveAudioURL(url);
+  config.listening.sections[n-1].audioURL = converted;
   wrap.innerHTML = buildURLPreview(url);
   toast('Preview updated');
 }
@@ -1561,6 +1579,7 @@ function loadSectionAudio(n, input) {
   reader.onload = e => {
     config.listening.sections[n-1].audioData = e.target.result;
     config.listening.sections[n-1].audioName = file.name;
+    config.listening.sections[n-1].audioURL = ''; // uploaded file replaces any pasted URL as the active source
     document.getElementById('L-audio-name-'+n).textContent = '🎵 ' + file.name;
     document.getElementById('L-audio-slot-'+n).classList.add('loaded');
     const el = document.getElementById('L-audio-el-'+n);
