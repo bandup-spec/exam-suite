@@ -191,6 +191,7 @@
       <div id="w-prompt-2" class="prompt-card hidden">
         <h3>Writing Task 2</h3>
         <div id="prompt-text-2" class="content-pre" style="font-size:0.88rem;line-height:1.7;color:var(--ink2)">Loading...</div>
+        <img id="W-img-2" style="max-width:250%;max-height:500px;margin-top:12px;border-radius:8px;display:none">
       </div>
     </div>
   </div>
@@ -370,6 +371,18 @@ function extractYouTubeId(url) {
 function resolvePlayableAudioURL(url) {
   if (!url) return url;
   if (url.includes('export=download') || url.includes('uc?id=')) return url;
+  // raw.githubusercontent.com always serves files as Content-Type:
+  // application/octet-stream, regardless of extension — browsers refuse to
+  // play that in an <audio> element even though the bytes are a valid mp3.
+  // jsDelivr mirrors the same GitHub content but serves the correct
+  // audio/* type, so rewrite to that instead.
+  if (url.includes('raw.githubusercontent.com')) {
+    const m = url.match(/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/([^\/]+)\/(.+)/);
+    if (m) {
+      const [, user, repo, ref, path] = m;
+      return `https://cdn.jsdelivr.net/gh/${user}/${repo}@${ref}/${path}`;
+    }
+  }
   if (!url.includes('drive.google.com')) return url;
   const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
   return match ? `https://drive.google.com/uc?export=download&id=${match[1]}` : url;
@@ -1301,6 +1314,7 @@ function loadWritingPrompts(){
     const t=config.writing&&config.writing.tasks&&config.writing.tasks[i];
     document.getElementById('prompt-text-'+i).textContent=(t&&t.prompt)||'No prompt loaded.';
     const img=document.getElementById('W-img-'+i);
+    if(!img) return; // guard: don't let a missing image element abort init (e.g. audio loading) downstream
     if(t&&t.imgURL){ img.src=t.imgURL; img.style.display='block'; }
     else if(t&&t.imgData){ img.src=t.imgData; img.style.display='block'; }
     else img.style.display='none';
