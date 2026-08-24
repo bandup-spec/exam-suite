@@ -416,7 +416,18 @@ function convertDriveURL(url) {
 async function fetchDriveConfig(url) {
   // GitHub raw URLs & most direct JSON URLs work fine with fetch (no CORS)
   try {
-    const res = await fetch(url, { cache:'no-cache' });
+    // Without a timeout, a slow/dead connection leaves this fetch pending
+    // forever — since window.onload awaits loadConfig() before anything
+    // else (including rendering the audio player status), a hung fetch
+    // here freezes the whole test screen on "Loading...", audio included.
+    const ctrl = new AbortController();
+    const timeoutId = setTimeout(() => ctrl.abort(), 8000);
+    let res;
+    try {
+      res = await fetch(url, { cache:'no-cache', signal: ctrl.signal });
+    } finally {
+      clearTimeout(timeoutId);
+    }
     if (res.ok) {
       const text = await res.text();
       return JSON.parse(text);
@@ -1428,23 +1439,41 @@ window.onload = async () => {
     window.location.href = 'tests.html'; return;
   }
 
-  await loadConfig();
+  try {
+    await loadConfig();
+  } catch(e) {
+    // loadConfig() already catches its own fetch/parse errors, but if
+    // something upstream still throws, don't let it strand the page on
+    // the loading overlay — fall through and render whatever's cached.
+    console.error('loadConfig failed, continuing with cached/empty config:', e);
+    hideLoadingOverlay();
+  }
+
   if (activeTestSet.setName) document.getElementById('hdr-badge').textContent = activeTestSet.setName;
   initUser(); // must run before initTimer() — normalizes candidateID in sessionStorage,
               // which the timer's storage key depends on to avoid collisions between sessions
   initTimer();
   restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
-  detectSingleContinuousAudio();
 
-  buildLQs(1);
-  buildRQs();
-  loadPassages();
-  loadWritingPrompts();
-  switchLSection(1);
-  if (continuousQueue.length > 0) {
-    const sections = config.listening && config.listening.sections || [];
-    const firstItem = continuousQueue[0];
-    loadAudioForSection(sections[firstItem.idx], firstItem.idx + 1);
+  try {
+    detectSingleContinuousAudio();
+    buildLQs(1);
+    buildRQs();
+    loadPassages();
+    loadWritingPrompts();
+    switchLSection(1);
+    if (continuousQueue.length > 0) {
+      const sections = config.listening && config.listening.sections || [];
+      const firstItem = continuousQueue[0];
+      loadAudioForSection(sections[firstItem.idx], firstItem.idx + 1);
+    }
+  } catch(e) {
+    // If a bad/partial config makes any of the above throw, the audio
+    // panel and question panels must still reach a usable state instead
+    // of freezing on "Loading..." forever.
+    console.error('Section init failed:', e);
+    const status = document.getElementById('audio-status');
+    if (status) status.innerText = 'No audio for this section';
   }
   switchSection('L');
 };
