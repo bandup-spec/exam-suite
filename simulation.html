@@ -327,6 +327,14 @@ let ytPendingVideoId = null;
 let currentAudioMode = 'none'; // 'none' | 'file' | 'youtube'
 let progressInterval = null;
 let isSingleContinuousAudio = false; // true when all 4 sections share the same audio URL
+// continuousQueue holds every section's audio track in order (1 entry per
+// distinct, consecutive URL — identical back-to-back URLs collapse into one
+// entry so a "same link pasted in all 4 sections" setup still plays once).
+// Once playback starts, section-tab navigation never touches the player —
+// it just keeps playing through the queue and auto-advances on end.
+let continuousQueue = [];
+let queuePos = 0;
+let audioSessionStarted = false;
 
 function onYouTubeIframeAPIReady() {
   ytReady = true;
@@ -632,48 +640,68 @@ function switchLSection(n) {
   buildLQs(n);
   const sec=config.listening&&config.listening.sections&&config.listening.sections[n-1];
   const img=document.getElementById('audio-img');
-  document.getElementById('L-section-label').innerText = isSingleContinuousAudio ? 'Section Audio (continuous)' : `Section ${n} Audio`;
+
+  // The label reflects whichever track is actually loaded/playing (queuePos),
+  // not whichever section tab the candidate is currently viewing — those two
+  // can differ once playback is underway and the candidate has moved on.
+  if (continuousQueue.length > 0) {
+    const playingSecNum = continuousQueue[queuePos] ? continuousQueue[queuePos].idx + 1 : n;
+    document.getElementById('L-section-label').innerText = isSingleContinuousAudio
+      ? 'Section Audio (continuous)'
+      : `Playing: Section ${playingSecNum} Audio`;
+  } else {
+    document.getElementById('L-section-label').innerText = `Section ${n} Audio`;
+  }
 
   // Image is independent of whether audio exists for this section
   if (sec && sec.imgURL) { img.src = sec.imgURL; img.style.display = 'block'; }
   else if (sec && sec.imgData) { img.src = sec.imgData; img.style.display = 'block'; }
   else { img.src = ''; img.style.display = 'none'; }
 
-  // If audio is shared across all 4 sections, don't touch the player at
-  // all when switching tabs — let it keep playing uninterrupted.
-  if (isSingleContinuousAudio) return;
+  // Once there's a queue of audio to play, switching tabs to look at other
+  // questions must never touch the player — it keeps playing uninterrupted
+  // and auto-advances through the queue on its own (see onAudioEnd).
+  if (continuousQueue.length > 0) return;
 
   loadAudioForSection(sec, n);
 }
 
-function loadAudioForSection(sec, n) {
+function loadAudioForSection(sec, n, autoplay) {
   const btn    = document.getElementById('play-btn');
   const status = document.getElementById('audio-status');
 
   stopAndResetPlayer();
 
+  const alreadyDone = audioSessionStarted && !autoplay; // mid-queue auto-advances should never re-disable-then-need-a-click
+
   if (sec && sec.audioURL) {
     const ytId = extractYouTubeId(sec.audioURL);
     if (ytId) {
       currentAudioMode = 'youtube';
-      btn.disabled = audioPlayed[n-1];
-      status.innerText = audioPlayed[n-1] ? 'Recording finished' : 'Ready to play';
+      btn.disabled = alreadyDone;
+      status.innerText = autoplay ? 'Playing — listen carefully' : (alreadyDone ? 'Recording finished' : 'Ready to play');
       if (ytReady && ytPlayer && ytPlayer.cueVideoById) ytPlayer.cueVideoById(ytId);
       else ytPendingVideoId = ytId;
+      if (autoplay && ytReady && ytPlayer && ytPlayer.playVideo) {
+        ytPlayer.playVideo();
+        progressInterval = setInterval(updateProgress, 400);
+      }
     } else {
       // Direct audio URL (mp3 etc.) — still routed through our custom button
       currentAudioMode = 'file';
       const el = document.getElementById('audio-el');
       el.src = sec.audioURL;
-      btn.disabled = audioPlayed[n-1];
-      status.innerText = audioPlayed[n-1] ? 'Recording finished' : 'Ready to play';
+      btn.disabled = alreadyDone;
+      status.innerText = autoplay ? 'Playing — listen carefully' : (alreadyDone ? 'Recording finished' : 'Ready to play');
+      if (autoplay) { el.play(); progressInterval = setInterval(updateProgress, 400); }
     }
   } else if (sec && sec.audioData) {
     currentAudioMode = 'file';
     const el = document.getElementById('audio-el');
     el.src = sec.audioData;
-    btn.disabled = audioPlayed[n-1];
-    status.innerText = audioPlayed[n-1] ? 'Recording finished' : 'Ready to play';
+    btn.disabled = alreadyDone;
+    status.innerText = autoplay ? 'Playing — listen carefully' : (alreadyDone ? 'Recording finished' : 'Ready to play');
+    if (autoplay) { el.play(); progressInterval = setInterval(updateProgress, 400); }
   } else {
     currentAudioMode = 'none';
     btn.disabled = true;
@@ -689,12 +717,29 @@ function stopAndResetPlayer() {
   if (ytReady && ytPlayer && ytPlayer.stopVideo) { try { ytPlayer.stopVideo(); } catch(e){} }
 }
 
-// Detect once on load: if every section with audio shares the exact same
-// URL, treat it as one continuous recording instead of 4 separate clips.
+// Detect once on load: build an ordered playback queue from every section's
+// audio track. Consecutive sections sharing the exact same URL collapse into
+// a single queue entry (handles the "same link pasted in all 4 sections"
+// case as one continuous track, same as before). Sections with distinct
+// links each get their own queue entry and are auto-played back-to-back —
+// this is what makes the player "universal": once started, it keeps going
+// regardless of which section tab the candidate is looking at.
 function detectSingleContinuousAudio() {
   const sections = (config.listening && config.listening.sections) || [];
-  const urls = sections.map(s => s && (s.audioURL || s.audioData)).filter(Boolean);
-  isSingleContinuousAudio = urls.length >= 2 && urls.every(u => u === urls[0]);
+  const raw = sections
+    .map((s, i) => ({ url: s && (s.audioURL || s.audioData), idx: i }))
+    .filter(x => x.url);
+
+  continuousQueue = [];
+  raw.forEach(item => {
+    const last = continuousQueue[continuousQueue.length - 1];
+    if (last && last.url === item.url) return; // same clip as the one before — don't reload it again
+    continuousQueue.push(item);
+  });
+  queuePos = 0;
+
+  // Kept for anything elsewhere that still reads this flag.
+  isSingleContinuousAudio = continuousQueue.length === 1 && raw.length >= 2;
 }
 
 function syncPassage(n){
@@ -734,15 +779,12 @@ function buildNav(s){
 }
 
 function playAudio(){
-  // For single continuous audio, "already played" is tracked globally
-  // (index 0) instead of per-section, since it's really one recording.
-  const playedIdx = isSingleContinuousAudio ? 0 : curLSec-1;
-  if(audioPlayed[playedIdx])return;
+  if (audioSessionStarted) return; // one continuous listening session — no replays, matches the real exam
 
   document.getElementById('play-btn').disabled=true;
   document.getElementById('audio-status').innerText='Playing — listen carefully';
-  audioPlayed[playedIdx]=true;
-  if (isSingleContinuousAudio) audioPlayed=[true,true,true,true]; // mark all sections played
+  audioSessionStarted = true;
+  audioPlayed=[true,true,true,true]; // the whole session counts as "played" the moment it starts
 
   if (currentAudioMode === 'youtube' && ytReady && ytPlayer && ytPlayer.playVideo) {
     ytPlayer.playVideo();
@@ -755,8 +797,25 @@ function playAudio(){
 }
 
 function onAudioEnd(){
-  document.getElementById('audio-status').innerText='Recording finished';
   if (progressInterval) { clearInterval(progressInterval); progressInterval = null; }
+
+  const nextPos = queuePos + 1;
+  if (nextPos < continuousQueue.length) {
+    // More sections' audio still queued up — auto-advance without needing
+    // another button press, and regardless of which tab is open right now.
+    queuePos = nextPos;
+    const sections = (config.listening && config.listening.sections) || [];
+    const nextItem = continuousQueue[queuePos];
+    const nextSec = sections[nextItem.idx];
+    loadAudioForSection(nextSec, nextItem.idx + 1, true);
+    // Refresh the label if the candidate happens to be looking at the player.
+    if (document.getElementById('L-section-label')) {
+      document.getElementById('L-section-label').innerText = `Playing: Section ${nextItem.idx + 1} Audio`;
+    }
+    return;
+  }
+
+  document.getElementById('audio-status').innerText='Recording finished';
   document.getElementById('audio-prog').style.width='100%';
 }
 
@@ -1382,9 +1441,10 @@ window.onload = async () => {
   loadPassages();
   loadWritingPrompts();
   switchLSection(1);
-  if (isSingleContinuousAudio) {
-    const firstSec = config.listening && config.listening.sections && config.listening.sections[0];
-    loadAudioForSection(firstSec, 1);
+  if (continuousQueue.length > 0) {
+    const sections = config.listening && config.listening.sections || [];
+    const firstItem = continuousQueue[0];
+    loadAudioForSection(sections[firstItem.idx], firstItem.idx + 1);
   }
   switchSection('L');
 };
