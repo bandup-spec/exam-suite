@@ -63,7 +63,7 @@
 
   <div class="card">
     <div class="card-title">2. Listening Answers</div>
-    <div class="card-desc" id="listening-hint">Paste answers in "number.letter" format, in any order, separated by spaces or newlines — e.g. <code>1.A 2.C 3.B</code> or one per line. Numbers should run 1–40 (IELTS) or 1–100 (TOEIC).</div>
+    <div class="card-desc" id="listening-hint">Paste answers in "number.answer" format, in any order, separated by spaces or newlines — e.g. <code>1.A 2.C 3.B</code> or one per line. Answers can be single letters, whole words, or short phrases (e.g. <code>21. NOT GIVEN</code>, <code>5. New York</code>) — not just multiple choice. Numbers should run 1–40 (IELTS) or 1–100 (TOEIC).</div>
     <textarea id="listening-input" placeholder="1.A 2.C 3.B 4.A 5.C ..." oninput="updateCounts()"></textarea>
     <div class="count-chip" id="listening-count">0 answers parsed</div>
   </div>
@@ -92,12 +92,24 @@ function updateHints(){
   updateCounts();
 }
 
-// Parses flexible "1.A 2.C" / "1:A" / "1) A" / "1. (A)" / "1. [A]" / one-per-line formats
+// Parses "1.A 2.C" / "1:A" / "1) A" / "1. (A)" / one-per-line — and also
+// multi-word answers like "21. NOT GIVEN" or "5. New York" (IELTS short
+// answer / TFNG questions aren't always single letters).
 function parseAnswerText(text){
   const result = {};
-  const matches = text.matchAll(/(\d+)\s*[.:\)]\s*[\(\[]?([A-Za-z0-9]+)[\)\]]?/g);
-  for (const m of matches){
-    result[parseInt(m[1],10)] = m[2].toUpperCase();
+  const markerRe = /(\d+)\s*[.:\)]\s*/g;
+  const starts = [];
+  let m;
+  while ((m = markerRe.exec(text)) !== null) {
+    starts.push({ num: parseInt(m[1],10), markerStart: m.index, answerStart: markerRe.lastIndex });
+  }
+  for (let i = 0; i < starts.length; i++) {
+    const from = starts[i].answerStart;
+    const to   = i+1 < starts.length ? starts[i+1].markerStart : text.length;
+    let ans = text.slice(from, to).trim();
+    ans = ans.replace(/^[\(\[]+|[\)\]]+$/g, '').trim(); // strip surrounding ( ) [ ]
+    ans = ans.replace(/\s+/g, ' ');
+    if (ans) result[starts[i].num] = ans.toUpperCase();
   }
   return result;
 }
