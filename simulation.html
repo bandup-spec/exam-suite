@@ -122,11 +122,19 @@
   .matching-options-box{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;background:var(--paper2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin-bottom:14px;font-size:0.85rem;color:var(--ink2)}
   .submit-btn{margin:0 16px 16px;padding:11px;background:var(--green);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;width:calc(100% - 32px);transition:all 0.15s}
   .submit-btn:hover{opacity:0.9}
+  #toast-wrap{position:fixed;top:66px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+  .toast{pointer-events:auto;min-width:260px;max-width:min(90vw,420px);padding:12px 16px;border-radius:9px;font-size:0.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,0.2);display:flex;align-items:center;gap:10px;animation:toastIn 0.25s ease-out;color:#fff}
+  .toast.info{background:var(--blue2)}
+  .toast.warn{background:#b8860b}
+  .toast.danger{background:var(--red)}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes toastOut{from{opacity:1}to{opacity:0}}
   .hidden{display:none!important}
   .content-pre{white-space:pre-wrap;font-family:inherit}
 </style>
 </head>
 <body>
+<div id="toast-wrap"></div>
 
 <div class="hdr">
   <div class="hdr-left">
@@ -248,7 +256,7 @@
       </div>
     </div>
     <!-- SUBMIT -->
-    <button class="submit-btn" id="submit-btn" onclick="submitTest()" style="display:none">Submit &amp; Save Answers</button>
+    <button class="submit-btn" id="submit-btn" onclick="openReviewModal()" style="display:none">Submit &amp; Save Answers</button>
   </div>
 </div>
 
@@ -527,6 +535,50 @@ function initUser() {
 // ══════════════════════════════════════
 const TEST_DURATION_SECONDS = 9900; // 2:45:00
 
+// ══════════════════════════════════════
+// TOASTS — non-blocking notifications (time reminders, connection issues, etc.)
+// Unlike alert(), these don't freeze JS/audio playback while shown.
+// ══════════════════════════════════════
+function showToast(msg, variant, duration) {
+  const wrap = document.getElementById('toast-wrap');
+  if (!wrap) return;
+  const el = document.createElement('div');
+  el.className = 'toast ' + (variant || 'info');
+  el.innerHTML = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'toastOut 0.3s ease-in forwards';
+    setTimeout(() => el.remove(), 300);
+  }, duration || 6000);
+}
+
+// Fires once per threshold as the timer crosses it — tracks which have
+// already fired so a slow/throttled tick (backgrounded tab) can't skip or
+// repeat a warning. Checked every tick against the wall-clock-derived
+// timeLeft, not a simple counter, so it stays correct even after skips.
+const _firedTimeWarnings = new Set();
+function checkTimeWarnings(timeLeftNow) {
+  const elapsed = TEST_DURATION_SECONDS - timeLeftNow;
+
+  // "Every 1hr past" — fires at each full hour of elapsed time
+  for (let h = 1; h * 3600 <= TEST_DURATION_SECONDS; h++) {
+    const mark = h * 3600;
+    if (elapsed >= mark && !_firedTimeWarnings.has('elapsed' + mark)) {
+      _firedTimeWarnings.add('elapsed' + mark);
+      showToast(`⏱️ ${h} hour${h>1?'s':''} have passed.`, 'info');
+    }
+  }
+
+  if (timeLeftNow <= 1800 && !_firedTimeWarnings.has('remain1800')) {
+    _firedTimeWarnings.add('remain1800');
+    showToast('⚠️ 30 minutes remaining.', 'warn');
+  }
+  if (timeLeftNow <= 300 && !_firedTimeWarnings.has('remain300')) {
+    _firedTimeWarnings.add('remain300');
+    showToast('🔴 Final 5 minutes! Please finish and review your answers.', 'danger', 9000);
+  }
+}
+
 function getTimerStorageKey() {
   const cid = sessionStorage.getItem('candidateID') || 'guest';
   const sid = (activeTestSet && activeTestSet.setID) || 'default';
@@ -566,6 +618,7 @@ function initTimer() {
     if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); return; }
     timeLeft--;
     renderTimer();
+    checkTimeWarnings(timeLeft);
     tickCount++;
     if (tickCount % 3 === 0) saveAnswersLocal();       // every ~3s — instant local backup
     if (tickCount % 90 === syncJitter) syncDraftToSheets(); // every ~90s, staggered — offsite backup, throttled for quota
@@ -607,12 +660,32 @@ function saveAnswersLocal() {
 function restoreAnswersLocal() {
   try {
     const raw = localStorage.getItem(getAutosaveStorageKey());
-    if (!raw) return;
+    if (!raw) return 0;
     const draft = JSON.parse(raw);
     if (draft.lAnswers) Object.assign(lAnswers, draft.lAnswers);
     if (draft.rAnswers) Object.assign(rAnswers, draft.rAnswers);
     if (draft.writingVals) Object.assign(writingVals, draft.writingVals);
-  } catch(e) { /* corrupted draft — ignore, candidate starts blank */ }
+    return draft.savedAt || 0;
+  } catch(e) { return 0; /* corrupted draft — ignore, candidate starts blank */ }
+}
+
+// Restore-on-login (Layer 3): pulls the server-side draft (synced every ~90s
+// during a previous session) and uses it if it's newer than whatever's in
+// local storage — covers a candidate resuming on a different device/browser,
+// or one whose local storage got cleared mid-test.
+async function restoreAnswersFromServer(localSavedAt) {
+  const candidateData = JSON.parse(sessionStorage.getItem('candidateData') || '{}');
+  const candidateID = candidateData.candidateID || sessionStorage.getItem('candidateID') || '';
+  if (!candidateID || !activeTestSet.setID) return;
+  try {
+    const res = await callSheets({ action: 'getDraft', candidateID, testSetID: activeTestSet.setID });
+    if (!res || !res.success || !res.found) return;
+    const serverTime = res.updatedAt ? new Date(res.updatedAt).getTime() : 0;
+    if (serverTime <= (localSavedAt || 0)) return; // local copy is already newer/equal
+    Object.assign(lAnswers, JSON.parse(res.lAnswers || '{}'));
+    Object.assign(rAnswers, JSON.parse(res.rAnswers || '{}'));
+    Object.assign(writingVals, JSON.parse(res.writingVals || '{}'));
+  } catch(e) { /* offline/quota — local copy (if any) still stands */ }
 }
 
 function clearAutosaveStorage() {
@@ -625,17 +698,22 @@ async function syncDraftToSheets() {
   const ta = document.getElementById('w-textarea');
   if (ta) writingVals[curWriting] = ta.value;
 
-  const snapshot = JSON.stringify({ lAnswers, rAnswers, writingVals });
+  const snapshot = JSON.stringify({ lAnswers, rAnswers, writingVals, cur });
   if (snapshot === lastSyncedSnapshot) return; // nothing new — save the Apps Script quota
 
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData') || '{}');
   try {
     await callSheets({
       action: 'saveDraft',
+      examType: 'IELTS',
+      currentSection: cur,
       candidateID: candidateData.candidateID || sessionStorage.getItem('candidateID') || '',
       fullName:    candidateData.fullName || sessionStorage.getItem('candidateName') || '',
       testSetID:   activeTestSet.setID   || '',
       testSetName: activeTestSet.setName || '',
+      lAnswers: JSON.stringify(lAnswers),
+      rAnswers: JSON.stringify(rAnswers),
+      writingVals: JSON.stringify(writingVals),
       listeningAnswers: JSON.stringify(lAnswers),
       readingAnswers:   JSON.stringify(rAnswers),
       writingTask1: (writingVals[1]||'').substring(0,2000),
@@ -645,10 +723,11 @@ async function syncDraftToSheets() {
   } catch(e) { /* offline/quota hit — Layer 1 local copy is already safe, will retry in 90s */ }
 }
 
+
 function autoSubmitOnTimeUp() {
   if (window._timeUpHandled) return;
   window._timeUpHandled = true;
-  alert('⏰ Time is up! Your test will be submitted automatically.');
+  showToast('⏰ Time is up! Submitting your test now...', 'danger', 8000);
   submitTest(true);
 }
 
@@ -1383,9 +1462,77 @@ function autoCheckScore(){
   return {lScore,rScore,lBand:scoreToBand(lScore),rBand:scoreToBand(rScore)};
 }
 
-async function submitTest(autoSubmit){
-  if(!autoSubmit && !confirm('Submit your answers? You will not be able to make changes after this.'))return;
+// ══════════════════════════════════════
+// REVIEW MODAL — shown before final submit (not shown on time's-up auto-submit)
+// ══════════════════════════════════════
+function getUnanswered_(sec){
+  const ans = answered[sec] || {};
+  const list = [];
+  for (let i=1; i<=40; i++) if (!ans[i]) list.push(i);
+  return list;
+}
+function lSubsectionOf_(n){
+  if (n<=10) return 1; if (n<=20) return 2; if (n<=30) return 3; return 4;
+}
+function jumpToL_(n){
+  switchSection('L');
+  switchLSection(lSubsectionOf_(n));
+}
+function jumpToR_(){
+  switchSection('R');
+}
 
+function openReviewModal(){
+  writingVals[curWriting] = document.getElementById('w-textarea') ? document.getElementById('w-textarea').value : writingVals[curWriting];
+  const lUnanswered = getUnanswered_('L');
+  const rUnanswered = getUnanswered_('R');
+  const min1 = (config.writing&&config.writing.tasks&&config.writing.tasks[1]&&config.writing.tasks[1].minWords)||150;
+  const min2 = (config.writing&&config.writing.tasks&&config.writing.tasks[2]&&config.writing.tasks[2].minWords)||250;
+  const wc1 = (writingVals[1]||'').trim().split(/\s+/).filter(Boolean).length;
+  const wc2 = (writingVals[2]||'').trim().split(/\s+/).filter(Boolean).length;
+
+  const chip = (n, onclick) => `<button class="nav-sq" style="width:auto;height:auto;padding:4px 8px;border-radius:5px" onclick="${onclick}">${n}</button>`;
+  const lChips = lUnanswered.slice(0,60).map(n=>chip(n, `closeReviewModal();jumpToL_(${n})`)).join('');
+  const rChips = rUnanswered.slice(0,60).map(n=>chip(n, `closeReviewModal();jumpToR_()`)).join('');
+
+  const overlay = document.createElement('div');
+  overlay.id = 'review-modal-overlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9998;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `
+    <div style="background:var(--paper);color:var(--ink);border-radius:14px;padding:26px;max-width:520px;width:100%;max-height:85vh;overflow-y:auto">
+      <h2 style="font-family:'Source Serif 4',serif;color:var(--blue);margin-bottom:16px">Review Your Answers</h2>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:0.85rem;font-weight:700;color:var(--ink2);margin-bottom:6px">Listening — ${40-lUnanswered.length}/40 answered</div>
+        ${lUnanswered.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px">${lChips}${lUnanswered.length>60?`<span style="font-size:0.78rem;color:var(--ink3)">+${lUnanswered.length-60} more</span>`:''}</div>` : `<div style="color:var(--green);font-size:0.83rem">✅ All answered</div>`}
+      </div>
+
+      <div style="margin-bottom:16px">
+        <div style="font-size:0.85rem;font-weight:700;color:var(--ink2);margin-bottom:6px">Reading — ${40-rUnanswered.length}/40 answered</div>
+        ${rUnanswered.length ? `<div style="display:flex;flex-wrap:wrap;gap:5px">${rChips}${rUnanswered.length>60?`<span style="font-size:0.78rem;color:var(--ink3)">+${rUnanswered.length-60} more</span>`:''}</div>` : `<div style="color:var(--green);font-size:0.83rem">✅ All answered</div>`}
+      </div>
+
+      <div style="margin-bottom:20px">
+        <div style="font-size:0.85rem;font-weight:700;color:var(--ink2);margin-bottom:6px">Writing</div>
+        <div style="font-size:0.83rem;color:${wc1>=min1?'var(--green)':'var(--red)'}">Task 1: ${wc1} words (min ${min1}) ${wc1>=min1?'✅':'⚠️'}</div>
+        <div style="font-size:0.83rem;color:${wc2>=min2?'var(--green)':'var(--red)'};margin-top:3px">Task 2: ${wc2} words (min ${min2}) ${wc2>=min2?'✅':'⚠️'}</div>
+      </div>
+
+      <div style="display:flex;gap:10px">
+        <button style="flex:1;background:var(--paper2);color:var(--ink2);border:1px solid var(--border);padding:10px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600" onclick="closeReviewModal()">← Go Back &amp; Review</button>
+        <button style="flex:1;background:var(--green);color:#fff;border:none;padding:10px;border-radius:7px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600" onclick="closeReviewModal();submitTest(false)">Submit Now</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+}
+function closeReviewModal(){
+  const ov = document.getElementById('review-modal-overlay');
+  if (ov) ov.remove();
+}
+
+async function submitTest(autoSubmit){
+  // autoSubmit is also used for "already reviewed" — the review modal is the
+  // confirmation step now, so a manual submit only reaches here after it.
   try {
     writingVals[curWriting]=document.getElementById('w-textarea').value;
 
@@ -1448,7 +1595,7 @@ async function submitTest(autoSubmit){
   }
 
   if (!autoSubmit) {
-    alert('✅ Answers submitted.\n\nYour test has been recorded. Your results will be reviewed and made available on your profile.');
+    showToast('✅ Answers submitted. Your results will be reviewed and made available on your profile.', 'info', 8000);
   }
 }
 
@@ -1479,7 +1626,8 @@ window.onload = async () => {
   initUser(); // must run before initTimer() — normalizes candidateID in sessionStorage,
               // which the timer's storage key depends on to avoid collisions between sessions
   initTimer();
-  restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
+  const localSavedAt = restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
+  await restoreAnswersFromServer(localSavedAt); // may overwrite with a newer server-side copy (different device/cleared storage)
 
   try {
     detectSingleContinuousAudio();
