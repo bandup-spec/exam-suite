@@ -26,7 +26,8 @@ const CANDIDATE_HEADERS = [
   'CreatedAt',       // 7
   'LastLogin',       // 8
   'PhotoBase64',     // 9
-  'Status'           // 10  'Pending' | 'Approved' | 'Rejected' — new registrations need admin approval before they can log in
+  'Status',          // 10  'Pending' | 'Approved' | 'Rejected' — new registrations need admin approval before they can log in
+  'SessionToken'     // 11  set fresh on every successful login; invalidates any session from another device
 ];
 
 // Candidate ID format: 3 letters + hyphen + 5 digits, e.g. CWA-01234 (9 chars total)
@@ -107,7 +108,8 @@ const CIDX = {
   CREATED_AT: 7,
   LAST_LOGIN: 8,
   PHOTO: 9,
-  STATUS: 10
+  STATUS: 10,
+  SESSION_TOKEN: 11
 };
 
 const SIDX = {
@@ -155,6 +157,7 @@ function setupSheets() {
   ensureSheetWithHeaders_(ss, SHEET_SETTINGS, SETTINGS_HEADERS, '#002f5f');
   ensureSheetWithHeaders_(ss, SHEET_OTP, OTP_HEADERS, '#002f5f');
   ensureSheetWithHeaders_(ss, SHEET_ANSWERKEYS, ANSWERKEY_HEADERS, '#8a1c1c');
+  ensureSheetWithHeaders_(ss, SHEET_DRAFTS, DRAFT_HEADERS, '#5a3d8a');
 
   seedDefaultSettings_();
   return 'All sheets ready! (v4.0)';
@@ -291,6 +294,9 @@ function handleRequest(p, callback) {
         case 'getCandidateScores':        result = getCandidateScores(p); break;
         case 'gradeWriting':              result = withLock_(() => gradeWriting(p)); break;
         case 'saveDraft':                 result = withLock_(() => saveDraft(p)); break;
+        case 'getDraft':                  result = getDraft(p); break;
+        case 'getDrafts':                 result = getDrafts(); break;
+        case 'checkSession':              result = { success: true, valid: validateSession_(p.candidateID, p.sessionToken) }; break;
 
         case 'getCandidates':             result = getCandidates(); break;
         case 'approveCandidate':          result = withLock_(() => approveCandidate(p)); break;
@@ -443,6 +449,12 @@ function loginCandidate(p) {
 
   updateLastLogin(p.candidateID);
 
+  // Issue a fresh session token — this immediately invalidates whatever
+  // token any other logged-in device is holding for this account, so
+  // the next time that device syncs (saveDraft, every ~90s during a test),
+  // it will fail the check and be signed out.
+  const sessionToken = issueSessionToken_(p.candidateID);
+
   return {
     success: true,
     candidateID: String(row[CIDX.ID] || ''),
@@ -451,8 +463,43 @@ function loginCandidate(p) {
     gender: String(row[CIDX.GENDER] || ''),
     nationality: String(row[CIDX.NATIONALITY] || ''),
     email: String(row[CIDX.EMAIL] || ''),
-    photoBase64: String(row[CIDX.PHOTO] || '')
+    photoBase64: String(row[CIDX.PHOTO] || ''),
+    sessionToken: sessionToken
   };
+}
+
+function issueSessionToken_(candidateID) {
+  const sheet = getSheet_(SHEET_CANDIDATES);
+  if (!sheet) return '';
+  const data = sheet.getDataRange().getValues();
+  const id = normalize_(candidateID);
+  const token = Utilities.getUuid();
+  for (let i = 1; i < data.length; i++) {
+    if (normalize_(data[i][CIDX.ID]) === id) {
+      sheet.getRange(i + 1, CIDX.SESSION_TOKEN + 1).setValue(token);
+      return token;
+    }
+  }
+  return '';
+}
+
+// Used by saveDraft/saveScore to detect a session that's been superseded by
+// a newer login elsewhere. Permissive by design: a request sent without a
+// token (older cached page, or an action that doesn't carry one) is never
+// blocked — only an explicit mismatch counts as "logged in elsewhere".
+function validateSession_(candidateID, sessionToken) {
+  if (!sessionToken) return true;
+  const sheet = getSheet_(SHEET_CANDIDATES);
+  if (!sheet) return true;
+  const data = sheet.getDataRange().getValues();
+  const id = normalize_(candidateID);
+  for (let i = 1; i < data.length; i++) {
+    if (normalize_(data[i][CIDX.ID]) === id) {
+      const stored = String(data[i][CIDX.SESSION_TOKEN] || '');
+      return !stored || stored === sessionToken; // no stored token yet (pre-migration row) — allow
+    }
+  }
+  return true; // candidate row not found — let the normal "unknown candidate" paths handle it
 }
 
 function updateProfile(p) {
@@ -578,6 +625,9 @@ function scoreToTOEICListening_(raw) { return scoreToScaled_(raw, TOEIC_LISTENIN
 function scoreToTOEICReading_(raw)   { return scoreToScaled_(raw, TOEIC_READING_TABLE); }
 
 function saveScore(p) {
+  if (p.candidateID && !validateSession_(p.candidateID, p.sessionToken)) {
+    return { success: false, sessionInvalid: true, message: 'Your account was logged in on another device. Please log in again to submit.' };
+  }
   const sheet = getOrCreateSheet_(SHEET_SCORES, SCORE_HEADERS);
   const subID = 'SUB-' + Date.now();
   const examType = (String(p.examType || 'IELTS').toUpperCase() === 'TOEIC') ? 'TOEIC' : 'IELTS';
@@ -639,6 +689,8 @@ function saveScore(p) {
     readingScaled,
     toeicTotal
   ]);
+
+  markDraftSubmitted_(p.candidateID, p.testSetID);
 
   return {
     success: true, submissionID: subID, examType,
@@ -898,11 +950,24 @@ const DRAFT_HEADERS = [
   'CandidateID',
   'TestSetID',
   'FullName',
+  'ExamType',
+  'CurrentSection',
+  'ListeningAnswered',
+  'ReadingAnswered',
+  'WritingWordCount',
+  'Status',
   'ListeningAnswers',
   'ReadingAnswers',
   'WritingVals',
+  'StartedAt',
   'UpdatedAt'
 ];
+const DIDX = { // Draft column indices — keep in sync with DRAFT_HEADERS above
+  CANDIDATE_ID: 0, TEST_SET_ID: 1, FULL_NAME: 2, EXAM_TYPE: 3,
+  CURRENT_SECTION: 4, LISTENING_ANSWERED: 5, READING_ANSWERED: 6, WRITING_WORDCOUNT: 7,
+  STATUS: 8, LISTENING_ANSWERS: 9, READING_ANSWERS: 10, WRITING_VALS: 11,
+  STARTED_AT: 12, UPDATED_AT: 13
+};
 
 function findDraftRow_(sheet, candidateID, testSetID) {
   const data = sheet.getDataRange().getValues();
@@ -913,22 +978,57 @@ function findDraftRow_(sheet, candidateID, testSetID) {
   return -1;
 }
 
+function countAnswered_(jsonStr) {
+  try {
+    const obj = JSON.parse(jsonStr || '{}');
+    return Object.keys(obj).filter(k => String(obj[k] || '').trim() !== '').length;
+  } catch (e) { return 0; }
+}
+
+function countWords_(writingValsStr) {
+  try {
+    const obj = JSON.parse(writingValsStr || '{}');
+    return Object.keys(obj).reduce((sum, k) => {
+      const txt = String(obj[k] || '').trim();
+      return sum + (txt ? txt.split(/\s+/).length : 0);
+    }, 0);
+  } catch (e) { return 0; }
+}
+
 function saveDraft(p) {
   if (!p.candidateID) return { success: false, message: 'No candidateID.' };
+  if (!validateSession_(p.candidateID, p.sessionToken)) {
+    return { success: false, sessionInvalid: true, message: 'Your account was logged in on another device. This session has been signed out.' };
+  }
 
-  const sheet = getOrCreateSheet_(SHEET_DRAFTS, DRAFT_HEADERS);
+  const sheet = getOrCreateDraftSheet_();
   const now = new Date().toISOString();
+  const lAnswersStr = typeof p.lAnswers === 'string' ? p.lAnswers : JSON.stringify(p.lAnswers || {});
+  const rAnswersStr = typeof p.rAnswers === 'string' ? p.rAnswers : JSON.stringify(p.rAnswers || {});
+  const writingStr  = typeof p.writingVals === 'string' ? p.writingVals : JSON.stringify(p.writingVals || {});
+
+  const rowIdx = findDraftRow_(sheet, p.candidateID, p.testSetID);
+  const startedAt = (rowIdx !== -1 && sheet.getRange(rowIdx + 1, DIDX.STARTED_AT + 1).getValue())
+    ? sheet.getRange(rowIdx + 1, DIDX.STARTED_AT + 1).getValue()
+    : now;
+
   const row = [
     String(p.candidateID).toUpperCase(),
     String(p.testSetID || ''),
     String(p.fullName || ''),
-    typeof p.lAnswers === 'string' ? p.lAnswers : JSON.stringify(p.lAnswers || {}),
-    typeof p.rAnswers === 'string' ? p.rAnswers : JSON.stringify(p.rAnswers || {}),
-    typeof p.writingVals === 'string' ? p.writingVals : JSON.stringify(p.writingVals || {}),
+    String(p.examType || 'IELTS').toUpperCase(),
+    String(p.currentSection || ''),
+    countAnswered_(lAnswersStr),
+    countAnswered_(rAnswersStr),
+    countWords_(writingStr),
+    'in_progress',
+    lAnswersStr,
+    rAnswersStr,
+    writingStr,
+    startedAt,
     now
   ];
 
-  const rowIdx = findDraftRow_(sheet, p.candidateID, p.testSetID);
   if (rowIdx !== -1) {
     sheet.getRange(rowIdx + 1, 1, 1, DRAFT_HEADERS.length).setValues([row]);
   } else {
@@ -936,6 +1036,61 @@ function saveDraft(p) {
   }
 
   return { success: true, savedAt: now };
+}
+
+// Restore-on-login — lets a candidate resume on a new device/browser even if
+// their local autosave copy was lost (cleared storage, different machine).
+function getDraft(p) {
+  if (!p.candidateID) return { success: false, message: 'No candidateID.' };
+  const sheet = getSheet_(SHEET_DRAFTS);
+  if (!sheet) return { success: true, found: false };
+
+  const rowIdx = findDraftRow_(sheet, p.candidateID, p.testSetID);
+  if (rowIdx === -1) return { success: true, found: false };
+
+  const row = sheet.getDataRange().getValues()[rowIdx];
+  return {
+    success: true, found: true,
+    status: String(row[DIDX.STATUS] || ''),
+    currentSection: String(row[DIDX.CURRENT_SECTION] || ''),
+    lAnswers: String(row[DIDX.LISTENING_ANSWERS] || '{}'),
+    rAnswers: String(row[DIDX.READING_ANSWERS] || '{}'),
+    writingVals: String(row[DIDX.WRITING_VALS] || '{}'),
+    updatedAt: String(row[DIDX.UPDATED_AT] || '')
+  };
+}
+
+// Admin live monitor feed — every currently-testing candidate's real-time
+// section, answered counts, and last-sync time (not a login-recency guess).
+function getDrafts() {
+  const sheet = getSheet_(SHEET_DRAFTS);
+  if (!sheet) return { success: true, rows: [] };
+  const data = sheet.getDataRange().getValues();
+  const rows = data.slice(1).map(r => [
+    r[DIDX.CANDIDATE_ID], r[DIDX.TEST_SET_ID], r[DIDX.FULL_NAME], r[DIDX.EXAM_TYPE],
+    r[DIDX.CURRENT_SECTION], r[DIDX.LISTENING_ANSWERED], r[DIDX.READING_ANSWERED],
+    r[DIDX.WRITING_WORDCOUNT], r[DIDX.STATUS], r[DIDX.UPDATED_AT]
+  ]);
+  return { success: true, rows };
+}
+
+// Marks a candidate's draft as submitted (rather than deleting it) so the
+// admin monitor can still show "just finished" for a beat before it ages out,
+// and so a resumed-elsewhere edge case doesn't silently resurrect stale answers.
+function markDraftSubmitted_(candidateID, testSetID) {
+  const sheet = getSheet_(SHEET_DRAFTS);
+  if (!sheet) return;
+  const rowIdx = findDraftRow_(sheet, candidateID, testSetID);
+  if (rowIdx !== -1) {
+    sheet.getRange(rowIdx + 1, DIDX.STATUS + 1).setValue('submitted');
+    sheet.getRange(rowIdx + 1, DIDX.UPDATED_AT + 1).setValue(new Date().toISOString());
+  }
+}
+
+function getOrCreateDraftSheet_() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  ensureSheetWithHeaders_(ss, SHEET_DRAFTS, DRAFT_HEADERS, '#5a3d8a');
+  return ss.getSheetByName(SHEET_DRAFTS);
 }
 
 // ============================================================
