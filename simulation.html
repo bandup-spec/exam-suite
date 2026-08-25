@@ -30,12 +30,31 @@
   body.dark-mode .timer{background:#2a2a3a;color:#ff8080}
   body.dark-mode .passage{color:var(--ink)}
 
-  /* FONT SIZE CONTROL */
-  .font-size-ctrl{display:flex;gap:2px;align-items:center}
-  .fs-btn{padding:4px 9px;border:1px solid rgba(255,255,255,0.3);border-radius:5px;color:rgba(255,255,255,0.85);background:transparent;font-size:0.72rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;line-height:1}
-  .fs-btn:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.5)}
-  .fs-btn:first-child{border-radius:5px 0 0 5px}
-  .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
+  /* FONT SIZE CONTROL — slider (5 stops matching FONT_SCALE_STEPS) */
+  .font-size-ctrl{display:flex;gap:7px;align-items:center}
+  .fs-icon{font-family:'DM Sans',sans-serif;font-weight:700;color:rgba(255,255,255,0.65);line-height:1;user-select:none}
+  .fs-icon-sm{font-size:0.68rem}
+  .fs-icon-lg{font-size:1rem}
+  .fs-slider{
+    -webkit-appearance:none;appearance:none;
+    width:78px;height:4px;border-radius:2px;
+    background:rgba(255,255,255,0.25);
+    outline:none;cursor:pointer;margin:0;
+  }
+  .fs-slider::-webkit-slider-thumb{
+    -webkit-appearance:none;appearance:none;
+    width:15px;height:15px;border-radius:50%;
+    background:var(--gold);border:2px solid #fff;
+    cursor:pointer;transition:transform 0.1s;
+  }
+  .fs-slider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+  .fs-slider::-moz-range-thumb{
+    width:15px;height:15px;border-radius:50%;
+    background:var(--gold);border:2px solid #fff;
+    cursor:pointer;transition:transform 0.1s;
+  }
+  .fs-slider::-moz-range-thumb:hover{transform:scale(1.15)}
+  .fs-slider::-moz-range-track{background:rgba(255,255,255,0.25);height:4px;border-radius:2px}
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);height:100dvh;overflow:hidden;display:flex;flex-direction:column}
   @media (max-width:900px){
     body{height:auto;min-height:100dvh;overflow:auto}
@@ -68,10 +87,35 @@
   .panel-left{flex:1;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);transition:flex-basis 0.2s}
   .main.compact-left .panel-left{flex:0 0 var(--compact-left-w, 260px);transition:none}
   .main.compact-left .panel-right{flex:1}
-  .resize-handle{width:7px;cursor:col-resize;background:transparent;flex-shrink:0;position:relative;display:none}
+
+  /* ═══ RESIZE HANDLE ═══
+     Previously nearly invisible in its idle state (a 3px sliver at 10%
+     opacity against a near-identical background). Now given a persistent
+     tinted strip + a visible grip glyph so it reads as an affordance
+     without hovering first, while still highlighting further on
+     hover/drag for clear feedback. */
+  .resize-handle{
+    width:10px;cursor:col-resize;flex-shrink:0;position:relative;display:none;
+    background:rgba(0,47,95,0.05);
+  }
+  body.dark-mode .resize-handle{background:rgba(255,255,255,0.04)}
   .main.compact-left .resize-handle{display:block}
-  .resize-handle:hover::after,.resize-handle.dragging::after{background:var(--gold)}
-  .resize-handle::after{content:'';position:absolute;left:2px;top:50%;transform:translateY(-50%);width:3px;height:36px;background:var(--border);border-radius:3px;transition:background 0.15s}
+  .resize-handle:hover,.resize-handle.dragging{background:rgba(200,168,75,0.18)}
+  .resize-handle::before{
+    content:'⋮';
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    font-size:1rem;line-height:1;color:var(--ink3);opacity:0.55;
+    letter-spacing:0;pointer-events:none;transition:color 0.15s,opacity 0.15s;
+  }
+  .resize-handle::after{
+    content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:4px;height:44px;background:var(--ink3);opacity:0.35;border-radius:3px;
+    transition:background 0.15s,opacity 0.15s;
+  }
+  .resize-handle:hover::after,.resize-handle.dragging::after{background:var(--gold);opacity:0.9}
+  .resize-handle:hover::before,.resize-handle.dragging::before{color:var(--gold);opacity:0.9}
+  .resize-handle::before{display:none} /* the ⋮ glyph overlaps the bar oddly at this size — bar alone reads cleanest */
+
   .rtab{padding:10px 24px;border:none;background:transparent;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;position:relative;transition:color 0.2s}
   .rtab:hover{color:rgba(255,255,255,0.9)}.rtab.active{color:#fff}
   .rtab.active::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--gold)}
@@ -173,8 +217,10 @@
     <span>Candidate: <b id="disp-name">Guest</b></span>
     <span>ID: <b id="disp-id">N/A</b></span>
     <div class="font-size-ctrl" title="Adjust text size">
-      <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
-      <button class="fs-btn" onclick="changeFontSize(1)">A+</button>
+      <span class="fs-icon fs-icon-sm">A</span>
+      <input type="range" class="fs-slider" id="fs-slider" min="0" max="4" step="1" value="1"
+             oninput="setFontSize(this.value)" aria-label="Text size">
+      <span class="fs-icon fs-icon-lg">A</span>
     </div>
     <button class="btn-profile" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
     <button class="btn-profile" onclick="window.location.href='tests.html'">← Tests</button>
@@ -326,6 +372,8 @@ function initAccessibilityPrefs() {
     fontScaleIndex = idx >= 0 ? idx : 1;
   }
   applyFontScale();
+  const slider = document.getElementById('fs-slider');
+  if (slider) slider.value = fontScaleIndex; // reflect restored preference on the handle position
 
   // Dark mode
   const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
@@ -344,10 +392,12 @@ function applyFontScale() {
 function toggleHdrMenu(){
   document.getElementById('hdr-actions').classList.toggle('open');
 }
-function changeFontSize(direction) {
-  const newIndex = fontScaleIndex + direction;
-  if (newIndex < 0 || newIndex >= FONT_SCALE_STEPS.length) return; // already at min/max
-  fontScaleIndex = newIndex;
+// Called on every drag of the font-size slider — value is the step index (0-4),
+// mapped through FONT_SCALE_STEPS just like the old +/- buttons did.
+function setFontSize(stepIndex) {
+  const idx = parseInt(stepIndex, 10);
+  if (isNaN(idx) || idx < 0 || idx >= FONT_SCALE_STEPS.length) return;
+  fontScaleIndex = idx;
   applyFontScale();
 }
 
@@ -568,6 +618,10 @@ function initUser() {
 // the page loads, instead of resetting to the full duration.
 // ══════════════════════════════════════
 const TEST_DURATION_SECONDS = 9900; // 2:45:00
+// The "Done — Continue to Reading" button only appears once this much time
+// has passed since the test started (see renderTabLocks()).
+const CONTINUE_BTN_MIN_ELAPSED_SECONDS = 25 * 60; // 25 minutes
+let _continueGateOpened = false; // one-shot flag so the unlock only fires/toasts once
 
 // ══════════════════════════════════════
 // TOASTS — non-blocking notifications (time reminders, connection issues, etc.)
@@ -765,9 +819,21 @@ function resetCompactWidth() {
 function renderTabLocks() {
   document.getElementById('tab-R').classList.toggle('locked-tab', !revealed.R);
   document.getElementById('tab-W').classList.toggle('locked-tab', !revealed.W);
-  document.getElementById('continue-btn').style.display =
-    (cur === 'L' && !revealed.R) ? 'inline-block' :
-    (cur === 'R' && !revealed.W) ? 'inline-block' : 'none';
+
+  // The Listening → Reading continue button stays hidden until at least
+  // CONTINUE_BTN_MIN_ELAPSED_SECONDS has passed since the test started,
+  // so candidates can't skip ahead before a reasonable chunk of the
+  // Listening section has actually elapsed. Reading → Writing has no such
+  // gate — the candidate has already spent the full Listening duration by
+  // the time they reach it.
+  const elapsedSeconds = TEST_DURATION_SECONDS - timeLeft;
+  const continueGateOpen = elapsedSeconds >= CONTINUE_BTN_MIN_ELAPSED_SECONDS;
+
+  const showContinue =
+    (cur === 'L' && !revealed.R && continueGateOpen) ||
+    (cur === 'R' && !revealed.W);
+
+  document.getElementById('continue-btn').style.display = showContinue ? 'inline-block' : 'none';
   document.getElementById('continue-btn').innerText =
     cur === 'L' ? 'Done — Continue to Reading →' : 'Done — Continue to Writing →';
 }
