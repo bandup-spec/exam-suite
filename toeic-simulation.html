@@ -45,6 +45,9 @@
   .stage-gate h1{font-family:'Source Serif 4',serif;color:var(--blue);margin-bottom:10px}
   .stage-gate p{color:var(--ink2);font-size:0.92rem;line-height:1.7;margin-bottom:10px;text-align:left}
   .stage-gate .btn{margin-top:18px;padding:12px 28px;font-size:0.92rem;background:var(--blue);color:#fff}
+  .stage-gate .btn:disabled{opacity:0.4;cursor:not-allowed}
+  .ack-row{display:flex;gap:9px;align-items:flex-start;margin:16px 0 4px;font-size:0.85rem;color:var(--ink2);cursor:pointer;background:var(--paper2,#f2f0ec);padding:12px 14px;border-radius:8px;text-align:left}
+  .ack-row input{margin-top:3px;flex-shrink:0}
 
   .part-block{background:#fff;border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px}
   .part-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
@@ -219,7 +222,11 @@ function showStartGate(){
       <p><b>Format:</b> 100 Listening questions (Parts 1–4, ~45 min) + 100 Reading questions (Parts 5–7, 75 min). All multiple choice — no Writing or Speaking sections.</p>
       <p>Once you start the Listening section, the timer begins automatically and cannot be paused. You may revisit and change any answer within a section before time runs out or before you move to the next section.</p>
       <p>Make sure your audio is on and working before you begin.</p>
-      <button class="btn" onclick="startStage('listening')">Start Listening Section →</button>
+      <label class="ack-row">
+        <input type="checkbox" id="ack-check" onchange="document.getElementById('start-listening-btn').disabled=!this.checked">
+        <span>I have read and understood the instructions above, and I'm ready to begin.</span>
+      </label>
+      <button class="btn" id="start-listening-btn" disabled onclick="startStage('listening')">Start Listening Section →</button>
     </div>`;
 }
 
