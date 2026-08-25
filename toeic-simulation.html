@@ -90,9 +90,18 @@
   #load-overlay{position:fixed;inset:0;background:rgba(0,47,95,0.92);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:14px}
   .spinner{width:40px;height:40px;border:3px solid rgba(255,255,255,0.25);border-top-color:var(--gold);border-radius:50%;animation:spin 0.7s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+
+  #toast-wrap{position:fixed;top:12px;left:50%;transform:translateX(-50%);z-index:9999;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+  .toast{pointer-events:auto;min-width:260px;max-width:min(90vw,420px);padding:12px 16px;border-radius:9px;font-size:0.85rem;font-weight:600;box-shadow:0 6px 20px rgba(0,0,0,0.2);display:flex;align-items:center;gap:10px;animation:toastIn 0.25s ease-out;color:#fff}
+  .toast.info{background:var(--blue2,#1a5fa8)}
+  .toast.warn{background:#b8860b}
+  .toast.danger{background:var(--red,#c0392b)}
+  @keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes toastOut{from{opacity:1}to{opacity:0}}
 </style>
 </head>
 <body>
+<div id="toast-wrap"></div>
 
 <div class="hdr">
   <div class="hdr-logo">Band<span>Up</span> · TOEIC</div>
@@ -193,8 +202,9 @@ function saveAutosave(){
 function loadAutosave(){
   try {
     const raw = localStorage.getItem(autosaveKey());
-    if(raw){ const d = JSON.parse(raw); answers = d.answers || {}; flagged = d.flagged || {}; }
+    if(raw){ const d = JSON.parse(raw); answers = d.answers || {}; flagged = d.flagged || {}; return d.savedAt || 0; }
   } catch(e){}
+  return 0;
 }
 function clearAutosave(){ try{ localStorage.removeItem(autosaveKey()); }catch(e){} }
 
@@ -246,6 +256,45 @@ function finishListening(){
 // ═══════════════════════════════════════
 // TIMER — persists across refresh, same pattern as simulation.html
 // ═══════════════════════════════════════
+// ══════════════════════════════════════
+// TOASTS — non-blocking notifications (time reminders, etc.)
+// ══════════════════════════════════════
+function showToast(msg, variant, duration) {
+  const wrap = document.getElementById('toast-wrap');
+  if (!wrap) return;
+  const el = document.createElement('div');
+  el.className = 'toast ' + (variant || 'info');
+  el.innerHTML = msg;
+  wrap.appendChild(el);
+  setTimeout(() => {
+    el.style.animation = 'toastOut 0.3s ease-in forwards';
+    setTimeout(() => el.remove(), 300);
+  }, duration || 6000);
+}
+
+// Fires once per threshold per stage — re-armed each time initTimer(which) is
+// called for a new stage, since Listening and Reading have separate clocks.
+let _firedTimeWarnings = new Set();
+function checkTimeWarnings(which, remaining){
+  const total = STAGE_DURATIONS[which];
+  const elapsed = total - remaining;
+  for (let h = 1; h * 3600 <= total; h++) {
+    const mark = h * 3600;
+    if (elapsed >= mark && !_firedTimeWarnings.has(which+'_elapsed'+mark)) {
+      _firedTimeWarnings.add(which+'_elapsed'+mark);
+      showToast(`⏱️ ${h} hour${h>1?'s':''} have passed (${which}).`, 'info');
+    }
+  }
+  if (total > 1800 && remaining <= 1800 && !_firedTimeWarnings.has(which+'_remain1800')) {
+    _firedTimeWarnings.add(which+'_remain1800');
+    showToast(`⚠️ 30 minutes remaining (${which}).`, 'warn');
+  }
+  if (total > 300 && remaining <= 300 && !_firedTimeWarnings.has(which+'_remain300')) {
+    _firedTimeWarnings.add(which+'_remain300');
+    showToast(`🔴 Final 5 minutes (${which})! Please finish up.`, 'danger', 9000);
+  }
+}
+
 function initTimer(which){
   const key = timerKey(which);
   let endTime = localStorage.getItem(key);
@@ -256,6 +305,7 @@ function initTimer(which){
   endTime = parseInt(endTime, 10);
 
   clearInterval(timerInterval);
+  _firedTimeWarnings = new Set(); // fresh set of thresholds for this stage
   let tickCount = 0;
   // Staggered per-browser offset so many candidates starting around the same
   // time don't all sync to Sheets on the exact same tick — same approach as
@@ -264,6 +314,7 @@ function initTimer(which){
   timerInterval = setInterval(() => {
     const remaining = Math.max(0, Math.round((endTime - Date.now())/1000));
     renderTimer(remaining);
+    checkTimeWarnings(which, remaining);
     tickCount++;
     if (tickCount % 90 === syncJitter) syncDraftToSheets();
     if(remaining <= 0){
@@ -286,19 +337,48 @@ let lastSyncedSnapshot = '';
 async function syncDraftToSheets(){
   const snapshot = JSON.stringify(answers);
   if (snapshot === lastSyncedSnapshot) return; // nothing changed — save the quota
+
+  // Split by absolute number so the admin monitor can show Listening/Reading
+  // progress separately instead of one combined count.
+  const listeningPart = {}, readingPart = {};
+  Object.keys(answers).forEach(k => {
+    const n = parseInt(k, 10);
+    if (n <= 100) listeningPart[k] = answers[k]; else readingPart[k] = answers[k];
+  });
+
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData')||'{}');
   try {
     await callSheets({
       action: 'saveDraft',
+      examType: 'TOEIC',
+      currentSection: stage || '',
       candidateID: candidateData.candidateID || getCandidateID(),
       fullName: candidateData.fullName || sessionStorage.getItem('candidateName') || '',
       testSetID: activeTestSet.setID || '',
-      lAnswers: snapshot,
-      rAnswers: '{}',
+      lAnswers: JSON.stringify(listeningPart),
+      rAnswers: JSON.stringify(readingPart),
       writingVals: '{}'
     });
     lastSyncedSnapshot = snapshot;
   } catch(e) { /* best-effort — local autosave already covers the common case */ }
+}
+
+// Restore-on-login (Layer 2 for TOEIC): pulls the server-side draft if it's
+// newer than the local autosave copy — covers resuming on a different device
+// or a cleared-storage browser.
+async function restoreAnswersFromServer(localSavedAt){
+  const candidateData = JSON.parse(sessionStorage.getItem('candidateData')||'{}');
+  const candidateID = candidateData.candidateID || getCandidateID();
+  if (!candidateID || !activeTestSet.setID) return;
+  try {
+    const res = await callSheets({ action: 'getDraft', candidateID, testSetID: activeTestSet.setID });
+    if (!res || !res.success || !res.found) return;
+    const serverTime = res.updatedAt ? new Date(res.updatedAt).getTime() : 0;
+    if (serverTime <= (localSavedAt || 0)) return;
+    const l = JSON.parse(res.lAnswers || '{}');
+    const r = JSON.parse(res.rAnswers || '{}');
+    answers = Object.assign({}, l, r);
+  } catch(e) { /* offline/quota — local copy (if any) still stands */ }
 }
 
 function renderTimer(sec){
@@ -314,11 +394,11 @@ function stageTimeUp(which){
   saveAutosave();
   if(which === 'listening'){
     clearStageTimer('listening');
-    alert("Time's up for the Listening section. Moving on to Reading.");
+    showToast("⏰ Time's up for Listening. Moving on to Reading.", 'danger', 6000);
     showStageTransition();
   } else {
     clearStageTimer('reading');
-    alert("Time's up. Submitting your test now.");
+    showToast("⏰ Time's up. Submitting your test now...", 'danger', 6000);
     submitTest(true);
   }
 }
@@ -778,10 +858,11 @@ function escH(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&
 // ═══════════════════════════════════════
 (async function boot(){
   initUser();
-  loadAutosave();
+  const localSavedAt = loadAutosave();
   loadPlayedAudio();
   const ok = await loadConfig();
   if(!ok) return;
+  await restoreAnswersFromServer(localSavedAt);
   showStartGate();
 })();
 </script>
