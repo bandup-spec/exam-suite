@@ -60,9 +60,14 @@
   .timer.warn{background:var(--red);color:#fff;animation:pulse 1s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.85}}
   .main{display:flex;flex:1;overflow:hidden}
-  .panel-left{flex:1;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
   .panel-right{flex:1;display:flex;flex-direction:column;overflow:hidden;background:var(--paper)}
-  .right-tab-bar{background:var(--blue);border-bottom:3px solid var(--gold);display:flex;flex-shrink:0}
+  .right-tab-bar{background:var(--blue);border-bottom:3px solid var(--gold);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+  .rtab-group{display:flex}
+  .continue-btn-inline{margin:0 12px;padding:6px 14px;background:var(--gold);color:var(--blue);border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap;transition:all 0.15s}
+  .continue-btn-inline:hover{opacity:0.85}
+  .panel-left{flex:1;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;background:var(--paper);transition:flex-basis 0.2s}
+  .main.compact-left .panel-left{flex:0 0 260px}
+  .main.compact-left .panel-right{flex:1}
   .rtab{padding:10px 24px;border:none;background:transparent;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;position:relative;transition:color 0.2s}
   .rtab:hover{color:rgba(255,255,255,0.9)}.rtab.active{color:#fff}
   .rtab.active::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--gold)}
@@ -215,11 +220,13 @@
   <!-- RIGHT PANEL -->
   <div class="panel-right">
     <div class="right-tab-bar">
-      <button class="rtab active" id="tab-L" onclick="switchSection('L')">Listening</button>
-      <button class="rtab locked-tab" id="tab-R" onclick="switchSection('R')">Reading</button>
-      <button class="rtab locked-tab" id="tab-W" onclick="switchSection('W')">Writing</button>
+      <div class="rtab-group">
+        <button class="rtab active" id="tab-L" onclick="switchSection('L')">Listening</button>
+        <button class="rtab locked-tab" id="tab-R" onclick="switchSection('R')">Reading</button>
+        <button class="rtab locked-tab" id="tab-W" onclick="switchSection('W')">Writing</button>
+      </div>
+      <button class="continue-btn-inline" id="continue-btn" style="display:none" onclick="continueToNextSection()">Done — Continue to Reading →</button>
     </div>
-    <button class="continue-btn" id="continue-btn" style="display:none" onclick="continueToNextSection()">I'm Done — Continue to Reading →</button>
     <!-- LISTENING QS -->
     <div id="L-right" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="inner-tabs" id="L-sec-tabs">
@@ -679,10 +686,10 @@ function renderTabLocks() {
   document.getElementById('tab-R').classList.toggle('locked-tab', !revealed.R);
   document.getElementById('tab-W').classList.toggle('locked-tab', !revealed.W);
   document.getElementById('continue-btn').style.display =
-    (cur === 'L' && !revealed.R) ? 'block' :
-    (cur === 'R' && !revealed.W) ? 'block' : 'none';
+    (cur === 'L' && !revealed.R) ? 'inline-block' :
+    (cur === 'R' && !revealed.W) ? 'inline-block' : 'none';
   document.getElementById('continue-btn').innerText =
-    cur === 'L' ? 'I\'m Done — Continue to Reading →' : 'I\'m Done — Continue to Writing →';
+    cur === 'L' ? 'Done — Continue to Reading →' : 'Done — Continue to Writing →';
 }
 
 function continueToNextSection() {
@@ -813,6 +820,7 @@ function switchSection(s) {
   document.getElementById('R-right').classList.toggle('hidden',s!=='R');
   document.getElementById('W-right').classList.toggle('hidden',s!=='W');
   document.getElementById('submit-btn').style.display = s==='W' ? 'block' : 'none';
+  document.querySelector('.main').classList.toggle('compact-left', s==='L'); // audio card doesn't need half the screen — give the questions more room
   buildNav(s);
   renderTabLocks();
   if(s==='R')syncPassage(1);
