@@ -348,17 +348,27 @@ async function syncDraftToSheets(){
 
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData')||'{}');
   try {
-    await callSheets({
+    const res = await callSheets({
       action: 'saveDraft',
       examType: 'TOEIC',
       currentSection: stage || '',
       candidateID: candidateData.candidateID || getCandidateID(),
+      sessionToken: candidateData.sessionToken || '',
       fullName: candidateData.fullName || sessionStorage.getItem('candidateName') || '',
       testSetID: activeTestSet.setID || '',
       lAnswers: JSON.stringify(listeningPart),
       rAnswers: JSON.stringify(readingPart),
       writingVals: '{}'
     });
+    if (res && res.sessionInvalid) {
+      if (!window._sessionKickedOut) {
+        window._sessionKickedOut = true;
+        clearInterval(timerInterval);
+        showToast('🚪 Signed out — your account was logged in on another device.', 'danger', 10000);
+        setTimeout(() => { window.location.href = 'index.html'; }, 3500);
+      }
+      return;
+    }
     lastSyncedSnapshot = snapshot;
   } catch(e) { /* best-effort — local autosave already covers the common case */ }
 }
@@ -792,19 +802,29 @@ async function doSubmitTest(autoSubmit){
 
   let result = null;
   let sheetsFailed = false;
+  let sessionKicked = false;
   try {
     result = await callSheets({
       action: 'saveScore',
       examType: 'TOEIC',
       candidateID: candidateData.candidateID || '',
+      sessionToken: candidateData.sessionToken || '',
       fullName: candidateData.fullName || sessionStorage.getItem('candidateName') || '',
       testSetID: activeTestSet.setID || '',
       testSetName: activeTestSet.setName || '',
       listeningAnswers: JSON.stringify(listeningAnswers),
       readingAnswers: JSON.stringify(readingAnswers)
     });
-    if (!result || !result.success) sheetsFailed = true;
+    if (result && result.sessionInvalid) sessionKicked = true;
+    else if (!result || !result.success) sheetsFailed = true;
   } catch(e) { sheetsFailed = true; }
+
+  if (sessionKicked) {
+    showToast('🚪 Could not submit — your account was logged in on another device. Please log in again.', 'danger', 10000);
+    submitBtn.textContent = 'Not submitted';
+    setTimeout(() => { window.location.href = 'index.html'; }, 3500);
+    return;
+  }
 
   // Only download a local JSON backup if the Sheets save didn't actually
   // succeed — most submissions save fine, so there's no need to surprise
