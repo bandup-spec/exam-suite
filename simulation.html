@@ -66,6 +66,10 @@
   .rtab{padding:10px 24px;border:none;background:transparent;color:rgba(255,255,255,0.6);font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;cursor:pointer;position:relative;transition:color 0.2s}
   .rtab:hover{color:rgba(255,255,255,0.9)}.rtab.active{color:#fff}
   .rtab.active::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:3px;background:var(--gold)}
+  .rtab.locked-tab{opacity:0.35;cursor:not-allowed;pointer-events:none}
+  .rtab.done-tab{opacity:0.55}
+  .continue-btn{margin:12px 16px;padding:11px;background:var(--blue2);color:#fff;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;width:calc(100% - 32px);transition:all 0.15s}
+  .continue-btn:hover{opacity:0.9}
   .inner-tabs{background:var(--paper2);border-bottom:1px solid var(--border);display:flex;padding:0 16px;flex-shrink:0}
   .inner-tab{padding:9px 16px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.15s}
   .inner-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
@@ -106,6 +110,10 @@
   .wc-progress{width:140px;height:4px;background:var(--paper3);border-radius:2px;overflow:hidden}
   .wc-fill{height:100%;background:var(--blue2);transition:width 0.3s;border-radius:2px}
   .nav-footer{background:var(--blue);padding:8px 16px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;flex-shrink:0;position:sticky;bottom:0;z-index:10}
+  .nav-footer.collapsed{padding:6px 16px}
+  .nav-footer.collapsed #nav-squares{display:none!important}
+  .nav-toggle-btn{background:none;border:1px solid rgba(255,255,255,0.35);color:rgba(255,255,255,0.85);border-radius:5px;padding:3px 8px;font-size:0.7rem;font-weight:600;cursor:pointer;flex-shrink:0}
+  .nav-toggle-btn:hover{border-color:#fff;color:#fff}
   .nav-lbl{font-size:0.7rem;font-weight:700;letter-spacing:0.1em;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-right:4px}
   .nav-sq{width:26px;height:26px;border-radius:4px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.7);font-size:0.7rem;font-weight:700;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s}
   .nav-sq.done{background:var(--green);border-color:var(--green);color:#fff}
@@ -208,9 +216,10 @@
   <div class="panel-right">
     <div class="right-tab-bar">
       <button class="rtab active" id="tab-L" onclick="switchSection('L')">Listening</button>
-      <button class="rtab" id="tab-R" onclick="switchSection('R')">Reading</button>
-      <button class="rtab" id="tab-W" onclick="switchSection('W')">Writing</button>
+      <button class="rtab locked-tab" id="tab-R" onclick="switchSection('R')">Reading</button>
+      <button class="rtab locked-tab" id="tab-W" onclick="switchSection('W')">Writing</button>
     </div>
+    <button class="continue-btn" id="continue-btn" style="display:none" onclick="continueToNextSection()">I'm Done — Continue to Reading →</button>
     <!-- LISTENING QS -->
     <div id="L-right" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
       <div class="inner-tabs" id="L-sec-tabs">
@@ -260,8 +269,10 @@
   </div>
 </div>
 
-<div class="nav-footer">
+<div class="nav-footer" id="nav-footer">
+  <button class="nav-toggle-btn" id="nav-toggle-btn" onclick="toggleNavFooter()" title="Minimize the progress bar">▾ Minimize</button>
   <span class="nav-lbl">Progress</span>
+  <span id="nav-summary" style="font-size:0.72rem;color:rgba(255,255,255,0.6);display:none"></span>
   <div id="nav-squares" style="display:flex;flex-wrap:wrap;gap:4px"></div>
 </div>
 
@@ -643,6 +654,51 @@ function clearTimerStorage() {
 // AUTOSAVE — Layer 1: instant local backup (survives refresh/crash)
 //            Layer 2: periodic backup to Google Sheets (survives device loss)
 // ══════════════════════════════════════
+function getRevealStorageKey() {
+  const cid = sessionStorage.getItem('candidateID') || 'guest';
+  const sid = (activeTestSet && activeTestSet.setID) || 'default';
+  return `ielts_revealed_${cid}_${sid}`;
+}
+
+// Anti-peeking gate: Reading/Writing content stays hidden until the
+// candidate finishes Listening (then Writing until Reading is finished).
+// Once revealed, a section STAYS revealed — the candidate can freely go
+// back to review/change earlier answers. This only blocks *looking ahead*.
+let revealed = { L: true, R: false, W: false };
+function loadRevealState() {
+  try {
+    const raw = localStorage.getItem(getRevealStorageKey());
+    if (raw) revealed = Object.assign(revealed, JSON.parse(raw));
+  } catch(e) {}
+}
+function saveRevealState() {
+  try { localStorage.setItem(getRevealStorageKey(), JSON.stringify(revealed)); } catch(e) {}
+}
+
+function renderTabLocks() {
+  document.getElementById('tab-R').classList.toggle('locked-tab', !revealed.R);
+  document.getElementById('tab-W').classList.toggle('locked-tab', !revealed.W);
+  document.getElementById('continue-btn').style.display =
+    (cur === 'L' && !revealed.R) ? 'block' :
+    (cur === 'R' && !revealed.W) ? 'block' : 'none';
+  document.getElementById('continue-btn').innerText =
+    cur === 'L' ? 'I\'m Done — Continue to Reading →' : 'I\'m Done — Continue to Writing →';
+}
+
+function continueToNextSection() {
+  if (cur === 'L' && !revealed.R) {
+    revealed.R = true;
+    saveRevealState();
+    showToast('📖 Reading section unlocked.', 'info');
+    switchSection('R');
+  } else if (cur === 'R' && !revealed.W) {
+    revealed.W = true;
+    saveRevealState();
+    showToast('✍️ Writing section unlocked.', 'info');
+    switchSection('W');
+  }
+}
+
 function getAutosaveStorageKey() {
   const cid = sessionStorage.getItem('candidateID') || 'guest';
   const sid = (activeTestSet && activeTestSet.setID) || 'default';
@@ -692,6 +748,16 @@ function clearAutosaveStorage() {
   try { localStorage.removeItem(getAutosaveStorageKey()); } catch(e) {}
 }
 
+// Forced logout when another device has taken over this account's session.
+// Called from any callSheets response that comes back with sessionInvalid.
+function handleSessionInvalid_() {
+  if (window._sessionKickedOut) return;
+  window._sessionKickedOut = true;
+  clearInterval(timerInterval);
+  showToast('🚪 Signed out — your account was logged in on another device.', 'danger', 10000);
+  setTimeout(() => { window.location.href = 'index.html'; }, 3500);
+}
+
 async function syncDraftToSheets() {
   // capture the current writing textarea too, since it isn't written into
   // writingVals until the user switches tasks or submits
@@ -703,7 +769,7 @@ async function syncDraftToSheets() {
 
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData') || '{}');
   try {
-    await callSheets({
+    const res = await callSheets({
       action: 'saveDraft',
       examType: 'IELTS',
       currentSection: cur,
@@ -711,6 +777,7 @@ async function syncDraftToSheets() {
       fullName:    candidateData.fullName || sessionStorage.getItem('candidateName') || '',
       testSetID:   activeTestSet.setID   || '',
       testSetName: activeTestSet.setName || '',
+      sessionToken: candidateData.sessionToken || '',
       lAnswers: JSON.stringify(lAnswers),
       rAnswers: JSON.stringify(rAnswers),
       writingVals: JSON.stringify(writingVals),
@@ -719,6 +786,7 @@ async function syncDraftToSheets() {
       writingTask1: (writingVals[1]||'').substring(0,2000),
       writingTask2: (writingVals[2]||'').substring(0,2000)
     });
+    if (res && res.sessionInvalid) { handleSessionInvalid_(); return; }
     lastSyncedSnapshot = snapshot; // only mark synced on success — retry next interval otherwise
   } catch(e) { /* offline/quota hit — Layer 1 local copy is already safe, will retry in 90s */ }
 }
@@ -732,6 +800,10 @@ function autoSubmitOnTimeUp() {
 }
 
 function switchSection(s) {
+  if ((s === 'R' && !revealed.R) || (s === 'W' && !revealed.W)) {
+    showToast('🔒 Finish the current section first — click "Continue" when ready.', 'warn');
+    return;
+  }
   cur=s;
   ['L','R','W'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('active',x===s));
   document.getElementById('L-left').classList.toggle('hidden',s!=='L');
@@ -742,6 +814,7 @@ function switchSection(s) {
   document.getElementById('W-right').classList.toggle('hidden',s!=='W');
   document.getElementById('submit-btn').style.display = s==='W' ? 'block' : 'none';
   buildNav(s);
+  renderTabLocks();
   if(s==='R')syncPassage(1);
   if(s==='W')switchWriting(curWriting,true);
 }
@@ -884,13 +957,90 @@ function markQ(sec,n,el){
 function buildNav(s){
   const wrap=document.getElementById('nav-squares');
   wrap.innerHTML='';
-  if(s==='W')return;
+  if(s==='W'){ updateNavSummary_(); return; }
   const ans=answered[s]||{};
   for(let i=1;i<=40;i++){
     const d=document.createElement('div');
     d.className='nav-sq'+(ans[i]?' done':'');
-    d.innerText=i; wrap.appendChild(d);
+    d.innerText=i;
+    d.title='Jump to question '+i;
+    d.onclick=()=>jumpToQuestion_(s,i);
+    wrap.appendChild(d);
   }
+  updateNavSummary_();
+}
+
+// Tags each rendered question block with its number (read off the visible
+// "q-num" label) so a nav-square click can scroll straight to it — the
+// render functions build several different block shapes (mc/cl/matching/
+// short-answer), so tagging is done once, after the fact, instead of
+// touching every template.
+function tagQuestionBlocks_(container){
+  container.querySelectorAll('.q-block').forEach(el=>{
+    const numEl=el.querySelector('.q-num');
+    const m=numEl && numEl.textContent.match(/\d+/);
+    if(m) el.dataset.qn=m[0];
+  });
+}
+
+function jumpToQuestion_(sec,n){
+  if (sec==='L') {
+    switchSection('L');
+    switchLSection(lSubsectionOf_(n));
+  } else {
+    if (!revealed.R) { showToast('🔒 Finish Listening first.', 'warn'); return; }
+    switchSection('R');
+    syncPassage(n<=13?1:(n<=26?2:3));
+  }
+  setTimeout(()=>scrollToQuestionBlock_(sec,n), 60); // let the section swap render first
+}
+
+function scrollToQuestionBlock_(sec,n){
+  const container=document.getElementById(sec==='L'?'L-right':'R-right');
+  if(!container) return;
+  tagQuestionBlocks_(container);
+  let target=container.querySelector(`.q-block[data-qn="${n}"]`);
+  if(!target){
+    // grouped question types (matching/headings) may only tag their first
+    // number — fall back to the nearest block at or before N
+    let bestNum=-1;
+    container.querySelectorAll('.q-block[data-qn]').forEach(el=>{
+      const num=parseInt(el.dataset.qn,10);
+      if(num<=n && num>bestNum){ bestNum=num; target=el; }
+    });
+  }
+  if(target){
+    target.scrollIntoView({behavior:'smooth', block:'center'});
+    target.style.outline='2px solid var(--gold)';
+    setTimeout(()=>{ if(target) target.style.outline=''; }, 1500);
+  }
+}
+
+// ══════════════════════════════════════
+// COLLAPSIBLE PROGRESS BAR — the always-visible number grid can feel like
+// clutter, especially while reading a passage or writing an essay, so it can
+// be minimized down to just a summary count. Choice persists across reloads.
+// ══════════════════════════════════════
+function updateNavSummary_(){
+  const el=document.getElementById('nav-summary');
+  if(!el) return;
+  if(cur==='W'){
+    const wc=(writingVals[curWriting]||document.getElementById('w-textarea')?.value||'').trim();
+    el.innerText = wc ? 'Writing in progress' : 'Not started';
+    return;
+  }
+  const ans=answered[cur]||{};
+  const count=Object.keys(ans).filter(k=>ans[k]).length;
+  el.innerText = `${count}/40 answered`;
+}
+
+function toggleNavFooter(forceCollapsed){
+  const footer=document.getElementById('nav-footer');
+  const collapsed = typeof forceCollapsed==='boolean' ? forceCollapsed : !footer.classList.contains('collapsed');
+  footer.classList.toggle('collapsed', collapsed);
+  document.getElementById('nav-toggle-btn').innerText = collapsed ? '▸ Show' : '▾ Minimize';
+  document.getElementById('nav-summary').style.display = collapsed ? 'inline' : 'none';
+  try{ localStorage.setItem('ielts_nav_collapsed', collapsed?'1':'0'); }catch(e){}
 }
 
 function playAudio(){
@@ -1554,10 +1704,12 @@ async function submitTest(autoSubmit){
     const btn=document.getElementById('submit-btn');
     btn.textContent='Saving...'; btn.disabled=true;
     let sheetsFailed = false;
+    let sessionKicked = false;
     try {
       const res = await callSheets({
         action:'saveScore',
         candidateID:   candidateData.candidateID||'',
+        sessionToken:  candidateData.sessionToken||'',
         fullName:      candidateData.fullName||sessionStorage.getItem('candidateName')||'',
         testSetID:     activeTestSet.setID   || '',
         testSetName:   activeTestSet.setName || '',
@@ -1567,11 +1719,25 @@ async function submitTest(autoSubmit){
         writingTask1:  (writingVals[1]||'').substring(0,2000),
         writingTask2:  (writingVals[2]||'').substring(0,2000)
       });
-      if (!res || !res.success) sheetsFailed = true;
+      if (res && res.sessionInvalid) {
+        sessionKicked = true;
+      } else if (!res || !res.success) {
+        sheetsFailed = true;
+      }
     } catch(e){
       sheetsFailed = true;
     } finally {
-      btn.textContent='Submitted ✓'; btn.disabled=true;
+      if (sessionKicked) {
+        showToast('🚪 Could not submit — your account was logged in on another device. Please log in again.', 'danger', 10000);
+        btn.textContent='Not submitted'; btn.disabled=true;
+      } else {
+        btn.textContent='Submitted ✓'; btn.disabled=true;
+      }
+    }
+
+    if (sessionKicked) {
+      setTimeout(() => { window.location.href = 'index.html'; }, 3500);
+      return; // skip the backup-download and cleanup below — the finally block above already ran
     }
 
     // Download JSON backup only if the Sheets save didn't actually succeed —
@@ -1626,6 +1792,7 @@ window.onload = async () => {
   initUser(); // must run before initTimer() — normalizes candidateID in sessionStorage,
               // which the timer's storage key depends on to avoid collisions between sessions
   initTimer();
+  loadRevealState();
   const localSavedAt = restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
   await restoreAnswersFromServer(localSavedAt); // may overwrite with a newer server-side copy (different device/cleared storage)
 
@@ -1650,6 +1817,7 @@ window.onload = async () => {
     if (status) status.innerText = 'No audio for this section';
   }
   switchSection('L');
+  try { toggleNavFooter(localStorage.getItem('ielts_nav_collapsed')==='1'); } catch(e) {}
 };
 </script>
 </body>
