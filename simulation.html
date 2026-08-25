@@ -695,6 +695,9 @@ function initTimer() {
     if(timeLeft<=600)timerEl.className='timer warn';
   }
   renderTimer();
+  // Evaluate the Continue-button gate immediately too, in case a returning
+  // candidate reloads the page after the 25-minute mark has already passed.
+  renderTabLocks();
 
   let tickCount = 0;
   // Stagger periodic Sheets syncs across candidates — if a whole batch starts
@@ -707,6 +710,12 @@ function initTimer() {
     timeLeft--;
     renderTimer();
     checkTimeWarnings(timeLeft);
+    // Re-evaluate the Continue-to-next-section gate every tick — this used
+    // to only refresh inside switchSection(), so the "25 minutes elapsed"
+    // button stayed stale until the candidate happened to trigger a section
+    // switch (e.g. clicking a nav square). Now it appears exactly on time,
+    // regardless of what the candidate is doing.
+    renderTabLocks();
     tickCount++;
     if (tickCount % 3 === 0) saveAnswersLocal();       // every ~3s — instant local backup
     if (tickCount % 90 === syncJitter) syncDraftToSheets(); // every ~90s, staggered — offsite backup, throttled for quota
@@ -828,6 +837,13 @@ function renderTabLocks() {
   // the time they reach it.
   const elapsedSeconds = TEST_DURATION_SECONDS - timeLeft;
   const continueGateOpen = elapsedSeconds >= CONTINUE_BTN_MIN_ELAPSED_SECONDS;
+
+  // Fire a one-time toast the moment the gate opens for Listening, so the
+  // candidate notices the new button even if they're not looking at it.
+  if (continueGateOpen && !_continueGateOpened && cur === 'L' && !revealed.R) {
+    _continueGateOpened = true;
+    showToast('✅ You can now continue to the Reading section when ready.', 'info');
+  }
 
   const showContinue =
     (cur === 'L' && !revealed.R && continueGateOpen) ||
