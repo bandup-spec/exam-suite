@@ -1705,6 +1705,7 @@ function initDrivePanel() {
 // ═══════════════════════════════════════
 let _monitorCands = [];
 let _monitorScores = [];
+let _monitorDrafts = [];
 let monitorInterval = null;
 let allCandidatesList = [];
 let allCandidateScores = [];
@@ -1721,18 +1722,21 @@ async function loadMonitor() {
   status.textContent = 'Fetching...';
 
   try {
-    const [candData, scoresData] = await Promise.all([
+    const [candData, scoresData, draftsData] = await Promise.all([
       callSheets({ action: 'getCandidates' }),
-      callSheets({ action: 'getScores' })
+      callSheets({ action: 'getScores' }),
+      callSheets({ action: 'getDrafts' })
     ]);
 
     _monitorCands  = (candData.success  && candData.rows)   ? candData.rows   : [];
     _monitorScores = (scoresData.success && scoresData.rows) ? scoresData.rows : [];
+    _monitorDrafts = (draftsData.success && draftsData.rows) ? draftsData.rows : [];
     allCandidatesList  = _monitorCands;
     allCandidateScores = _monitorScores;
 
+    const liveCount = _monitorDrafts.filter(r => r[8] === 'in_progress').length;
     status.className = 'sheets-status ok';
-    status.textContent = `✅ ${_monitorCands.length} candidates`;
+    status.textContent = `✅ ${_monitorCands.length} candidates` + (liveCount ? ` · 🟢 ${liveCount} testing now` : '');
 
     document.getElementById('monitor-search').value = '';
     renderMonitorTable(_monitorCands);
@@ -1741,6 +1745,23 @@ async function loadMonitor() {
     status.textContent = '❌ Error';
     wrap.innerHTML = `<div class="tbl-empty" style="color:var(--red)">❌ ${e.message}</div>`;
   }
+}
+
+// Draft row layout (getDrafts): [CandidateID, TestSetID, FullName, ExamType,
+// CurrentSection, ListeningAnswered, ReadingAnswered, WritingWordCount, Status, UpdatedAt]
+function getLiveDraft_(cid) {
+  const target = String(cid||'').trim().toUpperCase();
+  return _monitorDrafts.find(r => String(r[0]||'').trim().toUpperCase() === target && r[8] === 'in_progress') || null;
+}
+function secondsAgo_(iso) {
+  if (!iso) return null;
+  const s = Math.round((Date.now() - new Date(iso).getTime())/1000);
+  return s >= 0 ? s : null;
+}
+function agoLabel_(secs) {
+  if (secs === null) return '';
+  if (secs < 90) return `${secs}s ago`;
+  return `${Math.round(secs/60)}m ago`;
 }
 
 function filterMonitor() {
@@ -1787,6 +1808,8 @@ function renderMonitorTable(cands, highlight) {
   }
 
   const sorted = [...cands].sort((a,b) => {
+    const liveRank = (getLiveDraft_(b[0])?1:0) - (getLiveDraft_(a[0])?1:0);
+    if (liveRank !== 0) return liveRank; // live-testing candidates float to the top
     const rank = {online:0,recent:1,offline:2};
     return rank[getStatus(a[7])] - rank[getStatus(b[7])];
   });
@@ -1813,8 +1836,16 @@ function renderMonitorTable(cands, highlight) {
         : '<span style="color:var(--ink3)">○ Offline</span>';
     const candScores = scores.filter(s => s[2] === cid);  // [2] = CandidateID
     const bestBand = candScores.reduce((max,s) => { const b=parseFloat(s[14]||0); return b>max?b:max; }, 0); // [14] = OverallBand
+
+    // Real live status, from the Drafts sheet — synced every ~90s by the
+    // exam client itself — instead of guessing from login recency.
+    const live = getLiveDraft_(cid);
     const bandCls = bestBand>=7?'band-high':bestBand>=5.5?'band-mid':bestBand>0?'band-low':'';
-    const inProgress = st!=='offline' && (!latestScore[cid] || (new Date(r[7]) > new Date(latestScore[cid][0])));
+    const secAgo = live ? secondsAgo_(live[9]) : null;
+    const staleLive = live && secAgo !== null && secAgo > 240; // no sync in 4min — likely closed tab/lost connection
+    const liveBadge = live
+      ? `<span style="font-size:0.7rem;background:${staleLive?'#fdeceb':'#e8f5e9'};color:${staleLive?'var(--red)':'var(--green)'};padding:1px 6px;border-radius:4px;margin-left:4px;white-space:nowrap">${staleLive?'⚠️ stalled':'🟢 live'} · ${escH(live[4]||'—')} · L ${live[5]}/40 R ${live[6]}/40${live[7]>0?` · ${live[7]}w`:''} · ${agoLabel_(secAgo)}</span>`
+      : '';
 
     html += `<tr class="monitor-row" onclick="openMonitorDetail('${escH(cid)}')">
       <td><span class="online-dot ${dotCls}"></span></td>
@@ -1822,7 +1853,7 @@ function renderMonitorTable(cands, highlight) {
       <td style="font-size:0.78rem;color:var(--ink3)">${r[7] ? new Date(r[7]).toLocaleString('en-PH',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}) : '—'}</td>
       <td style="text-align:center">${candScores.length}</td>
       <td><span class="band-badge ${bandCls}">${bestBand>0?bestBand:'—'}</span></td>
-      <td>${stLabel}${inProgress&&st!=='offline'?'<span style="font-size:0.7rem;background:#e8f5e9;color:var(--green);padding:1px 6px;border-radius:4px;margin-left:4px">In Test</span>':''}</td>
+      <td>${stLabel}${liveBadge}</td>
       <td><button class="refresh-btn" style="padding:4px 10px;font-size:0.75rem" onclick="event.stopPropagation();openMonitorDetail('${escH(cid)}')">View →</button></td>
     </tr>`;
   });
@@ -1857,7 +1888,22 @@ function openMonitorDetail(cid) {
   // Progress bars per section from latest submission — using correct Code.gs columns
   const latest = candScores[candScores.length - 1];
   const progWrap = document.getElementById('monitor-progress-bars');
-  if (latest) {
+
+  // Live in-progress draft (if the candidate is testing right now) takes
+  // priority over the last completed submission's bars.
+  const live = getLiveDraft_(cid);
+  if (live) {
+    const secAgo = secondsAgo_(live[9]);
+    const stale = secAgo !== null && secAgo > 240;
+    progWrap.innerHTML = `
+      <div style="background:${stale?'#fdeceb':'#e8f5e9'};border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:0.83rem;color:${stale?'var(--red)':'var(--green)'};font-weight:600">
+        ${stale?'⚠️ No sync in a while — may have lost connection or closed the tab':'🟢 Currently testing'} · Section: ${escH(live[4]||'—')} · Last synced ${agoLabel_(secAgo)}
+      </div>
+      <div class="prog-row"><span class="prog-label">Listening</span><div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${(live[5]/40)*100}%;background:var(--blue2)">${live[5]}/40</div></div></div>
+      <div class="prog-row"><span class="prog-label">Reading</span><div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${(live[6]/40)*100}%;background:var(--green)">${live[6]}/40</div></div></div>
+      ${live[7]>0 ? `<div class="prog-row"><span class="prog-label">Writing</span><div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${Math.min((live[7]/400)*100,100)}%;background:var(--gold)">${live[7]} words</div></div></div>` : ''}
+    `;
+  } else if (latest) {
     const lScore = parseInt(latest[6])||0;   // [6] ListeningScore
     const rScore = parseInt(latest[8])||0;   // [8] ReadingScore
     const w1wc   = parseInt(latest[15])||0;  // [15] WritingTask1WC
