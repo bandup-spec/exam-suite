@@ -30,6 +30,7 @@
   .ok{background:#eafaf0;color:#2e7d4f;border:1px solid rgba(46,125,79,0.3)}
   .err{background:#fdeceb;color:#c0392b;border:1px solid rgba(192,57,43,0.3)}
   code{background:#f2f0ec;padding:1px 6px;border-radius:4px;font-size:0.8rem}
+  .preview{margin-top:10px;font-size:0.78rem;color:#4a4a6a;background:#f2f0ec;border-radius:6px;padding:8px 10px;max-height:120px;overflow:auto;display:none}
 </style>
 </head>
 <body>
@@ -63,9 +64,15 @@
 
   <div class="card">
     <div class="card-title">2. Listening Answers</div>
-    <div class="card-desc" id="listening-hint">Paste answers in "number.answer" format, in any order, separated by spaces or newlines — e.g. <code>1.A 2.C 3.B</code> or one per line. Answers can be single letters, whole words, or short phrases (e.g. <code>21. NOT GIVEN</code>, <code>5. New York</code>) — not just multiple choice. Numbers should run 1–40 (IELTS) or 1–100 (TOEIC).</div>
+    <div class="card-desc" id="listening-hint">
+      Paste answers in "number.answer" format, in any order, separated by spaces or newlines — e.g. <code>1.A 2.C 3.B</code> or one per line.
+      Answers can be single letters, whole words, or short phrases (e.g. <code>21. NOT GIVEN</code>, <code>5. New York</code>) — not just multiple choice.
+      Numbers should run 1–40 (IELTS) or 1–100 (TOEIC).
+      <br><strong>Multiple acceptable answers:</strong> separate alternates with a slash, e.g. <code>6.MOVIE/FILM</code> or <code>40.PRACTICE/PRACTISE</code> — these will be saved together so either answer counts as correct.
+    </div>
     <textarea id="listening-input" placeholder="1.A 2.C 3.B 4.A 5.C ..." oninput="updateCounts()"></textarea>
     <div class="count-chip" id="listening-count">0 answers parsed</div>
+    <div class="preview" id="listening-preview"></div>
   </div>
 
   <div class="card">
@@ -73,6 +80,7 @@
     <div class="card-desc" id="reading-hint">Same format. For TOEIC, paste the REAL numbers as printed on your answer key (101–200) — this tool converts them automatically to match how the test engine checks them internally.</div>
     <textarea id="reading-input" placeholder="101.B 102.D 103.B ..." oninput="updateCounts()"></textarea>
     <div class="count-chip" id="reading-count">0 answers parsed</div>
+    <div class="preview" id="reading-preview"></div>
   </div>
 
   <div class="card">
@@ -95,6 +103,11 @@ function updateHints(){
 // Parses "1.A 2.C" / "1:A" / "1) A" / "1. (A)" / one-per-line — and also
 // multi-word answers like "21. NOT GIVEN" or "5. New York" (IELTS short
 // answer / TFNG questions aren't always single letters).
+//
+// NEW: supports multiple acceptable answers separated by "/", e.g.
+// "6.MOVIE/FILM" -> stored as an array ["MOVIE","FILM"] instead of a
+// single string. Single answers stay as plain strings (unchanged
+// behaviour), so nothing breaks for existing single-answer keys.
 function parseAnswerText(text){
   const result = {};
   const markerRe = /(\d+)\s*[.:\)]\s*/g;
@@ -109,9 +122,28 @@ function parseAnswerText(text){
     let ans = text.slice(from, to).trim();
     ans = ans.replace(/^[\(\[]+|[\)\]]+$/g, '').trim(); // strip surrounding ( ) [ ]
     ans = ans.replace(/\s+/g, ' ');
-    if (ans) result[starts[i].num] = ans.toUpperCase();
+    if (!ans) continue;
+
+    if (ans.includes('/')) {
+      const alts = ans.split('/')
+        .map(a => a.trim().toUpperCase())
+        .filter(Boolean);
+      result[starts[i].num] = alts.length > 1 ? alts : (alts[0] || '');
+    } else {
+      result[starts[i].num] = ans.toUpperCase();
+    }
   }
   return result;
+}
+
+function formatPreview(parsed){
+  const lines = Object.keys(parsed)
+    .sort((a,b) => parseInt(a,10) - parseInt(b,10))
+    .map(n => {
+      const v = parsed[n];
+      return Array.isArray(v) ? `${n}. ${v.join(' / ')}` : `${n}. ${v}`;
+    });
+  return lines.join('\n');
 }
 
 function updateCounts(){
@@ -130,6 +162,17 @@ function updateCounts(){
   const rChip = document.getElementById('reading-count');
   rChip.textContent = `${rCount} answers parsed` + (rCount && rCount!==maxN ? ` (expected ${maxN})` : '');
   rChip.className = 'count-chip' + (rCount===maxN ? '' : ' warn');
+
+  // Show a small preview so you can visually confirm which numbers have
+  // multiple accepted answers before sending.
+  const lPrev = document.getElementById('listening-preview');
+  const rPrev = document.getElementById('reading-preview');
+  const lHasAlts = Object.values(lParsed).some(v => Array.isArray(v));
+  const rHasAlts = Object.values(rParsed).some(v => Array.isArray(v));
+  lPrev.style.display = lHasAlts ? 'block' : 'none';
+  rPrev.style.display = rHasAlts ? 'block' : 'none';
+  if (lHasAlts) lPrev.textContent = formatPreview(lParsed);
+  if (rHasAlts) rPrev.textContent = formatPreview(rParsed);
 }
 
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwOWjeZlhj3HWA9C7W8j7GVh9OlVunuMgp6cvGfCFAW_RSZlsjpHvL4Ihqpbo0huwfdSg/exec';
@@ -163,7 +206,8 @@ async function send(){
     if(!confirm('No answers were parsed from either box — send an empty key anyway?')) return;
   }
 
-  // Listening key stays as-is. Reading key: TOEIC numbers are printed as
+  // Listening key stays as-is (values may now be a string OR an array of
+  // acceptable alternates). Reading key: TOEIC numbers are printed as
   // 101-200 but the generic server-side scorer checks keys 1..100 for BOTH
   // sections, so convert TOEIC reading numbers to relative (num - 100).
   // IELTS reading is already 1-40, no conversion needed.
