@@ -826,14 +826,14 @@
   "writing": {
     "tasks": {
       "1": {
-        "prompt": "The table below gives details of world electricity production by renewable sources in the four years between 2009 and 2012.\n\nSummarise the information by selecting and reporting the main features and making comparisons where relevant.\n\nYou should write at least 150 words.",
+        "prompt": "The table below gives information about a bakery's average sales in three different branches in 2015.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nYou should write at least 150 words.",
         "imgData": "",
         "minWords": 150,
-        "imgURL": "https://raw.githubusercontent.com/bandup-spec/exam-suite/main/img/62126/ielts-t3.PNG",
+        "imgURL": "https://i.imgur.com/7fmmh1t.jpeg",
         "tableHtml": "<table border=\"1\" cellpadding=\"6\" style=\"border-collapse:collapse;width:100%\">\n<caption>World electricity production by renewable sources in Trillion Watt Hours (TWh)</caption>\n<tr><th>Source</th><th>2009</th><th>2010</th><th>2011</th><th>2012</th></tr>\n<tr><td>Geothermal</td><td>67.4</td><td>68.5</td><td>69.3</td><td>70.4</td></tr>\n<tr><td>Wind</td><td>276.4</td><td>351.2</td><td>451.5</td><td>534</td></tr>\n<tr><td>Solar</td><td>21</td><td>33.5</td><td>53.1</td><td>104.5</td></tr>\n<tr><td>Hydraulic</td><td>3329</td><td>3514.3</td><td>3530.8</td><td>3663.4</td></tr>\n<tr><td>Bio-mass</td><td>246.8</td><td>288.9</td><td>307.6</td><td>326.2</td></tr>\n</table>"
       },
       "2": {
-        "prompt": "Discuss both these views and give your own opinion.\n\nChildhood obesity is becoming a problem throughout the developed world. Because of this, some people think that adverts for fast food, sweets and sugary snacks should not be allowed in schools and colleges.\n\nTo what extent do you agree or disagree with this?\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.\n\nYou should write at least 250 words.",
+        "prompt": "You should spend about 40 minutes on this task.\nSome people think that developed countries have a higher responsibility to combat climate change than developing countries. Others believe that all countries should have the same responsibilities towards protecting the environment.\n\nDiscuss both these views and give your own opinion.\n\nYou should write at least 250 words.\n\nGive reasons for your answer and include any relevant examples from your own knowledge or experience.",
         "imgData": "",
         "minWords": 250
       }
