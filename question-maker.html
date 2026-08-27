@@ -1066,9 +1066,9 @@ function qmClose() {
   _qmEditIdx = null;
 }
 document.addEventListener('DOMContentLoaded', function() {
-  document.getElementById('qm-overlay').addEventListener('click', function(e) {
-    if (e.target === document.getElementById('qm-overlay')) qmClose();
-  });
+  // Clicking the dark backdrop no longer closes the question editor —
+  // accidental clicks near the edges were wiping in-progress question data.
+  // Use the × button or Save/Cancel instead.
   document.getElementById('ai-gen-overlay').addEventListener('click', function(e) {
     if (e.target === document.getElementById('ai-gen-overlay')) closeAIGen();
   });
