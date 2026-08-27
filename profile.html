@@ -35,8 +35,13 @@
   /* ─── SETTINGS POPOVER ─── */
   .settings-wrap{position:relative}
   .icon-btn{display:flex;align-items:center;gap:6px}
-  .settings-panel{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--paper);color:var(--ink);border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.25);padding:16px;width:230px;z-index:200}
+  .settings-panel{display:none;position:absolute;top:calc(100% + 10px);right:0;background:var(--paper);color:var(--ink);border:1px solid var(--border);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.25);width:340px;max-height:75vh;overflow-y:auto;z-index:200}
   .settings-panel.open{display:block}
+  .settings-cat-tabs{display:flex;position:sticky;top:0;background:var(--paper);border-bottom:1px solid var(--border);border-radius:12px 12px 0 0;z-index:1}
+  .settings-cat-btn{flex:1;padding:10px 4px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:0.68rem;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+  .settings-cat-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+  .settings-cat-content{display:none;padding:16px}
+  .settings-cat-content.active{display:block}
   .settings-row{display:flex;align-items:center;justify-content:space-between;font-size:0.85rem;margin-bottom:14px}
   .settings-row:last-child{margin-bottom:0}
   .settings-label{font-weight:600;color:var(--ink2)}
@@ -53,7 +58,7 @@
     .hdr-right{flex-direction:row!important;justify-content:center;flex-wrap:wrap;gap:10px!important;padding:14px!important}
     .hdr-right .btn-hdr{width:auto!important;padding:9px 12px!important;font-size:1.05rem}
     .hdr-right .btn-label{display:none}
-    .settings-panel{right:auto;left:50%;transform:translateX(-50%)}
+    .settings-panel{right:auto;left:50%;transform:translateX(-50%);width:min(340px,calc(100vw - 24px))}
   }
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
 
@@ -272,20 +277,128 @@
       <div class="settings-wrap">
         <button class="btn-hdr btn-logout icon-btn" onclick="toggleSettingsPanel(event)" title="Settings">⚙️<span class="btn-label"> Settings</span></button>
         <div class="settings-panel" id="settings-panel">
-          <div class="settings-row">
-            <span class="settings-label">🌙 Dark Mode</span>
-            <label class="switch">
-              <input type="checkbox" id="dark-mode-switch" onchange="toggleDarkMode()">
-              <span class="slider-track"></span>
-            </label>
+          <div class="settings-cat-tabs">
+            <button class="settings-cat-btn active" onclick="switchSettingsCat('display',this)">🌙 Display</button>
+            <button class="settings-cat-btn" onclick="switchSettingsCat('profile',this)">👤 Profile</button>
+            <button class="settings-cat-btn" onclick="switchSettingsCat('email',this)">✉️ Email</button>
+            <button class="settings-cat-btn" onclick="switchSettingsCat('password',this)">🔑 Password</button>
           </div>
-          <div class="settings-row" style="flex-direction:column;align-items:stretch">
-            <span class="settings-label" style="margin-bottom:8px">🔤 Font Size</span>
-            <div class="fs-slider-wrap">
-              <input type="range" min="0" max="4" step="1" id="font-size-slider" oninput="setFontSize(this.value)">
-              <div class="fs-labels"><span>A</span><span style="font-size:1.3em">A</span></div>
+
+          <!-- DISPLAY -->
+          <div id="settings-cat-display" class="settings-cat-content active">
+            <div class="settings-row">
+              <span class="settings-label">🌙 Dark Mode</span>
+              <label class="switch">
+                <input type="checkbox" id="dark-mode-switch" onchange="toggleDarkMode()">
+                <span class="slider-track"></span>
+              </label>
+            </div>
+            <div class="settings-row" style="flex-direction:column;align-items:stretch">
+              <span class="settings-label" style="margin-bottom:8px">🔤 Font Size</span>
+              <div class="fs-slider-wrap">
+                <input type="range" min="85" max="145" step="1" id="font-size-slider" oninput="setFontSize(this.value)">
+                <div class="fs-labels"><span>A</span><span style="font-size:1.3em">A</span></div>
+              </div>
             </div>
           </div>
+
+          <!-- PROFILE (Personal Details) -->
+          <div id="settings-cat-profile" class="settings-cat-content">
+            <div class="settings-field">
+              <label>Full Name</label>
+              <input type="text" id="set-fullname" placeholder="e.g. Santos, Maria">
+            </div>
+            <div class="settings-row">
+              <div class="settings-field">
+                <label>Date of Birth</label>
+                <input type="date" id="set-dob">
+              </div>
+              <div class="settings-field">
+                <label>Gender</label>
+                <select id="set-gender">
+                  <option value="">Select...</option>
+                  <option>Male</option>
+                  <option>Female</option>
+                  <option>Prefer not to say</option>
+                </select>
+              </div>
+            </div>
+            <div class="settings-field">
+              <label>Nationality</label>
+              <select id="set-nationality"><option value="">Select country...</option></select>
+            </div>
+            <button class="btn btn-blue" onclick="saveProfileSettings()">💾 Save Changes</button>
+            <div id="settings-save-status" class="inline-msg"></div>
+          </div>
+
+          <!-- EMAIL -->
+          <div id="settings-cat-email" class="settings-cat-content">
+            <div style="font-size:0.82rem;color:var(--ink3);margin-bottom:12px;line-height:1.5">
+              Your email is used for password recovery. A verification code will be sent before any change takes effect.
+            </div>
+
+            <!-- Current email display -->
+            <div id="email-current-wrap">
+              <div class="settings-field" style="margin-bottom:10px">
+                <label>Current Email</label>
+                <input type="text" id="email-current-display" disabled style="background:var(--paper2);color:var(--ink3)">
+              </div>
+              <button class="btn-sm btn-sm-blue" onclick="startEmailChange()">✏️ Change Email</button>
+            </div>
+
+            <!-- Email change form (hidden initially) -->
+            <div id="email-change-wrap" style="display:none">
+              <div class="email-verify-row">
+                <div class="settings-field">
+                  <label>New Email Address</label>
+                  <input type="email" id="set-new-email" placeholder="e.g. maria@gmail.com">
+                </div>
+                <button class="btn-sm btn-sm-blue" id="btn-send-email-otp" onclick="sendEmailChangeOTP()">Send Code</button>
+              </div>
+              <div id="email-otp-wrap" style="display:none">
+                <div class="otp-row">
+                  <div class="settings-field">
+                    <label>Verification Code (sent to new email)</label>
+                    <input type="text" id="set-email-otp" placeholder="6-digit code" maxlength="6" autocomplete="one-time-code">
+                  </div>
+                  <button class="btn-sm btn-sm-blue" onclick="verifyEmailChange()">Confirm</button>
+                </div>
+              </div>
+              <div style="margin-top:8px">
+                <button class="btn-sm btn-sm-ghost" onclick="cancelEmailChange()">Cancel</button>
+              </div>
+              <div id="email-change-status" class="inline-msg"></div>
+            </div>
+          </div>
+
+          <!-- PASSWORD -->
+          <div id="settings-cat-password" class="settings-cat-content">
+            <div class="settings-field">
+              <label>Current Password</label>
+              <div class="pw-wrap-s">
+                <input type="password" id="set-cur-pass" placeholder="Enter current password">
+                <button class="pw-toggle-s" onclick="togglePwS('set-cur-pass',this)" type="button">Show</button>
+              </div>
+            </div>
+            <div class="settings-field">
+              <label>New Password</label>
+              <div class="pw-wrap-s">
+                <input type="password" id="set-new-pass" placeholder="At least 6 characters" oninput="checkPwStrengthS(this)">
+                <button class="pw-toggle-s" onclick="togglePwS('set-new-pass',this)" type="button">Show</button>
+              </div>
+              <div class="pw-strength-s" id="pw-strength-s"></div>
+            </div>
+            <div class="settings-field">
+              <label>Confirm New Password</label>
+              <div class="pw-wrap-s">
+                <input type="password" id="set-confirm-pass" placeholder="Re-enter new password">
+                <button class="pw-toggle-s" onclick="togglePwS('set-confirm-pass',this)" type="button">Show</button>
+              </div>
+            </div>
+            <button class="btn btn-blue" onclick="changePassword()">🔑 Change Password</button>
+            <div id="pw-change-status" class="inline-msg"></div>
+          </div>
+
         </div>
       </div>
       <button class="btn-hdr btn-start icon-btn" onclick="proceedToTest()" title="Start Test">🚀<span class="btn-label"> Start Test</span></button>
@@ -339,11 +452,6 @@
     <!-- RIGHT: Tabs -->
     <div>
       <div class="card">
-        <div class="tabs">
-          <button class="tab-btn active" onclick="switchTab('progress',this)">📊 Progress</button>
-          <button class="tab-btn" onclick="switchTab('settings',this)">⚙️ Settings</button>
-        </div>
-
         <!-- PROGRESS -->
         <div id="tab-progress" class="tab-content active">
           <div id="progress-content">
@@ -351,104 +459,6 @@
           </div>
         </div>
 
-        <!-- SETTINGS -->
-        <div id="tab-settings" class="tab-content">
-
-          <!-- SECTION 1: Personal Details -->
-          <div class="settings-section-title">Personal Details</div>
-          <div class="settings-field">
-            <label>Full Name</label>
-            <input type="text" id="set-fullname" placeholder="e.g. Santos, Maria">
-          </div>
-          <div class="settings-row">
-            <div class="settings-field">
-              <label>Date of Birth</label>
-              <input type="date" id="set-dob">
-            </div>
-            <div class="settings-field">
-              <label>Gender</label>
-              <select id="set-gender">
-                <option value="">Select...</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Prefer not to say</option>
-              </select>
-            </div>
-          </div>
-          <div class="settings-field">
-            <label>Nationality</label>
-            <select id="set-nationality"><option value="">Select country...</option></select>
-          </div>
-          <button class="btn btn-blue" onclick="saveProfileSettings()">💾 Save Changes</button>
-          <div id="settings-save-status" class="inline-msg"></div>
-
-          <!-- SECTION 2: Email Address -->
-          <div class="settings-section-title">Email Address</div>
-          <div style="font-size:0.82rem;color:var(--ink3);margin-bottom:12px;line-height:1.5">
-            Your email is used for password recovery. A verification code will be sent before any change takes effect.
-          </div>
-
-          <!-- Current email display -->
-          <div id="email-current-wrap">
-            <div class="settings-field" style="margin-bottom:10px">
-              <label>Current Email</label>
-              <input type="text" id="email-current-display" disabled style="background:var(--paper2);color:var(--ink3)">
-            </div>
-            <button class="btn-sm btn-sm-blue" onclick="startEmailChange()">✏️ Change Email</button>
-          </div>
-
-          <!-- Email change form (hidden initially) -->
-          <div id="email-change-wrap" style="display:none">
-            <div class="email-verify-row">
-              <div class="settings-field">
-                <label>New Email Address</label>
-                <input type="email" id="set-new-email" placeholder="e.g. maria@gmail.com">
-              </div>
-              <button class="btn-sm btn-sm-blue" id="btn-send-email-otp" onclick="sendEmailChangeOTP()">Send Code</button>
-            </div>
-            <div id="email-otp-wrap" style="display:none">
-              <div class="otp-row">
-                <div class="settings-field">
-                  <label>Verification Code (sent to new email)</label>
-                  <input type="text" id="set-email-otp" placeholder="6-digit code" maxlength="6" autocomplete="one-time-code">
-                </div>
-                <button class="btn-sm btn-sm-blue" onclick="verifyEmailChange()">Confirm</button>
-              </div>
-            </div>
-            <div style="margin-top:8px">
-              <button class="btn-sm btn-sm-ghost" onclick="cancelEmailChange()">Cancel</button>
-            </div>
-            <div id="email-change-status" class="inline-msg"></div>
-          </div>
-
-          <!-- SECTION 3: Change Password -->
-          <div class="settings-section-title">Change Password</div>
-          <div class="settings-field">
-            <label>Current Password</label>
-            <div class="pw-wrap-s">
-              <input type="password" id="set-cur-pass" placeholder="Enter current password">
-              <button class="pw-toggle-s" onclick="togglePwS('set-cur-pass',this)" type="button">Show</button>
-            </div>
-          </div>
-          <div class="settings-field">
-            <label>New Password</label>
-            <div class="pw-wrap-s">
-              <input type="password" id="set-new-pass" placeholder="At least 6 characters" oninput="checkPwStrengthS(this)">
-              <button class="pw-toggle-s" onclick="togglePwS('set-new-pass',this)" type="button">Show</button>
-            </div>
-            <div class="pw-strength-s" id="pw-strength-s"></div>
-          </div>
-          <div class="settings-field">
-            <label>Confirm New Password</label>
-            <div class="pw-wrap-s">
-              <input type="password" id="set-confirm-pass" placeholder="Re-enter new password">
-              <button class="pw-toggle-s" onclick="togglePwS('set-confirm-pass',this)" type="button">Show</button>
-            </div>
-          </div>
-          <button class="btn btn-blue" onclick="changePassword()">🔑 Change Password</button>
-          <div id="pw-change-status" class="inline-msg"></div>
-
-        </div>
       </div>
     </div>
 
@@ -467,18 +477,17 @@ let settings      = {};
 // Shared preference keys with simulation.html/tests.html/index.html
 // so the setting carries over across the whole site.
 // ══════════════════════════════════════
-const FONT_SCALE_STEPS = [85, 100, 115, 130, 145];
-let fontScaleIndex = 1;
+const FONT_SCALE_MIN = 85, FONT_SCALE_MAX = 145; // percent — shared with simulation.html/tests.html/index.html
+let fontScalePct = 100;
 
 function initAccessibilityPrefs() {
   const savedScale = parseInt(localStorage.getItem('ielts_font_scale'));
-  if (!isNaN(savedScale)) {
-    const idx = FONT_SCALE_STEPS.indexOf(savedScale);
-    fontScaleIndex = idx >= 0 ? idx : 1;
+  if (!isNaN(savedScale) && savedScale >= FONT_SCALE_MIN && savedScale <= FONT_SCALE_MAX) {
+    fontScalePct = savedScale;
   }
   applyFontScale();
   const fsSlider = document.getElementById('font-size-slider');
-  if (fsSlider) fsSlider.value = fontScaleIndex;
+  if (fsSlider) fsSlider.value = fontScalePct;
 
   const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
   if (darkOn) document.body.classList.add('dark-mode');
@@ -486,14 +495,16 @@ function initAccessibilityPrefs() {
   if (darkSwitch) darkSwitch.checked = darkOn;
 }
 function applyFontScale() {
-  document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
-  localStorage.setItem('ielts_font_scale', FONT_SCALE_STEPS[fontScaleIndex]);
+  document.documentElement.style.fontSize = fontScalePct + '%';
+  localStorage.setItem('ielts_font_scale', fontScalePct);
 }
 function toggleHdrMenu(){
   document.getElementById('hdr-actions').classList.toggle('open');
 }
-function setFontSize(idx) {
-  fontScaleIndex = parseInt(idx, 10);
+function setFontSize(pct) {
+  const val = parseInt(pct, 10);
+  if (isNaN(val) || val < FONT_SCALE_MIN || val > FONT_SCALE_MAX) return;
+  fontScalePct = val;
   applyFontScale();
 }
 function toggleDarkMode() {
@@ -502,9 +513,18 @@ function toggleDarkMode() {
   const darkSwitch = document.getElementById('dark-mode-switch');
   if (darkSwitch) darkSwitch.checked = isDark;
 }
+function switchSettingsCat(id, btn) {
+  document.querySelectorAll('.settings-cat-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.settings-cat-content').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('settings-cat-'+id).classList.add('active');
+}
 function toggleSettingsPanel(ev) {
   if (ev) ev.stopPropagation();
-  document.getElementById('settings-panel').classList.toggle('open');
+  const panel = document.getElementById('settings-panel');
+  const willOpen = !panel.classList.contains('open');
+  panel.classList.toggle('open');
+  if (willOpen) populateSettingsForm(); // fill in profile/email fields fresh each time the panel opens
 }
 document.addEventListener('click', (e) => {
   const panel = document.getElementById('settings-panel');
@@ -1204,7 +1224,6 @@ function switchTab(id, btn) {
   btn.classList.add('active');
   document.getElementById('tab-'+id).classList.add('active');
   if (id==='trf') renderTRF();
-  if (id==='settings') populateSettingsForm();
 }
 
 const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan","Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia","Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo","Costa Rica","Croatia","Cuba","Cyprus","Czech Republic","Denmark","Djibouti","Dominica","Dominican Republic","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq","Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman","Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal","Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"];
