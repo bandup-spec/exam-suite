@@ -145,6 +145,8 @@
   .overall-score{font-family:'Source Serif 4',serif;font-size:1.8rem;font-weight:600;color:var(--gold)}
   .wc-row{display:flex;gap:6px;margin-top:8px}
   .wc-chip{flex:1;background:#fff;border:1px solid var(--border);border-radius:6px;padding:6px 8px;text-align:center;font-size:0.72rem}
+  .instructor-note{margin-top:10px;padding:10px 12px;background:#fff9e6;border:1px solid #f5d87a;border-radius:6px;font-size:0.78rem;color:var(--ink2);line-height:1.5}
+  .instructor-note b{display:block;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:3px}
   .wc-chip b{display:block;font-size:0.92rem;color:var(--blue)}
   .empty-state{text-align:center;padding:40px 20px;color:var(--ink3);font-size:0.88rem}
   /* ANNOUNCEMENTS */
@@ -165,6 +167,36 @@
   .trend-bar-wrap{flex:1;height:18px;background:var(--paper3);border-radius:3px;overflow:hidden}
   .trend-bar{height:100%;border-radius:3px;transition:width 0.6s ease;display:flex;align-items:center;padding-left:6px;font-size:0.68rem;font-weight:700;color:#fff;min-width:2px}
   .trend-val{width:36px;text-align:right;font-weight:700;color:var(--ink);font-size:0.8rem}
+
+  /* BADGES / ACHIEVEMENTS */
+  .badges-wrap{margin-bottom:18px;padding:14px 16px;background:var(--paper2);border:1px solid var(--border);border-radius:10px}
+  .badges-hdr{display:flex;align-items:center;justify-content:space-between;font-size:0.8rem;font-weight:700;color:var(--ink2);margin-bottom:10px}
+  .badges-count{font-size:0.7rem;color:var(--ink3);background:var(--paper3);border-radius:10px;padding:1px 8px}
+  .badges-grid{display:flex;flex-wrap:wrap;gap:8px}
+  .badge-pill{display:flex;align-items:center;gap:6px;padding:5px 10px;border-radius:20px;font-size:0.72rem;font-weight:600;border:1px solid var(--border)}
+  .badge-pill.earned{background:rgba(200,168,75,0.15);border-color:var(--gold);color:var(--blue)}
+  .badge-pill.locked{background:var(--paper3);color:var(--ink3);opacity:0.55;filter:grayscale(1)}
+  .badge-icon{font-size:0.95rem}
+
+  /* GOAL / TARGET BAND */
+  .goal-wrap{margin-bottom:18px;padding:14px 16px;background:var(--paper2);border:1px solid var(--border);border-radius:10px}
+  .goal-hdr{display:flex;align-items:center;justify-content:space-between;font-size:0.82rem;font-weight:700;color:var(--ink2);margin-bottom:8px}
+  .goal-clear-btn{background:transparent;border:none;color:var(--ink3);cursor:pointer;font-size:0.85rem;padding:2px 6px}
+  .goal-clear-btn:hover{color:var(--red)}
+  .goal-bar-wrap{height:14px;background:var(--paper3);border-radius:8px;overflow:hidden;margin-bottom:6px}
+  .goal-bar{height:100%;border-radius:8px;transition:width 0.6s ease}
+  .goal-status{font-size:0.76rem;color:var(--ink3)}
+  .goal-set-row{display:flex;gap:8px}
+  .goal-set-row input{flex:1;padding:7px 10px;border:1px solid var(--border);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.82rem}
+
+  /* SKILL BREAKDOWN */
+  .skill-wrap{margin-bottom:20px;padding:14px 16px;background:var(--paper2);border:1px solid var(--border);border-radius:10px}
+  .skill-title{font-size:0.75rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+  .skill-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:0.8rem}
+  .skill-label{width:70px;color:var(--ink3);font-weight:600;font-size:0.72rem;flex-shrink:0}
+  .skill-bar-wrap{flex:1;height:14px;background:var(--paper3);border-radius:3px;overflow:hidden}
+  .skill-bar{height:100%;border-radius:3px;transition:width 0.6s ease}
+  .skill-val{width:36px;text-align:right;font-weight:700;color:var(--ink);font-size:0.78rem}
 
   /* TRF */
   .trf-sel{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
@@ -192,6 +224,8 @@
   .otp-row{display:flex;gap:8px;align-items:flex-end;margin-top:10px}
   .otp-row .settings-field{flex:1;margin-bottom:0}
   .otp-row input{letter-spacing:0.18em;font-size:1rem;text-align:center}
+  .referral-code-row{display:flex;gap:8px}
+  .referral-code-row input{flex:1;padding:9px 13px;border:1px solid var(--paper3);border-radius:8px;font-family:monospace;font-size:0.95rem;letter-spacing:0.08em;color:var(--blue);font-weight:700;background:var(--paper2);text-align:center}
   .pw-wrap-s{position:relative}
   .pw-wrap-s input{padding-right:52px}
   .pw-toggle-s{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--ink3);font-size:0.8rem;padding:0}
@@ -427,6 +461,57 @@
               </div>
               <button class="btn btn-blue" onclick="changePassword()">🔑 Change Password</button>
               <div id="pw-change-status" class="inline-msg"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- NOTIFICATIONS -->
+        <div class="settings-acc-item">
+          <button class="settings-acc-header" onclick="toggleSettingsAcc('notif',this)">
+            <span>🔔 Notifications</span><span class="settings-acc-chevron">▾</span>
+          </button>
+          <div id="settings-cat-notif" class="settings-acc-body">
+            <div class="settings-acc-body-inner">
+              <div class="settings-row">
+                <span class="settings-label">📧 Email me when results are graded</span>
+                <label class="switch">
+                  <input type="checkbox" id="notif-graded" onchange="saveNotifPrefs()">
+                  <span class="slider-track"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <span class="settings-label">📅 Remind me of upcoming tests</span>
+                <label class="switch">
+                  <input type="checkbox" id="notif-reminder" onchange="saveNotifPrefs()">
+                  <span class="slider-track"></span>
+                </label>
+              </div>
+              <div class="settings-row">
+                <span class="settings-label">📢 New announcements</span>
+                <label class="switch">
+                  <input type="checkbox" id="notif-announce" onchange="saveNotifPrefs()">
+                  <span class="slider-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- REFERRAL -->
+        <div class="settings-acc-item">
+          <button class="settings-acc-header" onclick="toggleSettingsAcc('referral',this)">
+            <span>🎁 Refer a Friend</span><span class="settings-acc-chevron">▾</span>
+          </button>
+          <div id="settings-cat-referral" class="settings-acc-body">
+            <div class="settings-acc-body-inner">
+              <div style="font-size:0.8rem;color:var(--ink3);margin-bottom:10px;line-height:1.5">
+                Share your code with friends. They enter it when they sign up.
+              </div>
+              <div class="referral-code-row">
+                <input type="text" id="referral-code-display" readonly>
+                <button class="btn-sm btn-sm-blue" onclick="copyReferralCode()">📋 Copy</button>
+              </div>
+              <div id="referral-copy-status" class="inline-msg"></div>
             </div>
           </div>
         </div>
@@ -726,6 +811,20 @@ function renderProgress() {
 
   let html = '';
 
+  // Badges / achievements
+  html += renderBadgesStrip(ieltsScores, toeicScores);
+
+  // Goal progress (only meaningful if candidate set an IELTS target band)
+  html += renderGoalProgress(best);
+
+  // Skill breakdown — latest attempt only, side-by-side comparison
+  html += renderSkillBreakdown(last);
+
+  // Download all results
+  html += `<div style="text-align:right;margin-bottom:16px">
+    <button class="btn-sm btn-sm-blue" onclick="downloadAllTRFs()">⬇️ Download All Results</button>
+  </div>`;
+
   // Trend chart (IELTS band trend — only meaningful across IELTS attempts)
   if (ieltsScores.length > 1) {
     html += `<div class="trend-wrap"><div class="trend-title">Band Score Trend</div>`;
@@ -767,6 +866,118 @@ function renderProgress() {
   wrap.innerHTML = html;
 }
 
+// ─── BADGES / ACHIEVEMENTS ───
+function computeBadges(ieltsScores, toeicScores) {
+  const all = myScores;
+  const badges = [];
+
+  badges.push({ icon:'🎉', label:'First Test', earned: all.length >= 1 });
+  badges.push({ icon:'🔥', label:'3 Attempts', earned: all.length >= 3 });
+  badges.push({ icon:'💪', label:'5 Attempts', earned: all.length >= 5 });
+
+  const ieltsOveralls = ieltsScores.map(r=>parseFloat(r[14])||0).filter(n=>n>0);
+  badges.push({ icon:'🏅', label:'Band 7+', earned: ieltsOveralls.some(n=>n>=7) });
+  badges.push({ icon:'⭐', label:'Band 8+', earned: ieltsOveralls.some(n=>n>=8) });
+
+  if (ieltsOveralls.length >= 2) {
+    badges.push({ icon:'📈', label:'Most Improved', earned: ieltsOveralls[ieltsOveralls.length-1] > ieltsOveralls[0] });
+  }
+
+  const toeicTotals = toeicScores.map(r=>parseInt(r[27])||0).filter(n=>n>0);
+  badges.push({ icon:'💯', label:'TOEIC 900+', earned: toeicTotals.some(n=>n>=900) });
+
+  return badges;
+}
+
+function renderBadgesStrip(ieltsScores, toeicScores) {
+  const badges = computeBadges(ieltsScores, toeicScores);
+  const earnedCount = badges.filter(b=>b.earned).length;
+  return `<div class="badges-wrap">
+    <div class="badges-hdr"><span>🏆 Achievements</span><span class="badges-count">${earnedCount}/${badges.length}</span></div>
+    <div class="badges-grid">
+      ${badges.map(b => `<div class="badge-pill ${b.earned?'earned':'locked'}" title="${b.earned?'Earned!':'Not yet earned'}">
+        <span class="badge-icon">${b.icon}</span><span class="badge-label">${escH(b.label)}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+// ─── GOAL / TARGET BAND ───
+function getGoalKey() { return 'target_band_'+(candidateData.candidateID||'guest'); }
+function loadGoal() {
+  const v = parseFloat(localStorage.getItem(getGoalKey()));
+  return isNaN(v) ? null : v;
+}
+function saveGoalFromWidget() {
+  const input = document.getElementById('goal-input-inline');
+  const v = parseFloat(input.value);
+  if (isNaN(v) || v < 1 || v > 9) { alert('Enter a target band between 1.0 and 9.0'); return; }
+  localStorage.setItem(getGoalKey(), v);
+  renderProgress();
+}
+function clearGoal() {
+  localStorage.removeItem(getGoalKey());
+  renderProgress();
+}
+function renderGoalProgress(bestBand) {
+  const goal = loadGoal();
+  if (goal === null) {
+    return `<div class="goal-wrap">
+      <div class="goal-hdr"><span>🎯 Set a Target Band</span></div>
+      <div class="goal-set-row">
+        <input type="number" id="goal-input-inline" min="1" max="9" step="0.5" placeholder="e.g. 7.0">
+        <button class="btn-sm btn-sm-blue" onclick="saveGoalFromWidget()">Set Goal</button>
+      </div>
+    </div>`;
+  }
+  const pct = Math.min(100, (bestBand/goal)*100);
+  const reached = bestBand >= goal;
+  return `<div class="goal-wrap">
+    <div class="goal-hdr">
+      <span>🎯 Target: Band ${goal}</span>
+      <button class="goal-clear-btn" onclick="clearGoal()" title="Remove goal">✕</button>
+    </div>
+    <div class="goal-bar-wrap"><div class="goal-bar" style="width:${pct}%;background:${reached?'#2e7d4f':'var(--gold)'}"></div></div>
+    <div class="goal-status">${reached ? '🎉 Goal reached! Best band: '+bestBand : `Best so far: Band ${bestBand||'—'} · ${(goal-bestBand).toFixed(1)} to go`}</div>
+  </div>`;
+}
+
+// ─── SKILL BREAKDOWN (latest attempt) ───
+function renderSkillBreakdown(last) {
+  if (isTOEIC(last)) {
+    const lScaled = parseInt(last[25])||0, rdScaled = parseInt(last[26])||0;
+    return `<div class="skill-wrap">
+      <div class="skill-title">Skill Breakdown — Latest Attempt</div>
+      ${skillBar('Listening', lScaled, 495)}
+      ${skillBar('Reading', rdScaled, 495)}
+    </div>`;
+  }
+  const l = parseFloat(last[7])||0, r = parseFloat(last[9])||0, w = parseFloat(last[12])||0, s = parseFloat(last[13])||0;
+  return `<div class="skill-wrap">
+    <div class="skill-title">Skill Breakdown — Latest Attempt</div>
+    ${skillBar('Listening', l, 9)}
+    ${skillBar('Reading', r, 9)}
+    ${w ? skillBar('Writing', w, 9) : skillBarPending('Writing')}
+    ${s ? skillBar('Speaking', s, 9) : skillBarPending('Speaking')}
+  </div>`;
+}
+function skillBar(label, val, max) {
+  const pct = Math.min(100, (val/max)*100);
+  const color = pct>=77?'#2e7d4f':pct>=55?'#c8a84b':'#c0392b';
+  return `<div class="skill-row">
+    <div class="skill-label">${label}</div>
+    <div class="skill-bar-wrap"><div class="skill-bar" style="width:${pct}%;background:${color}"></div></div>
+    <div class="skill-val">${val||'—'}</div>
+  </div>`;
+}
+function skillBarPending(label) {
+  return `<div class="skill-row">
+    <div class="skill-label">${label}</div>
+    <div class="skill-bar-wrap"><div class="skill-bar" style="width:0%"></div></div>
+    <div class="skill-val" style="color:var(--ink3);font-size:0.7rem">Pending</div>
+  </div>`;
+}
+
 // ─── ANNOUNCEMENTS ───
 function renderAnnouncements() {
   const wrap = document.getElementById('announcements-content');
@@ -797,6 +1008,7 @@ function renderIELTSAttemptCard(r, idx) {
   const overall  = r[14]||'';
   const w1wc     = r[15]||0, w2wc   = r[16]||0;
   const graded   = !!overall;
+  const notes    = r[19]||'';
   const bClass   = b => { const n=parseFloat(b); return n>=7?'band-high':n>=5.5?'band-mid':n>0?'band-low':'band-na'; };
 
   return `<div class="attempt-card">
@@ -835,6 +1047,7 @@ function renderIELTSAttemptCard(r, idx) {
       <div class="wc-chip"><b>${w1wc}</b>Task 1 words</div>
       <div class="wc-chip"><b>${w2wc}</b>Task 2 words</div>
     </div>
+    ${notes ? `<div class="instructor-note"><b>💬 Instructor Feedback</b><br>${escH(notes)}</div>` : ''}
   </div>`;
 }
 
@@ -893,8 +1106,7 @@ function renderTRF() {
   renderIELTSTRF(r);
 }
 
-function renderTOEICReport(r) {
-  const wrap = document.getElementById('trf-wrap');
+function buildTOEICTRFHtml(r, idx) {
   const cd = candidateData;
   const date = r[1] ? new Date(r[1]).toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'}) : '—';
   const setName = r[5] || 'TOEIC Simulation Test';
@@ -904,7 +1116,7 @@ function renderTOEICReport(r) {
   const instName = settings.institution_name || 'BandUp Center';
   const footerNote = settings.trf_footer_note || 'This is a simulation test result for preparation purposes only.';
 
-  wrap.innerHTML = `<div class="trf-doc" id="trf-printable">
+  return `<div class="trf-doc" id="trf-printable">
     <div class="trf-top-bar"></div>
     <div class="trf-inner">
       <div style="text-align:center;margin-bottom:20px">
@@ -939,12 +1151,15 @@ function renderTOEICReport(r) {
         ${escH(footerNote)}
       </div>
     </div>
-  </div>
-  <button class="btn btn-blue" style="margin-top:14px" onclick="window.print()">🖨 Print / Save as PDF</button>`;
+  </div>`;
 }
 
-function renderIELTSTRF(r) {
+function renderTOEICReport(r) {
   const wrap = document.getElementById('trf-wrap');
+  wrap.innerHTML = buildTOEICTRFHtml(r) + `<button class="btn btn-blue" style="margin-top:14px" onclick="window.print()">🖨 Print / Save as PDF</button>`;
+}
+
+function buildIELTSTRFHtml(r, idx) {
   const cd      = candidateData;
   const lBand   = r[7]||'—';
   const rdBand  = r[9]||'—';
@@ -961,7 +1176,7 @@ function renderIELTSTRF(r) {
   const footerNote = settings.trf_footer_note || 'This is a simulation test result for preparation purposes only.';
   const photoSrc = candidateData.photoBase64 || localStorage.getItem('photo_'+cd.candidateID) || '';
 
-  wrap.innerHTML = `<div class="trf-doc" id="trf-printable">
+  return `<div class="trf-doc" id="trf-printable">
     <div class="trf-top-bar"></div>
     <div class="trf-inner">
 
@@ -1075,6 +1290,12 @@ function renderIELTSTRF(r) {
   </div>`;
 }
 
+function renderIELTSTRF(r) {
+  const wrap = document.getElementById('trf-wrap');
+  const idx  = document.getElementById('trf-attempt-sel').value;
+  wrap.innerHTML = buildIELTSTRFHtml(r, idx);
+}
+
 function downloadTRF() {
   const idx = document.getElementById('trf-attempt-sel').value;
   if (idx==='') { alert('Select an attempt first.'); return; }
@@ -1116,6 +1337,51 @@ function downloadTRF() {
   const a    = document.createElement('a');
   a.href     = URL.createObjectURL(blob);
   a.download = `TRF_${cd.candidateID}_attempt${parseInt(idx)+1}.html`;
+  a.click();
+}
+
+function downloadAllTRFs() {
+  if (!myScores.length) { alert('No test attempts yet.'); return; }
+  const cd = candidateData;
+  const docs = myScores.map((r,i) => {
+    const html = isTOEIC(r) ? buildTOEICTRFHtml(r) : buildIELTSTRFHtml(r, i+1);
+    return `<div style="page-break-after:always">${html}</div>`;
+  }).join('');
+  const allCSS = [...document.styleSheets].map(s=>{try{return [...s.cssRules].map(r=>r.cssText).join('')}catch(e){return ''}}).join('');
+  const htmlDoc = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>All Results — ${cd.fullName}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    @page{size:A4;margin:10mm}
+    html,body{height:auto;width:100%}
+    body{font-family:'DM Sans',sans-serif;color:#1a1a2e;background:#fff}
+    ${allCSS}
+    body{padding:0!important}
+    .trf-doc{border:1px solid #ddd;box-shadow:none!important}
+    .trf-inner{padding:18px 22px!important}
+    .trf-hdr{padding-bottom:10px!important;margin-bottom:12px!important}
+    .trf-logo-main{font-size:1.4rem!important}
+    .trf-photo{width:70px!important;height:84px!important}
+    .trf-section-title{margin-bottom:6px!important;padding-bottom:3px!important}
+    .trf-fields{margin-bottom:12px!important}
+    .trf-field{padding:6px 12px!important}
+    .trf-field-val.large{font-size:0.92rem!important}
+    .trf-bands{margin-bottom:12px!important}
+    .trf-band-cell{padding:10px 6px!important}
+    .trf-band-score{font-size:1.7rem!important}
+    .trf-band-cell:last-child .trf-band-score{font-size:2rem!important}
+    .trf-writing-row{padding:8px 12px!important;margin-bottom:12px!important}
+    .trf-sig-row{margin-top:16px!important;margin-bottom:10px!important}
+    .trf-footer-doc{padding-top:8px!important}
+    .trf-stamp{width:44px!important;height:44px!important;margin-bottom:6px!important}
+    div[style*="page-break-after"]:last-child{page-break-after:auto!important}
+  </style></head><body>${docs}<script>
+    window.onload = () => { setTimeout(() => window.print(), 300); };
+  <\/script></body></html>`;
+  const blob = new Blob([htmlDoc],{type:'text/html'});
+  const a    = document.createElement('a');
+  a.href     = URL.createObjectURL(blob);
+  a.download = `AllResults_${cd.candidateID}.html`;
   a.click();
 }
 
@@ -1324,6 +1590,51 @@ function populateSettingsForm() {
   document.getElementById('set-confirm-pass').value= '';
   document.getElementById('pw-strength-s').className = 'pw-strength-s';
   hideInlineMsg('pw-change-status');
+
+  // Notifications
+  loadNotifPrefs();
+
+  // Referral code
+  document.getElementById('referral-code-display').value = generateReferralCode();
+}
+
+// ─── NOTIFICATION PREFERENCES (stored locally — hook up to backend for real email/SMS delivery) ───
+function getNotifKey() { return 'notif_prefs_'+(candidateData.candidateID||'guest'); }
+function loadNotifPrefs() {
+  let prefs = { graded:true, reminder:true, announce:true }; // sensible defaults
+  try {
+    const saved = JSON.parse(localStorage.getItem(getNotifKey()) || 'null');
+    if (saved) prefs = saved;
+  } catch(e) {}
+  document.getElementById('notif-graded').checked   = !!prefs.graded;
+  document.getElementById('notif-reminder').checked = !!prefs.reminder;
+  document.getElementById('notif-announce').checked = !!prefs.announce;
+}
+function saveNotifPrefs() {
+  const prefs = {
+    graded:   document.getElementById('notif-graded').checked,
+    reminder: document.getElementById('notif-reminder').checked,
+    announce: document.getElementById('notif-announce').checked,
+  };
+  localStorage.setItem(getNotifKey(), JSON.stringify(prefs));
+  // NOTE: this only saves the preference locally. To actually send emails/reminders,
+  // wire this up to a backend action (e.g. callSheets({action:'updateNotifPrefs', ...})).
+}
+
+// ─── REFERRAL CODE ───
+function generateReferralCode() {
+  const id = candidateData.candidateID || 'GUEST';
+  return 'REF-' + String(id).toUpperCase().replace(/[^A-Z0-9]/g,'').slice(-6).padStart(6,'0');
+}
+function copyReferralCode() {
+  const input = document.getElementById('referral-code-display');
+  input.select();
+  navigator.clipboard.writeText(input.value).then(() => {
+    showInlineMsg('referral-copy-status', 'ok', 'Copied to clipboard!');
+    setTimeout(() => hideInlineMsg('referral-copy-status'), 2000);
+  }).catch(() => {
+    showInlineMsg('referral-copy-status', 'err', 'Could not copy — select and copy manually.');
+  });
 }
 
 async function saveProfileSettings() {
