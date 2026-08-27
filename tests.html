@@ -100,15 +100,15 @@
   .section-label{font-size:0.72rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);margin:24px 0 12px}
   .section-label:first-of-type{margin-top:0}
 
-  /* TYPE FILTER — grid of cards, above the test list */
+  /* TYPE FILTER — plain text links with a double underline, highlight only on hover/active */
   .tests-page{max-width:1100px;margin:0 auto;padding:28px 20px;width:100%;flex:1}
-  .type-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:26px}
-  .type-card{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 10px;border:1px solid var(--border);border-radius:12px;background:var(--paper);color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:600;transition:all 0.15s;text-align:center}
-  .type-card:hover{border-color:var(--blue2);background:var(--paper2)}
-  .type-card.active{border-color:var(--gold);background:rgba(0,47,95,0.07);color:var(--blue)}
-  .type-card .type-icon{font-size:1.4rem}
-  .type-card .type-count{background:var(--paper3);border-radius:10px;padding:1px 8px;font-size:0.68rem;font-weight:700;color:var(--ink3)}
-  .type-card.active .type-count{background:rgba(0,47,95,0.1);color:var(--blue)}
+  .type-grid{display:flex;flex-wrap:wrap;gap:4px 22px;margin-bottom:26px;border-bottom:1px solid var(--border);padding-bottom:2px}
+  .type-card{display:flex;align-items:center;gap:6px;padding:8px 2px 10px;border:none;border-bottom:3px double var(--paper3);background:transparent;color:var(--ink2);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:0.84rem;font-weight:600;transition:all 0.15s}
+  .type-card:hover{color:var(--blue);border-bottom-color:var(--blue2)}
+  .type-card.active{color:var(--blue);border-bottom-color:var(--gold)}
+  .type-card .type-icon{font-size:1rem}
+  .type-card .type-count{background:var(--paper3);border-radius:10px;padding:1px 7px;font-size:0.66rem;font-weight:700;color:var(--ink3)}
+  .type-card.active .type-count,.type-card:hover .type-count{background:rgba(0,47,95,0.1);color:var(--blue)}
 
   /* MAIN LIST + LATEST PANEL — 2-column layout below the type grid */
   .tests-layout{display:grid;grid-template-columns:1fr 260px;gap:20px}
