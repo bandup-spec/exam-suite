@@ -785,7 +785,7 @@
   "writing": {
     "tasks": {
       "1": {
-        "prompt": "The table below gives information about a bakery's average sales in three different branches in 2015.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nYou should write at least 150 words.",
+        "prompt": "You should spend 20 minutes for this task.\n\nThe table below gives information about a bakery's average sales in three different branches in 2015.\nSummarise the information by selecting and reporting the main features, and make comparisons where relevant.\n\nYou should write at least 150 words.",
         "imgData": "",
         "minWords": 150,
         "imgURL": "https://i.imgur.com/7fmmh1t.jpeg",
