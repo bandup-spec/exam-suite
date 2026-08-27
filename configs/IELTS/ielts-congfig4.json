@@ -474,7 +474,7 @@
           "fcTo": 6
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "Questions 7-9\nDo the following statements agree with the information given in Reading Passage 1?\nWrite\nYES if the statement agrees with the claims of the writer\nNO if the statement contradicts the claims of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this",
           "qNum": 7,
@@ -487,7 +487,7 @@
           "answer": ""
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "",
           "qNum": 8,
@@ -500,7 +500,7 @@
           "answer": ""
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "",
           "qNum": 9,
@@ -748,7 +748,7 @@
           "fcTo": 36
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "Questions 37-40\nDo the following statements agree with the views of the writer in Reading Passage 3?\nWrite\nYES if the statement agrees with the views of the writer\nNO if the statement contradicts the views of the writer\nNOT GIVEN if it is impossible to say what the writer thinks about this",
           "qNum": 37,
@@ -761,7 +761,7 @@
           "answer": ""
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "",
           "qNum": 38,
@@ -774,7 +774,7 @@
           "answer": ""
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "",
           "qNum": 39,
@@ -787,7 +787,7 @@
           "answer": ""
         },
         {
-          "type": "ynng",
+          "type": "yntg",
           "part": "",
           "instr": "",
           "qNum": 40,
