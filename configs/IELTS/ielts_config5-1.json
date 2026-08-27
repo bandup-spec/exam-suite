@@ -247,69 +247,98 @@
             "https://i.imgur.com/58m7nws.jpeg"
           ],
           "answer": ""
+        },
+        {
+          "type": "match",
+          "part": "Part 3",
+          "instr": "Questions 22-25 \nWrite the correct letter, A, B or C, in boxes 22-25 on your answer sheet",
+          "matchPrompt": "Which student will present which information?",
+          "matchChoices": [
+            "Gale",
+            "Lindsay",
+            "Kevin"
+          ],
+          "matchItems": [
+            {
+              "num": "22",
+              "label": "the research focus",
+              "answer": ""
+            },
+            {
+              "num": "23",
+              "label": "the focus group of the research",
+              "answer": ""
+            },
+            {
+              "num": "24",
+              "label": "how the students acquired access to the focus group",
+              "answer": ""
+            },
+            {
+              "num": "25",
+              "label": "the structure of the survey used in the research",
+              "answer": ""
+            }
+          ]
+        },
+        {
+          "type": "fc",
+          "part": "Part 3",
+          "instr": "Questions 26-30Complete the sentences below. Write NO MORE THAN 1WO WORDS AND/OR A NUMBER for each answer.",
+          "fcHtml": "<p><strong>26. </strong> The number of males and females participating in the study was {{26}}.</p>\n<p><strong>27. </strong> {{27}}per cent of the participants came from Europe.</p>\n<p><strong>28. </strong>The vast majority of the participants were 20 or 21 years old, and only {{28}} per cent were 19.</p>\n<p><strong>29. </strong>Most participants reported missing home and/or suffering from {{29}}at the start of their course.</p>\n<p><strong>30. </strong>The students examined the {{30}} of the previous two years to ensure the numbers in their research were as accurate as possible. </p>",
+          "fcInstr": "Questions 26-30Complete the sentences below. Write NO MORE THAN 1WO WORDS AND/OR A NUMBER for each answer.",
+          "fcAnswers": {},
+          "blanks": [
+            {
+              "num": 26,
+              "answer": ""
+            },
+            {
+              "num": 27,
+              "answer": ""
+            },
+            {
+              "num": 28,
+              "answer": ""
+            },
+            {
+              "num": 29,
+              "answer": ""
+            },
+            {
+              "num": 30,
+              "answer": ""
+            }
+          ],
+          "fcFrom": 26,
+          "fcTo": 30
         }
       ],
       "4": [
         {
-          "type": "mc",
-          "part": "Part 4",
-          "instr": "Questions 31-34\nChoose the correct answer, A, B or C.\nWrite your answers in boxes 31-34 on your answer sheet.",
-          "qNum": 31,
-          "qText": "Compared to other industries, tourism has",
-          "options": [
-            "the most young customers.",
-            "the biggest impact on people.",
-            "only indirect impact."
-          ],
-          "answer": ""
-        },
-        {
-          "type": "mc",
-          "part": "Part 4",
-          "instr": "",
-          "qNum": 32,
-          "qText": "In global tourism there is",
-          "options": [
-            "97% economic leakage.",
-            "a 9 in 10 chance of failure.",
-            "about 9% economic failure."
-          ],
-          "answer": ""
-        },
-        {
-          "type": "mc",
-          "part": "Part 4",
-          "instr": "",
-          "qNum": 33,
-          "qText": "Some countries with high levels of tourism still have",
-          "options": [
-            "poor accommodation.",
-            "great poverty.",
-            "large national debt."
-          ],
-          "answer": ""
-        },
-        {
-          "type": "mc",
-          "part": "Part 4",
-          "instr": "",
-          "qNum": 34,
-          "qText": "Geo-tourism is all about",
-          "options": [
-            "reducing pollution from industry.",
-            "increasing numbers of travellers.",
-            "providing a fair reward for service."
-          ],
-          "answer": ""
-        },
-        {
           "type": "fc",
           "part": "Part 4",
-          "instr": "Questions 35-40Complete the notes below.Write ONE WORD AND/OR A NUMBER ONLY for each answer.",
-          "fcHtml": "<h4><center>Project with World Bank</center></h4>\n<p>Developing technology platform</p>\n<p>brings grassroots products to locals</p>\n<p>avoids <strong>35</strong>{{35}} men</p><br>\n<p>Volunteering</p>\n<p>many teens schedule <strong>36</strong>{{36}} -year between school and university</p>\n<p>volunteering organizations charge up to £<strong>37</strong>{{37}}</p><br>\n<p>Geo-Tourism</p>\n<p>customers are looking for organizations that can suggest <strong>38</strong>{{38}} projects</p>\n<p>organizers would charge flat <strong>39</strong>{{39}}</p>\n<p>this would make for a good <strong>40</strong>{{40}} for each customer</p>",
-          "fcInstr": "Questions 35-40Complete the notes below.Write ONE WORD AND/OR A NUMBER ONLY for each answer.",
+          "instr": "Questions 31-37\nAnswer the questions below.\nWrite NO MORE THAN THREE WORDS AND/OR A NUMBER for each answer",
+          "fcHtml": "<p><strong>31. </strong> How many English speakers are there around the world today? {{31}}</p>\n<p><strong>32. </strong> Aside from French, which other language does the speaker say was more widely spoken than English in the 19th century? {{32}}</p>\n<p><strong>33. </strong> Who does the speaker believe will determine the future of English? {{33}}</p>\n<p><strong>34. </strong> What is the alternative name for English pidgin and creole languages? {{34}}</p>\n<p><strong>35. </strong> What does \"longi\" mean? {{35}}</p>\n<p><strong>36. </strong> According to the speaker, which language has a history which is very similar to English? {{36}}</p>\n<p><strong>37. </strong> What kind of languages are Spanish, French, and Italian? {{37}}</p>",
+          "fcInstr": "",
           "fcAnswers": {},
           "blanks": [
+            {
+              "num": 31,
+              "answer": ""
+            },
+            {
+              "num": 32,
+              "answer": ""
+            },
+            {
+              "num": 33,
+              "answer": ""
+            },
+            {
+              "num": 34,
+              "answer": ""
+            },
             {
               "num": 35,
               "answer": ""
@@ -321,22 +350,64 @@
             {
               "num": 37,
               "answer": ""
-            },
-            {
-              "num": 38,
-              "answer": ""
-            },
-            {
-              "num": 39,
-              "answer": ""
-            },
-            {
-              "num": 40,
-              "answer": ""
             }
           ],
-          "fcFrom": 35,
-          "fcTo": 40
+          "fcFrom": 31,
+          "fcTo": 37
+        },
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "Questions 38-40\nChoose the correct letter, A, B, or C.\nWrite your answers in boxes 38-40 on your answer sheet.",
+          "qNum": 38,
+          "qText": "The speaker says that Jamaican and South African English",
+          "options": [
+            "are very traditional languages.",
+            "have greatly influenced the English language.",
+            "were created very recently."
+          ],
+          "optionImages": [
+            "",
+            "",
+            ""
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "",
+          "qNum": 39,
+          "qText": "According to the second theory mentioned by the speaker, English",
+          "options": [
+            "might lose some of its more complex features in a global level.",
+            "might become even more complicated than it is now.",
+            "might be called 'Globish'."
+          ],
+          "optionImages": [
+            "",
+            "",
+            ""
+          ],
+          "answer": ""
+        },
+        {
+          "type": "mc",
+          "part": "Part 4",
+          "instr": "",
+          "qNum": 40,
+          "qText": "English is a unique language because",
+          "options": [
+            "it has the largest number of speakers in the world.",
+            "it hasn't changed much throughout human history.",
+            "it's spoken by a larger number of non-natives than any other language."
+          ],
+          "optionImages": [
+            "",
+            "",
+            ""
+          ],
+          "answer": ""
         }
       ]
     }
