@@ -60,22 +60,18 @@
   .fs-slider-wrap input[type=range]{width:100%;accent-color:var(--blue2)}
   .fs-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--ink3);padding:0 2px}
   @media(max-width:680px){
-    .hdr-right{flex-direction:row!important;justify-content:center;flex-wrap:wrap;gap:10px!important;padding:14px!important}
-    .hdr-right .btn-hdr{width:auto!important;padding:9px 12px!important;font-size:1.05rem}
-    .hdr-right .btn-label{display:none}
     .settings-panel{right:auto;left:50%;transform:translateX(-50%);width:min(340px,calc(100vw - 24px))}
   }
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
 
   .hdr{background:var(--blue);color:#fff;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex-shrink:0;border-bottom:3px solid var(--gold);position:relative}
-  .hdr-burger{display:none;background:transparent;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:4px 8px;line-height:1}
-  .hdr-right{display:flex;gap:10px;align-items:center}
-  @media(max-width:680px){
-    .hdr-burger{display:block}
-    .hdr-right{display:none;position:absolute;top:56px;left:0;right:0;flex-direction:column;align-items:stretch;gap:10px;background:var(--blue);padding:14px 20px;box-shadow:0 8px 20px rgba(0,0,0,0.25);z-index:80}
-    .hdr-right.open{display:flex}
-    .hdr-right .btn-hdr{width:100%}
-  }
+  .hdr-burger{display:block;background:transparent;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:4px 8px;line-height:1}
+  /* Dropdown for Settings/Logout — opened by the burger button, on every screen size */
+  .hdr-menu-dropdown{display:none;position:absolute;top:56px;right:24px;flex-direction:column;gap:8px;background:var(--blue);padding:12px;border-radius:0 0 8px 8px;box-shadow:0 8px 20px rgba(0,0,0,0.25);z-index:80;min-width:170px}
+  .hdr-menu-dropdown.open{display:flex}
+  .hdr-menu-dropdown .btn-hdr{width:100%;justify-content:flex-start}
+  .hdr-menu-dropdown .settings-wrap{width:100%}
+  .hdr-menu-dropdown .settings-wrap .btn-hdr{width:100%}
   .hdr-left{display:flex;align-items:center;gap:14px}
   .hdr-logo{font-family:'Source Serif 4',serif;font-size:1.1rem;font-weight:600}.hdr-logo span{color:var(--gold)}
   .hdr-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:3px 10px;font-size:0.75rem;color:rgba(255,255,255,0.8)}
@@ -259,7 +255,7 @@
 
   @media print{
     @page{size:A4;margin:10mm}
-    .hdr,.hdr-right,.tabs,.trf-sel,.no-print,.card>.photo-wrap,.card>.p-details{display:none!important}
+    .hdr,.hdr-menu-dropdown,.tabs,.trf-sel,.no-print,.card>.photo-wrap,.card>.p-details{display:none!important}
     body{background:#fff}
     .page{padding:0;max-width:100%}
     .grid{grid-template-columns:1fr!important}
@@ -284,160 +280,160 @@
     <div class="hdr-badge">Candidate Profile</div>
   </div>
   <div style="display:flex;gap:10px;align-items:center">
+    <button class="btn-hdr btn-start icon-btn" onclick="proceedToTest()" title="Start Test">🚀<span class="btn-label"> Start Test</span></button>
     <button class="hdr-burger" onclick="toggleHdrMenu()" aria-label="Menu">☰</button>
-    <div class="hdr-right" id="hdr-actions">
-      <div class="settings-wrap">
-        <button class="btn-hdr btn-logout icon-btn" onclick="toggleSettingsPanel(event)" title="Settings">⚙️<span class="btn-label"> Settings</span></button>
-        <div class="settings-panel" id="settings-panel">
+  </div>
+  <div class="hdr-menu-dropdown" id="hdr-menu-dropdown">
+    <div class="settings-wrap">
+      <button class="btn-hdr icon-btn" onclick="toggleSettingsPanel(event)" title="Settings">⚙️<span class="btn-label"> Settings</span></button>
+      <div class="settings-panel" id="settings-panel">
 
-          <!-- DISPLAY -->
-          <div class="settings-acc-item">
-            <button class="settings-acc-header active" onclick="toggleSettingsAcc('display',this)">
-              <span>🌙 Display</span><span class="settings-acc-chevron">▾</span>
-            </button>
-            <div id="settings-cat-display" class="settings-acc-body active">
-              <div class="settings-acc-body-inner">
-                <div class="settings-row">
-                  <span class="settings-label">🌙 Dark Mode</span>
-                  <label class="switch">
-                    <input type="checkbox" id="dark-mode-switch" onchange="toggleDarkMode()">
-                    <span class="slider-track"></span>
-                  </label>
-                </div>
-                <div class="settings-row" style="flex-direction:column;align-items:stretch">
-                  <span class="settings-label" style="margin-bottom:8px">🔤 Font Size</span>
-                  <div class="fs-slider-wrap">
-                    <input type="range" min="85" max="145" step="1" id="font-size-slider" oninput="setFontSize(this.value)">
-                    <div class="fs-labels"><span>A</span><span style="font-size:1.3em">A</span></div>
-                  </div>
+        <!-- DISPLAY -->
+        <div class="settings-acc-item">
+          <button class="settings-acc-header active" onclick="toggleSettingsAcc('display',this)">
+            <span>🌙 Display</span><span class="settings-acc-chevron">▾</span>
+          </button>
+          <div id="settings-cat-display" class="settings-acc-body active">
+            <div class="settings-acc-body-inner">
+              <div class="settings-row">
+                <span class="settings-label">🌙 Dark Mode</span>
+                <label class="switch">
+                  <input type="checkbox" id="dark-mode-switch" onchange="toggleDarkMode()">
+                  <span class="slider-track"></span>
+                </label>
+              </div>
+              <div class="settings-row" style="flex-direction:column;align-items:stretch">
+                <span class="settings-label" style="margin-bottom:8px">🔤 Font Size</span>
+                <div class="fs-slider-wrap">
+                  <input type="range" min="85" max="145" step="1" id="font-size-slider" oninput="setFontSize(this.value)">
+                  <div class="fs-labels"><span>A</span><span style="font-size:1.3em">A</span></div>
                 </div>
               </div>
             </div>
           </div>
-
-          <!-- PROFILE (Personal Details) -->
-          <div class="settings-acc-item">
-            <button class="settings-acc-header" onclick="toggleSettingsAcc('profile',this)">
-              <span>👤 Profile</span><span class="settings-acc-chevron">▾</span>
-            </button>
-            <div id="settings-cat-profile" class="settings-acc-body">
-              <div class="settings-acc-body-inner">
-                <div class="settings-field">
-                  <label>Full Name</label>
-                  <input type="text" id="set-fullname" placeholder="e.g. Santos, Maria">
-                </div>
-                <div class="settings-row">
-                  <div class="settings-field">
-                    <label>Date of Birth</label>
-                    <input type="date" id="set-dob">
-                  </div>
-                  <div class="settings-field">
-                    <label>Gender</label>
-                    <select id="set-gender">
-                      <option value="">Select...</option>
-                      <option>Male</option>
-                      <option>Female</option>
-                      <option>Prefer not to say</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="settings-field">
-                  <label>Nationality</label>
-                  <select id="set-nationality"><option value="">Select country...</option></select>
-                </div>
-                <button class="btn btn-blue" onclick="saveProfileSettings()">💾 Save Changes</button>
-                <div id="settings-save-status" class="inline-msg"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- EMAIL -->
-          <div class="settings-acc-item">
-            <button class="settings-acc-header" onclick="toggleSettingsAcc('email',this)">
-              <span>✉️ Email</span><span class="settings-acc-chevron">▾</span>
-            </button>
-            <div id="settings-cat-email" class="settings-acc-body">
-              <div class="settings-acc-body-inner">
-                <div style="font-size:0.82rem;color:var(--ink3);margin-bottom:12px;line-height:1.5">
-                  Your email is used for password recovery. A verification code will be sent before any change takes effect.
-                </div>
-
-                <!-- Current email display -->
-                <div id="email-current-wrap">
-                  <div class="settings-field" style="margin-bottom:10px">
-                    <label>Current Email</label>
-                    <input type="text" id="email-current-display" disabled style="background:var(--paper2);color:var(--ink3)">
-                  </div>
-                  <button class="btn-sm btn-sm-blue" onclick="startEmailChange()">✏️ Change Email</button>
-                </div>
-
-                <!-- Email change form (hidden initially) -->
-                <div id="email-change-wrap" style="display:none">
-                  <div class="email-verify-row">
-                    <div class="settings-field">
-                      <label>New Email Address</label>
-                      <input type="email" id="set-new-email" placeholder="e.g. maria@gmail.com">
-                    </div>
-                    <button class="btn-sm btn-sm-blue" id="btn-send-email-otp" onclick="sendEmailChangeOTP()">Send Code</button>
-                  </div>
-                  <div id="email-otp-wrap" style="display:none">
-                    <div class="otp-row">
-                      <div class="settings-field">
-                        <label>Verification Code (sent to new email)</label>
-                        <input type="text" id="set-email-otp" placeholder="6-digit code" maxlength="6" autocomplete="one-time-code">
-                      </div>
-                      <button class="btn-sm btn-sm-blue" onclick="verifyEmailChange()">Confirm</button>
-                    </div>
-                  </div>
-                  <div style="margin-top:8px">
-                    <button class="btn-sm btn-sm-ghost" onclick="cancelEmailChange()">Cancel</button>
-                  </div>
-                  <div id="email-change-status" class="inline-msg"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- PASSWORD -->
-          <div class="settings-acc-item">
-            <button class="settings-acc-header" onclick="toggleSettingsAcc('password',this)">
-              <span>🔑 Password</span><span class="settings-acc-chevron">▾</span>
-            </button>
-            <div id="settings-cat-password" class="settings-acc-body">
-              <div class="settings-acc-body-inner">
-                <div class="settings-field">
-                  <label>Current Password</label>
-                  <div class="pw-wrap-s">
-                    <input type="password" id="set-cur-pass" placeholder="Enter current password">
-                    <button class="pw-toggle-s" onclick="togglePwS('set-cur-pass',this)" type="button">Show</button>
-                  </div>
-                </div>
-                <div class="settings-field">
-                  <label>New Password</label>
-                  <div class="pw-wrap-s">
-                    <input type="password" id="set-new-pass" placeholder="At least 6 characters" oninput="checkPwStrengthS(this)">
-                    <button class="pw-toggle-s" onclick="togglePwS('set-new-pass',this)" type="button">Show</button>
-                  </div>
-                  <div class="pw-strength-s" id="pw-strength-s"></div>
-                </div>
-                <div class="settings-field">
-                  <label>Confirm New Password</label>
-                  <div class="pw-wrap-s">
-                    <input type="password" id="set-confirm-pass" placeholder="Re-enter new password">
-                    <button class="pw-toggle-s" onclick="togglePwS('set-confirm-pass',this)" type="button">Show</button>
-                  </div>
-                </div>
-                <button class="btn btn-blue" onclick="changePassword()">🔑 Change Password</button>
-                <div id="pw-change-status" class="inline-msg"></div>
-              </div>
-            </div>
-          </div>
-
         </div>
+
+        <!-- PROFILE (Personal Details) -->
+        <div class="settings-acc-item">
+          <button class="settings-acc-header" onclick="toggleSettingsAcc('profile',this)">
+            <span>👤 Profile</span><span class="settings-acc-chevron">▾</span>
+          </button>
+          <div id="settings-cat-profile" class="settings-acc-body">
+            <div class="settings-acc-body-inner">
+              <div class="settings-field">
+                <label>Full Name</label>
+                <input type="text" id="set-fullname" placeholder="e.g. Santos, Maria">
+              </div>
+              <div class="settings-row">
+                <div class="settings-field">
+                  <label>Date of Birth</label>
+                  <input type="date" id="set-dob">
+                </div>
+                <div class="settings-field">
+                  <label>Gender</label>
+                  <select id="set-gender">
+                    <option value="">Select...</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Prefer not to say</option>
+                  </select>
+                </div>
+              </div>
+              <div class="settings-field">
+                <label>Nationality</label>
+                <select id="set-nationality"><option value="">Select country...</option></select>
+              </div>
+              <button class="btn btn-blue" onclick="saveProfileSettings()">💾 Save Changes</button>
+              <div id="settings-save-status" class="inline-msg"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMAIL -->
+        <div class="settings-acc-item">
+          <button class="settings-acc-header" onclick="toggleSettingsAcc('email',this)">
+            <span>✉️ Email</span><span class="settings-acc-chevron">▾</span>
+          </button>
+          <div id="settings-cat-email" class="settings-acc-body">
+            <div class="settings-acc-body-inner">
+              <div style="font-size:0.82rem;color:var(--ink3);margin-bottom:12px;line-height:1.5">
+                Your email is used for password recovery. A verification code will be sent before any change takes effect.
+              </div>
+
+              <!-- Current email display -->
+              <div id="email-current-wrap">
+                <div class="settings-field" style="margin-bottom:10px">
+                  <label>Current Email</label>
+                  <input type="text" id="email-current-display" disabled style="background:var(--paper2);color:var(--ink3)">
+                </div>
+                <button class="btn-sm btn-sm-blue" onclick="startEmailChange()">✏️ Change Email</button>
+              </div>
+
+              <!-- Email change form (hidden initially) -->
+              <div id="email-change-wrap" style="display:none">
+                <div class="email-verify-row">
+                  <div class="settings-field">
+                    <label>New Email Address</label>
+                    <input type="email" id="set-new-email" placeholder="e.g. maria@gmail.com">
+                  </div>
+                  <button class="btn-sm btn-sm-blue" id="btn-send-email-otp" onclick="sendEmailChangeOTP()">Send Code</button>
+                </div>
+                <div id="email-otp-wrap" style="display:none">
+                  <div class="otp-row">
+                    <div class="settings-field">
+                      <label>Verification Code (sent to new email)</label>
+                      <input type="text" id="set-email-otp" placeholder="6-digit code" maxlength="6" autocomplete="one-time-code">
+                    </div>
+                    <button class="btn-sm btn-sm-blue" onclick="verifyEmailChange()">Confirm</button>
+                  </div>
+                </div>
+                <div style="margin-top:8px">
+                  <button class="btn-sm btn-sm-ghost" onclick="cancelEmailChange()">Cancel</button>
+                </div>
+                <div id="email-change-status" class="inline-msg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PASSWORD -->
+        <div class="settings-acc-item">
+          <button class="settings-acc-header" onclick="toggleSettingsAcc('password',this)">
+            <span>🔑 Password</span><span class="settings-acc-chevron">▾</span>
+          </button>
+          <div id="settings-cat-password" class="settings-acc-body">
+            <div class="settings-acc-body-inner">
+              <div class="settings-field">
+                <label>Current Password</label>
+                <div class="pw-wrap-s">
+                  <input type="password" id="set-cur-pass" placeholder="Enter current password">
+                  <button class="pw-toggle-s" onclick="togglePwS('set-cur-pass',this)" type="button">Show</button>
+                </div>
+              </div>
+              <div class="settings-field">
+                <label>New Password</label>
+                <div class="pw-wrap-s">
+                  <input type="password" id="set-new-pass" placeholder="At least 6 characters" oninput="checkPwStrengthS(this)">
+                  <button class="pw-toggle-s" onclick="togglePwS('set-new-pass',this)" type="button">Show</button>
+                </div>
+                <div class="pw-strength-s" id="pw-strength-s"></div>
+              </div>
+              <div class="settings-field">
+                <label>Confirm New Password</label>
+                <div class="pw-wrap-s">
+                  <input type="password" id="set-confirm-pass" placeholder="Re-enter new password">
+                  <button class="pw-toggle-s" onclick="togglePwS('set-confirm-pass',this)" type="button">Show</button>
+                </div>
+              </div>
+              <button class="btn btn-blue" onclick="changePassword()">🔑 Change Password</button>
+              <div id="pw-change-status" class="inline-msg"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
-      <button class="btn-hdr btn-start icon-btn" onclick="proceedToTest()" title="Start Test">🚀<span class="btn-label"> Start Test</span></button>
-      <button class="btn-hdr btn-logout icon-btn" onclick="window.location.href='index.html'" title="Logout">🚪<span class="btn-label"> Logout</span></button>
     </div>
+    <button class="btn-hdr btn-logout icon-btn" onclick="window.location.href='index.html'" title="Logout">🚪<span class="btn-label"> Logout</span></button>
   </div>
 </div>
 
@@ -546,7 +542,7 @@ function applyFontScale() {
   localStorage.setItem('ielts_font_scale', fontScalePct);
 }
 function toggleHdrMenu(){
-  document.getElementById('hdr-actions').classList.toggle('open');
+  document.getElementById('hdr-menu-dropdown').classList.toggle('open');
 }
 function setFontSize(pct) {
   const val = parseInt(pct, 10);
@@ -582,6 +578,11 @@ document.addEventListener('click', (e) => {
   const panel = document.getElementById('settings-panel');
   if (panel && panel.classList.contains('open') && !e.target.closest('.settings-wrap')) {
     panel.classList.remove('open');
+  }
+  const menu = document.getElementById('hdr-menu-dropdown');
+  const burger = document.querySelector('.hdr-burger');
+  if (menu && menu.classList.contains('open') && !menu.contains(e.target) && e.target !== burger) {
+    menu.classList.remove('open');
   }
 });
 
