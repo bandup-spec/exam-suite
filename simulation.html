@@ -130,7 +130,7 @@
   .scroll::-webkit-scrollbar{width:4px}.scroll::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:2px}
   .audio-card{background:var(--paper);border:1px solid var(--border);border-radius:12px;padding:32px 24px;text-align:center;max-width:440px;margin:0 auto}
   .audio-label{font-family:'Source Serif 4',serif;font-size:0.9rem;color:var(--ink2);margin-bottom:20px}
-  .audio-img{max-width:350%;max-height:440px;border-radius:8px;margin-bottom:16px;display:none}
+  .audio-img{width:100%;height:auto;max-height:440px;object-fit:contain;border-radius:8px;margin-bottom:16px;display:none}
   .play-ring{width:72px;height:72px;border-radius:50%;border:2px solid var(--blue);background:transparent;color:var(--blue);font-size:1.8rem;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;transition:all 0.2s}
   .play-ring:hover:not(:disabled){background:var(--blue);color:#fff;transform:scale(1.05)}
   .play-ring:disabled{border-color:var(--border);color:var(--ink3);cursor:not-allowed}
@@ -153,6 +153,7 @@
   .q-input.filled{border-color:var(--green);background:#f5fbf7}
   .mc-opts{display:flex;flex-direction:column;gap:5px;margin-top:6px}
   .mc-opt{display:flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid var(--paper3);border-radius:6px;cursor:pointer;font-size:0.86rem;transition:all 0.15s;font-family:'DM Sans',sans-serif}
+  .mc-opt-thumb{max-width:120px;max-height:90px;border-radius:6px;border:1px solid var(--paper3);display:block;margin-top:4px;object-fit:contain}
   .mc-opt:hover{background:var(--paper);border-color:var(--blue2)}
   .mc-opt.sel{background:#f0f5ff;border-color:var(--blue2);color:var(--blue)}
   .mc-opt input{accent-color:var(--blue)}
@@ -1449,8 +1450,10 @@ function renderQBlocksHTML(sec, blocks, sectionLabel) {
         <div style="font-size:0.85rem;color:var(--ink2);margin-bottom:8px;font-style:italic">${escH(b.qText||'')}</div>
         <div style="font-size:0.8rem;color:var(--ink3);margin-bottom:8px">Choose <b>${pick}</b> letters. <span style="color:var(--red);font-size:0.75rem">(Max ${pick})</span></div>
         <div class="mc-opts">`;
+      const ct2Imgs = b.optionImages || [];
       opts.forEach((opt, i) => {
-        html += `<label class="mc-opt"><input type="checkbox" name="${groupName}" value="${letters[i]}" onchange="markGroupedCL('${sec}',${JSON.stringify(nums)},this,${pick},'${groupName}')"> <span><b>${letters[i]}</b> — ${escH(opt)}</span></label>`;
+        const imgTag = ct2Imgs[i] ? `<img src="${escH(ct2Imgs[i])}" class="mc-opt-thumb" onerror="this.style.display='none'">` : '';
+        html += `<label class="mc-opt" style="align-items:flex-start"><input type="checkbox" name="${groupName}" value="${letters[i]}" onchange="markGroupedCL('${sec}',${JSON.stringify(nums)},this,${pick},'${groupName}')" style="margin-top:3px"> <span><b>${letters[i]}</b> — ${escH(opt)}${imgTag}</span></label>`;
       });
       html += `</div></div>`;
       return;
@@ -1501,10 +1504,12 @@ function renderQBlocksHTML(sec, blocks, sectionLabel) {
     let inner = '';
     if (type==='mc') {
       const opts    = b.options||[];
+      const optImgs = b.optionImages||[];
       const mcCount = b.mcCount||opts.length||4;
       inner = '<div class="mc-opts">';
       for (let i=0;i<mcCount;i++) {
-        inner += `<label class="mc-opt"><input type="radio" name="q${sec}${n}" value="${letters[i]}" onchange="markQ('${sec}',${n},this)"> <span><b>${letters[i]}</b>${opts[i]?' — '+escH(opts[i]):''}</span></label>`;
+        const imgTag = optImgs[i] ? `<img src="${escH(optImgs[i])}" class="mc-opt-thumb" onerror="this.style.display='none'">` : '';
+        inner += `<label class="mc-opt" style="align-items:flex-start"><input type="radio" name="q${sec}${n}" value="${letters[i]}" onchange="markQ('${sec}',${n},this)" style="margin-top:3px"> <span><b>${letters[i]}</b>${opts[i]?' — '+escH(opts[i]):''}${imgTag}</span></label>`;
       }
       inner += '</div>';
     } else if (type==='tfng') {
@@ -1544,8 +1549,9 @@ function buildQBlock(sec,n){
 
   if(q.type==='mc'){
     const opts=q.options||['','',''];
+    const optImgs=q.optionImages||[];
     inner='<div class="mc-opts">'+['A','B','C'].map((l,i)=>
-      `<label class="mc-opt"><input type="radio" name="q${sec}${n}" value="${l}" onchange="markQ('${sec}',${n},this)"> <span>${l} &nbsp; ${escH(opts[i]||'Option '+l)}</span></label>`
+      `<label class="mc-opt" style="align-items:flex-start"><input type="radio" name="q${sec}${n}" value="${l}" onchange="markQ('${sec}',${n},this)" style="margin-top:3px"> <span>${l} &nbsp; ${escH(opts[i]||'Option '+l)}${optImgs[i]?`<img src="${escH(optImgs[i])}" class="mc-opt-thumb" onerror="this.style.display='none'">`:''}</span></label>`
     ).join('')+'</div>';
 
   } else if(q.type==='cl'){
