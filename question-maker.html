@@ -111,6 +111,12 @@
   .qm-del-opt:hover{color:var(--red)}
   .qm-add-opt{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border:1px dashed var(--blue2);border-radius:6px;font-size:0.78rem;font-weight:600;color:var(--blue2);background:transparent;cursor:pointer;font-family:'DM Sans',sans-serif;margin-top:4px}
   .qm-add-opt:hover{background:#f0f5ff}
+  .qm-opt-row-wrap{margin-bottom:9px}
+  .qm-opt-row-wrap .qm-opt-row{margin-bottom:0}
+  .qm-opt-imgrow{display:flex;align-items:center;gap:6px;margin:4px 0 0 23px}
+  .qm-opt-img-icon{font-size:0.78rem;opacity:0.55;flex-shrink:0}
+  .qm-opt-img-url{flex:1;padding:5px 8px;border:1px solid var(--paper3);border-radius:6px;font-family:'DM Sans',sans-serif;font-size:0.76rem;color:var(--ink2)}
+  .qm-opt-thumb{height:26px;max-width:52px;border-radius:4px;border:1px solid var(--paper3);object-fit:cover;flex-shrink:0}
   .qm-range-row{display:flex;align-items:center;gap:7px;font-size:0.82rem;color:var(--ink2);flex-wrap:wrap}
   .qm-range-row input{width:55px!important;text-align:center;padding:5px 7px!important}
   .qm-ans-field{background:#f5fbf7;border-color:#a8dbb8!important;color:var(--green)!important;font-weight:600}
@@ -525,7 +531,7 @@
         <div style="background:var(--paper2);border-radius:8px;padding:14px;font-size:0.83rem;color:var(--ink2);line-height:1.9;margin-bottom:14px">
           <b style="color:var(--blue)">CSV Format:</b> Each row = one question.<br>
           Required columns: <code>type, text, optionA, optionB, optionC, optionD, answer, section, part</code><br>
-          <b>type</b> options: <code>mc</code>, <code>tfng</code>, <code>short</code>, <code>fc</code><br>
+          <b>type</b> options: <code>mc</code>, <code>tfng</code>, <code>yntg</code>, <code>short</code>, <code>fc</code><br>
           <b>section</b>: <code>R</code> (Reading) or <code>L</code> (Listening) | <b>part</b>: <code>1</code>, <code>2</code>, or <code>3</code>
         </div>
         <div class="field">
@@ -571,6 +577,7 @@
               <option value="">All Types</option>
               <option value="mc">Multiple Choice</option>
               <option value="tfng">True/False/NG</option>
+              <option value="yntg">Yes/No/NG</option>
               <option value="short">Short Answer</option>
               <option value="fc">Form Completion</option>
               <option value="match">Matching</option>
@@ -590,6 +597,7 @@
             <select id="qbank-type">
               <option value="mc">Multiple Choice</option>
               <option value="tfng">True / False / Not Given</option>
+              <option value="yntg">Yes / No / Not Given</option>
               <option value="short">Short Answer</option>
               <option value="fc">Form Completion</option>
               <option value="match">Matching</option>
@@ -650,6 +658,7 @@
         <option value="match">Matching</option>
         <option value="short">Short Answer</option>
         <option value="tfng">True / False / Not Given</option>
+        <option value="yntg">Yes / No / Not Given</option>
       </select>
     </div>
 
@@ -684,6 +693,7 @@
         <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px">
           <label style="display:flex;align-items:center;gap:5px;font-size:0.83rem"><input type="checkbox" id="ai-t-mc" checked style="accent-color:var(--blue)"> Multiple Choice</label>
           <label style="display:flex;align-items:center;gap:5px;font-size:0.83rem"><input type="checkbox" id="ai-t-tfng" checked style="accent-color:var(--blue)"> True/False/NG</label>
+          <label style="display:flex;align-items:center;gap:5px;font-size:0.83rem"><input type="checkbox" id="ai-t-yntg" style="accent-color:var(--blue)"> Yes/No/NG</label>
           <label style="display:flex;align-items:center;gap:5px;font-size:0.83rem"><input type="checkbox" id="ai-t-short" style="accent-color:var(--blue)"> Short Answer</label>
           <label style="display:flex;align-items:center;gap:5px;font-size:0.83rem"><input type="checkbox" id="ai-t-fc" style="accent-color:var(--blue)"> Form Completion</label>
         </div>
@@ -1135,7 +1145,8 @@ function qmTypeChange(existing) {
       </div>
       <div class="qm-section-label">Options — tick the correct one</div>
       <div id="qm-mc-opts">`;
-    opts.forEach((o, i) => { html += qmMCOptRow(i, o, answer === LTRS[i]); });
+    const optImgs = q.optionImages || [];
+    opts.forEach((o, i) => { html += qmMCOptRow(i, o, answer === LTRS[i], optImgs[i]||''); });
     html += `</div><button class="qm-add-opt" onclick="qmAddMCOpt()">+ Add Option</button>`;
     area.innerHTML = html;
 
@@ -1162,7 +1173,8 @@ function qmTypeChange(existing) {
       </div>
       <div class="qm-section-label">Options — tick all correct answers</div>
       <div id="qm-ct2-opts">`;
-    opts.forEach((o, i) => { html += qmCT2OptRow(i, o, answers.includes(LTRS[i])); });
+    const ct2OptImgs = q.optionImages || [];
+    opts.forEach((o, i) => { html += qmCT2OptRow(i, o, answers.includes(LTRS[i]), ct2OptImgs[i]||''); });
     html += `</div><button class="qm-add-opt" onclick="qmAddCT2Opt()">+ Add Option</button>`;
     area.innerHTML = html;
 
@@ -1214,58 +1226,103 @@ function qmTypeChange(existing) {
       <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
         ${['TRUE','FALSE','NOT GIVEN'].map(v=>`<label style="display:flex;align-items:center;gap:5px;font-size:0.84rem;cursor:pointer;padding:6px 12px;border:1px solid var(--paper3);border-radius:7px;background:${ans===v?'#f0fff4':'#fff'}"><input type="radio" name="qm-tfng" value="${v}" ${ans===v?'checked':''} style="accent-color:var(--green)"> ${v}</label>`).join('')}
       </div>`;
+
+  } else if (type === 'yntg') {
+    const ans = q.answer || '';
+    area.innerHTML = `
+      <div class="qm-field">
+        <label>Question number</label>
+        <input type="number" id="qm-yntg-qnum" min="1" max="99" value="${q.qNum||''}" placeholder="e.g. 7">
+      </div>
+      <div class="qm-field">
+        <label>Statement text</label>
+        <textarea id="qm-yntg-qtext" placeholder="Statement...">${escH(q.qText||'')}</textarea>
+      </div>
+      <div class="qm-section-label">Correct Answer</div>
+      <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+        ${['YES','NO','NOT GIVEN'].map(v=>`<label style="display:flex;align-items:center;gap:5px;font-size:0.84rem;cursor:pointer;padding:6px 12px;border:1px solid var(--paper3);border-radius:7px;background:${ans===v?'#f0fff4':'#fff'}"><input type="radio" name="qm-yntg" value="${v}" ${ans===v?'checked':''} style="accent-color:var(--green)"> ${v}</label>`).join('')}
+      </div>`;
   }
 }
 
 // ── ROW BUILDERS ──
-function qmMCOptRow(i, val, correct) {
-  return `<div class="qm-opt-row" id="qm-mc-opt-${i}">
-    <span class="qm-opt-ltr">${LTRS[i]}</span>
-    <input type="text" class="qm-mc-val" placeholder="Option ${LTRS[i]}..." value="${escH(val)}" oninput="qmSyncMCLabels()">
-    <input type="checkbox" class="qm-mc-chk" ${correct?'checked':''} onchange="qmMCOnlyOne(this,${i})">
-    <button class="qm-del-opt" onclick="qmRemoveMCOpt(${i})">x</button>
+function qmMCOptRow(i, val, correct, imgUrl) {
+  imgUrl = imgUrl || '';
+  return `<div class="qm-opt-row-wrap" id="qm-mc-opt-${i}">
+    <div class="qm-opt-row">
+      <span class="qm-opt-ltr">${LTRS[i]}</span>
+      <input type="text" class="qm-mc-val" placeholder="Option ${LTRS[i]}..." value="${escH(val)}" oninput="qmSyncMCLabels()">
+      <input type="checkbox" class="qm-mc-chk" ${correct?'checked':''} onchange="qmMCOnlyOne(this,${i})">
+      <button class="qm-del-opt" onclick="qmRemoveMCOpt(${i})">x</button>
+    </div>
+    <div class="qm-opt-imgrow">
+      <span class="qm-opt-img-icon">🖼️</span>
+      <input type="text" class="qm-mc-img qm-opt-img-url" placeholder="Image URL for this option (optional)" value="${escH(imgUrl)}" oninput="qmPreviewOptImg(this)">
+      <img src="${escH(imgUrl)}" class="qm-opt-thumb" style="display:${imgUrl?'block':'none'}" onerror="this.style.display='none'">
+    </div>
   </div>`;
 }
 function qmAddMCOpt() {
   const wrap = document.getElementById('qm-mc-opts');
-  const i = wrap.querySelectorAll('.qm-opt-row').length;
-  const d = document.createElement('div'); d.innerHTML = qmMCOptRow(i,'',false);
+  const i = wrap.querySelectorAll('.qm-opt-row-wrap').length;
+  const d = document.createElement('div'); d.innerHTML = qmMCOptRow(i,'',false,'');
   wrap.appendChild(d.firstElementChild); qmSyncMCLabels();
 }
 function qmRemoveMCOpt(i) {
-  const rows = [...document.querySelectorAll('#qm-mc-opts .qm-opt-row')];
+  const rows = [...document.querySelectorAll('#qm-mc-opts .qm-opt-row-wrap')];
   if (rows.length <= 2) return; rows[i] && rows[i].remove(); qmSyncMCLabels();
 }
 function qmSyncMCLabels() {
-  document.querySelectorAll('#qm-mc-opts .qm-opt-row').forEach((r,i)=>{
-    r.id=`qm-mc-opt-${i}`; r.querySelector('.qm-opt-ltr').textContent=LTRS[i];
+  document.querySelectorAll('#qm-mc-opts .qm-opt-row-wrap').forEach((wrap,i)=>{
+    wrap.id=`qm-mc-opt-${i}`;
+    const ltr = wrap.querySelector('.qm-opt-ltr');
+    if (ltr) ltr.textContent = LTRS[i];
   });
 }
 function qmMCOnlyOne(el, i) {
   document.querySelectorAll('#qm-mc-opts .qm-mc-chk').forEach((c,j)=>{ if(j!==i) c.checked=false; });
 }
+// Shared by MC and CT2 option-image rows — live-updates the thumbnail as the URL is typed.
+function qmPreviewOptImg(inputEl) {
+  const row = inputEl.closest('.qm-opt-imgrow');
+  const thumb = row && row.querySelector('.qm-opt-thumb');
+  if (!thumb) return;
+  const url = inputEl.value.trim();
+  if (url) { thumb.src = url; thumb.style.display = 'block'; }
+  else { thumb.src = ''; thumb.style.display = 'none'; }
+}
 
-function qmCT2OptRow(i, val, correct) {
-  return `<div class="qm-opt-row" id="qm-ct2-opt-${i}">
-    <span class="qm-opt-ltr">${LTRS[i]}</span>
-    <input type="text" class="qm-ct2-val" placeholder="Option ${LTRS[i]}..." value="${escH(val)}" oninput="qmSyncCT2Labels()">
-    <input type="checkbox" class="qm-ct2-chk" ${correct?'checked':''}>
-    <button class="qm-del-opt" onclick="qmRemoveCT2Opt(${i})">x</button>
+function qmCT2OptRow(i, val, correct, imgUrl) {
+  imgUrl = imgUrl || '';
+  return `<div class="qm-opt-row-wrap" id="qm-ct2-opt-${i}">
+    <div class="qm-opt-row">
+      <span class="qm-opt-ltr">${LTRS[i]}</span>
+      <input type="text" class="qm-ct2-val" placeholder="Option ${LTRS[i]}..." value="${escH(val)}" oninput="qmSyncCT2Labels()">
+      <input type="checkbox" class="qm-ct2-chk" ${correct?'checked':''}>
+      <button class="qm-del-opt" onclick="qmRemoveCT2Opt(${i})">x</button>
+    </div>
+    <div class="qm-opt-imgrow">
+      <span class="qm-opt-img-icon">🖼️</span>
+      <input type="text" class="qm-ct2-img qm-opt-img-url" placeholder="Image URL for this option (optional)" value="${escH(imgUrl)}" oninput="qmPreviewOptImg(this)">
+      <img src="${escH(imgUrl)}" class="qm-opt-thumb" style="display:${imgUrl?'block':'none'}" onerror="this.style.display='none'">
+    </div>
   </div>`;
 }
 function qmAddCT2Opt() {
   const wrap = document.getElementById('qm-ct2-opts');
-  const i = wrap.querySelectorAll('.qm-opt-row').length;
-  const d = document.createElement('div'); d.innerHTML = qmCT2OptRow(i,'',false);
+  const i = wrap.querySelectorAll('.qm-opt-row-wrap').length;
+  const d = document.createElement('div'); d.innerHTML = qmCT2OptRow(i,'',false,'');
   wrap.appendChild(d.firstElementChild); qmSyncCT2Labels();
 }
 function qmRemoveCT2Opt(i) {
-  const rows=[...document.querySelectorAll('#qm-ct2-opts .qm-opt-row')];
+  const rows=[...document.querySelectorAll('#qm-ct2-opts .qm-opt-row-wrap')];
   if(rows.length<=2)return; rows[i]&&rows[i].remove(); qmSyncCT2Labels();
 }
 function qmSyncCT2Labels() {
-  document.querySelectorAll('#qm-ct2-opts .qm-opt-row').forEach((r,i)=>{
-    r.id=`qm-ct2-opt-${i}`; r.querySelector('.qm-opt-ltr').textContent=LTRS[i];
+  document.querySelectorAll('#qm-ct2-opts .qm-opt-row-wrap').forEach((wrap,i)=>{
+    wrap.id=`qm-ct2-opt-${i}`;
+    const ltr = wrap.querySelector('.qm-opt-ltr');
+    if (ltr) ltr.textContent = LTRS[i];
   });
 }
 
@@ -1408,9 +1465,10 @@ function qmSave() {
     const qNum  = parseInt(document.getElementById('qm-mc-qnum').value)||null;
     const qText = document.getElementById('qm-mc-qtext').value.trim();
     const opts  = [...document.querySelectorAll('#qm-mc-opts .qm-mc-val')].map(i=>i.value.trim());
+    const optionImages = [...document.querySelectorAll('#qm-mc-opts .qm-mc-img')].map(i=>i.value.trim());
     const ci    = [...document.querySelectorAll('#qm-mc-opts .qm-mc-chk')].findIndex(c=>c.checked);
     const answer= ci>=0 ? LTRS[ci] : '';
-    Object.assign(q, {qNum,qText,options:opts,answer});
+    Object.assign(q, {qNum,qText,options:opts,optionImages,answer});
     if(qNum && answer){ config.answerKey[_qmSec][qNum]=answer; const el=document.getElementById('ak-'+_qmSec+'-'+qNum); if(el)el.value=answer; }
 
   } else if (type === 'ct2') {
@@ -1419,8 +1477,9 @@ function qmSave() {
     const qText   = document.getElementById('qm-ct2-qtext').value.trim();
     const pick    = parseInt(document.getElementById('qm-ct2-pick').value)||2;
     const opts    = [...document.querySelectorAll('#qm-ct2-opts .qm-ct2-val')].map(i=>i.value.trim());
+    const optionImages = [...document.querySelectorAll('#qm-ct2-opts .qm-ct2-img')].map(i=>i.value.trim());
     const answers = [...document.querySelectorAll('#qm-ct2-opts .qm-ct2-chk')].map((c,i)=>c.checked?LTRS[i]:null).filter(Boolean);
-    Object.assign(q, {qFrom,qTo,qText,pick,options:opts,answers});
+    Object.assign(q, {qFrom,qTo,qText,pick,options:opts,optionImages,answers});
 
   } else if (type === 'match') {
     const matchPrompt  = document.getElementById('qm-match-prompt').value.trim();
@@ -1449,6 +1508,14 @@ function qmSave() {
     const answer= chk ? chk.value : '';
     Object.assign(q, {qNum,qText,answer});
     if(qNum && answer){ config.answerKey[_qmSec][qNum]=answer; const el=document.getElementById('ak-'+_qmSec+'-'+qNum); if(el)el.value=answer; }
+
+  } else if (type === 'yntg') {
+    const qNum  = parseInt(document.getElementById('qm-yntg-qnum').value)||null;
+    const qText = document.getElementById('qm-yntg-qtext').value.trim();
+    const chk   = document.querySelector('input[name="qm-yntg"]:checked');
+    const answer= chk ? chk.value : '';
+    Object.assign(q, {qNum,qText,answer});
+    if(qNum && answer){ config.answerKey[_qmSec][qNum]=answer; const el=document.getElementById('ak-'+_qmSec+'-'+qNum); if(el)el.value=answer; }
   }
 
   const blocks = getQBlocks(_qmSec, _qmSecN);
@@ -1464,7 +1531,7 @@ function qmRenderList(sec, n) {
   const wrap = document.getElementById(listId);
   if (!wrap) return;
   const blocks = getQBlocks(sec, n);
-  const typeLbl = {fc:'Form Completion',mc:'Multiple Choice',ct2:'Choose TWO',match:'Matching',short:'Short Answer',tfng:'T/F/NG'};
+  const typeLbl = {fc:'Form Completion',mc:'Multiple Choice',ct2:'Choose TWO',match:'Matching',short:'Short Answer',tfng:'T/F/NG',yntg:'Y/N/NG'};
 
   if (!blocks.length) {
     wrap.innerHTML = '<div class="q-card-empty"><span>📝</span>No questions yet. Click <b>+ Add Question</b> to get started.</div>';
@@ -1480,7 +1547,7 @@ function qmRenderList(sec, n) {
 }
 
 function qmCardHTML(q, i, sec, n) {
-  const typeLbl = {fc:'Form Completion',mc:'Multiple Choice',ct2:'Choose TWO',match:'Matching',short:'Short Answer',tfng:'T/F/NG'};
+  const typeLbl = {fc:'Form Completion',mc:'Multiple Choice',ct2:'Choose TWO',match:'Matching',short:'Short Answer',tfng:'T/F/NG',yntg:'Y/N/NG'};
   const badge   = '<span class="q-type-badge">'+( typeLbl[q.type]||q.type )+'</span>';
   const partTag = q.part ? '<span style="font-size:0.73rem;color:var(--ink3)">'+escH(q.part)+'</span>' : '';
   const instr   = q.instr ? '<div style="font-size:0.8rem;color:var(--ink3);margin-bottom:6px;font-style:italic">'+escH(q.instr)+'</div>' : '';
@@ -1512,6 +1579,10 @@ function qmCardHTML(q, i, sec, n) {
     body += '<div class="q-card-text">'+escH(q.qText||'')+'</div>';
     if(q.answer) body += '<span class="q-card-ans">&#10003; '+escH(q.answer)+'</span>';
   } else if (q.type === 'tfng') {
+    body = '<div style="font-size:0.82rem;font-weight:700;color:var(--blue);margin-bottom:4px">Q'+(q.qNum||'?')+'</div>';
+    body += '<div class="q-card-text">'+escH(q.qText||'')+'</div>';
+    if(q.answer) body += '<span class="q-card-ans">&#10003; '+escH(q.answer)+'</span>';
+  } else if (q.type === 'yntg') {
     body = '<div style="font-size:0.82rem;font-weight:700;color:var(--blue);margin-bottom:4px">Q'+(q.qNum||'?')+'</div>';
     body += '<div class="q-card-text">'+escH(q.qText||'')+'</div>';
     if(q.answer) body += '<span class="q-card-ans">&#10003; '+escH(q.answer)+'</span>';
@@ -1649,7 +1720,7 @@ function collectConfig() {
       (blocks_store[n]||[]).forEach(q => {
         if (q.type==='fc') {
           (q.blanks||[]).forEach(b => { if(b.num && b.answer) config.answerKey[sec][b.num]=b.answer; });
-        } else if (q.type==='mc'||q.type==='short'||q.type==='tfng') {
+        } else if (q.type==='mc'||q.type==='short'||q.type==='tfng'||q.type==='yntg') {
           if(q.qNum && q.answer) config.answerKey[sec][q.qNum]=q.answer;
         } else if (q.type==='match') {
           (q.matchItems||[]).forEach(it => { if(it.num && it.answer) config.answerKey[sec][it.num]=it.answer; });
@@ -1970,12 +2041,14 @@ async function runAIGenerate() {
   const count    = document.getElementById('ai-gen-count').value;
   const wantMC   = document.getElementById('ai-t-mc').checked;
   const wantTF   = document.getElementById('ai-t-tfng').checked;
+  const wantYN   = document.getElementById('ai-t-yntg').checked;
   const wantSA   = document.getElementById('ai-t-short').checked;
   const wantFC   = document.getElementById('ai-t-fc').checked;
 
   const types = [];
   if (wantMC) types.push('Multiple Choice (mc)');
   if (wantTF) types.push('True/False/Not Given (tfng)');
+  if (wantYN) types.push('Yes/No/Not Given (yntg)');
   if (wantSA) types.push('Short Answer (short)');
   if (wantFC) types.push('Form Completion (fc)');
   if (!types.length) { alert('Please select at least one question type.'); return; }
@@ -2001,10 +2074,10 @@ async function runAIGenerate() {
 Question types to use (mix them proportionally): ${types.join(', ')}.
 
 For each question, output a JSON object with these fields:
-- type: "mc" | "tfng" | "short" | "fc"
+- type: "mc" | "tfng" | "yntg" | "short" | "fc"
 - text: the question or instruction stem
-- options: array of strings (for mc: 4 options A-D; for tfng: ["TRUE","FALSE","NOT GIVEN"]; for short/fc: [])
-- answer: the correct answer (for mc: "A"/"B"/"C"/"D"; for tfng: "TRUE"/"FALSE"/"NOT GIVEN"; for short/fc: the exact word/phrase)
+- options: array of strings (for mc: 4 options A-D; for tfng: ["TRUE","FALSE","NOT GIVEN"]; for yntg: ["YES","NO","NOT GIVEN"]; for short/fc: [])
+- answer: the correct answer (for mc: "A"/"B"/"C"/"D"; for tfng: "TRUE"/"FALSE"/"NOT GIVEN"; for yntg: "YES"/"NO"/"NOT GIVEN"; for short/fc: the exact word/phrase)
 - explanation: one-sentence rationale for the answer
 
 Return ONLY a valid JSON array of question objects. No preamble, no markdown, no extra text.
@@ -2055,7 +2128,7 @@ function renderAIResults(questions) {
   document.getElementById('ai-res-count').textContent = questions.length;
 
   const container = document.getElementById('ai-gen-cards');
-  const typeLabels = { mc:'Multiple Choice', tfng:'True/False/NG', short:'Short Answer', fc:'Form Completion' };
+  const typeLabels = { mc:'Multiple Choice', tfng:'True/False/NG', yntg:'Yes/No/NG', short:'Short Answer', fc:'Form Completion' };
 
   container.innerHTML = questions.map((q, i) => `
     <div class="ai-q-card selected" id="ai-qcard-${i}">
@@ -2167,7 +2240,7 @@ function renderQBank() {
     return;
   }
 
-  const typeLabels = { mc:'MC', tfng:'TF/NG', short:'Short', fc:'FC', match:'Match' };
+  const typeLabels = { mc:'MC', tfng:'TF/NG', yntg:'YN/NG', short:'Short', fc:'FC', match:'Match' };
   wrap.innerHTML = filtered.map((q, i) => `
     <div class="qbank-card">
       <div class="qbank-body">
@@ -2261,6 +2334,7 @@ function downloadCSVTemplate() {
   const rows = [
     'mc,"The passage states that renewable energy is","cheap","expensive","dangerous","unreliable","A","R","1"',
     'tfng,"The author believes solar power is the only solution","","","","","TRUE","R","1"',
+    'yntg,"The lecturer thinks wind turbines are too noisy for residential areas","","","","","NO","R","1"',
     'short,"What year was the experiment conducted?","","","","","2019","R","2"',
     'fc,"The river flows ___ km per hour","","","","","42","L","1"'
   ];
