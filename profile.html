@@ -820,10 +820,10 @@ function renderProgress() {
   // Skill breakdown — latest attempt only, side-by-side comparison
   html += renderSkillBreakdown(last);
 
-  // Download all results
-  html += `<div style="text-align:right;margin-bottom:16px">
-    <button class="btn-sm btn-sm-blue" onclick="downloadAllTRFs()">⬇️ Download All Results</button>
-  </div>`;
+  // Download all results — DISABLED for now (uncomment to re-enable)
+  // html += `<div style="text-align:right;margin-bottom:16px">
+  //   <button class="btn-sm btn-sm-blue" onclick="downloadAllTRFs()">⬇️ Download All Results</button>
+  // </div>`;
 
   // Trend chart (IELTS band trend — only meaningful across IELTS attempts)
   if (ieltsScores.length > 1) {
