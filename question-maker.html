@@ -1186,6 +1186,12 @@ function qmTypeChange(existing) {
         <label>Shared prompt / context (optional)</label>
         <textarea id="qm-match-prompt" placeholder="What does the speaker say about each of the following...">${escH(q.matchPrompt||'')}</textarea>
       </div>
+      <div class="qm-field">
+        <label>Map / Plan / Diagram Image URL (optional)</label>
+        <input type="text" id="qm-match-img" placeholder="https://... (leave blank for a normal text-only Matching question)" value="${escH(q.mapImgURL||'')}" oninput="qmPreviewMatchImg(this)">
+        <div style="font-size:0.75rem;color:var(--ink3);margin-top:4px">Use this for Map/Plan/Diagram Labeling — candidates will see the picture above the Choice Box (e.g. a map with locations A–H) and type the matching letter for each question below.</div>
+        <img id="qm-match-img-preview" src="${escH(q.mapImgURL||'')}" style="max-width:100%;max-height:220px;border-radius:8px;margin-top:8px;display:${q.mapImgURL?'block':'none'}" onerror="this.style.display='none'" onload="this.style.display='block'">
+      </div>
       <div class="qm-section-label">Choice Box (A, B, C… shown to candidates)</div>
       <div id="qm-match-choices">`;
     choices.forEach((c, i) => { html += qmMatchChoiceRow(i, c); });
@@ -1290,6 +1296,14 @@ function qmPreviewOptImg(inputEl) {
   const url = inputEl.value.trim();
   if (url) { thumb.src = url; thumb.style.display = 'block'; }
   else { thumb.src = ''; thumb.style.display = 'none'; }
+}
+
+function qmPreviewMatchImg(inputEl) {
+  const img = document.getElementById('qm-match-img-preview');
+  if (!img) return;
+  const url = inputEl.value.trim();
+  img.src = url;
+  img.style.display = url ? 'block' : 'none';
 }
 
 function qmCT2OptRow(i, val, correct, imgUrl) {
@@ -1483,13 +1497,14 @@ function qmSave() {
 
   } else if (type === 'match') {
     const matchPrompt  = document.getElementById('qm-match-prompt').value.trim();
+    const mapImgURL    = document.getElementById('qm-match-img').value.trim();
     const matchChoices = [...document.querySelectorAll('#qm-match-choices .qm-mc-choice-val')].map(i=>i.value.trim());
     const matchItems   = [...document.querySelectorAll('#qm-match-items .qm-match-item-row')].map(r=>({
       num:    r.querySelector('.item-qnum').value.trim(),
       label:  r.querySelector('.item-lbl').value.trim(),
       answer: r.querySelector('.item-ans').value.trim().toUpperCase()
     }));
-    Object.assign(q, {matchPrompt,matchChoices,matchItems});
+    Object.assign(q, {matchPrompt,mapImgURL,matchChoices,matchItems});
     matchItems.forEach(it=>{
       if(it.num && it.answer){ config.answerKey[_qmSec][it.num]=it.answer; const el=document.getElementById('ak-'+_qmSec+'-'+it.num); if(el)el.value=it.answer; }
     });
@@ -1570,6 +1585,7 @@ function qmCardHTML(q, i, sec, n) {
     if((q.answers||[]).length) body += '<span class="q-card-ans">&#10003; '+q.answers.join(', ')+'</span>';
   } else if (q.type === 'match') {
     if(q.matchPrompt) body += '<div class="q-card-text">'+escH(q.matchPrompt)+'</div>';
+    if(q.mapImgURL) body += '<img src="'+escH(q.mapImgURL)+'" style="max-width:100%;max-height:140px;border-radius:6px;margin-bottom:8px;display:block" onerror="this.style.display=\'none\'">';
     body += '<div class="match-preview-box"><div class="match-preview-grid">';
     (q.matchChoices||[]).forEach(function(c,j){ body += '<div><b>'+LTRS[j]+'</b> '+escH(c)+'</div>'; });
     body += '</div></div>';
