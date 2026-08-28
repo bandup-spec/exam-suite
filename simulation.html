@@ -953,14 +953,25 @@ function handleSessionInvalid_() {
   setTimeout(() => { window.location.href = 'index.html'; }, 3500);
 }
 
-async function syncDraftToSheets() {
+const sleep_ = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// tickCount%90===syncJitter already spreads everyone's 90s sync across a
+// stable 0-29s per-browser offset, so a whole batch starting together
+// doesn't all land on the same second. What that stagger can't prevent is
+// the LockService itself being busy (another candidate's write is mid-flight
+// right when this one fires) — saveDraft then comes back with
+// success:false + "Server is busy...". Retry that case a few times with a
+// short randomized backoff instead of silently marking it as synced.
+async function syncDraftToSheets(attempt) {
+  attempt = attempt || 0;
+
   // capture the current writing textarea too, since it isn't written into
   // writingVals until the user switches tasks or submits
   const ta = document.getElementById('w-textarea');
   if (ta) writingVals[curWriting] = ta.value;
 
   const snapshot = JSON.stringify({ lAnswers, rAnswers, writingVals, cur });
-  if (snapshot === lastSyncedSnapshot) return; // nothing new — save the Apps Script quota
+  if (attempt === 0 && snapshot === lastSyncedSnapshot) return; // nothing new — save the Apps Script quota
 
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData') || '{}');
   try {
@@ -981,8 +992,23 @@ async function syncDraftToSheets() {
       writingTask1: (writingVals[1]||'').substring(0,2000),
       writingTask2: (writingVals[2]||'').substring(0,2000)
     });
+
     if (res && res.sessionInvalid) { handleSessionInvalid_(); return; }
-    lastSyncedSnapshot = snapshot; // only mark synced on success — retry next interval otherwise
+
+    if (res && res.success === false && /server is busy/i.test(res.message || '')) {
+      // LockService couldn't get in — this draft is NOT saved yet.
+      // Don't mark lastSyncedSnapshot; retry a few times with a short,
+      // randomized backoff so simultaneous retries don't re-collide.
+      if (attempt < 3) {
+        const backoff = 3000 + Math.floor(Math.random() * 4000); // 3-7s
+        setTimeout(() => syncDraftToSheets(attempt + 1), backoff);
+      }
+      // if attempt >= 3, give up quietly for now — Layer 1 local copy is
+      // safe, and the regular 90s tick will try again from scratch
+      return;
+    }
+
+    if (res && res.success) lastSyncedSnapshot = snapshot; // only mark synced on real success
   } catch(e) { /* offline/quota hit — Layer 1 local copy is already safe, will retry in 90s */ }
 }
 
