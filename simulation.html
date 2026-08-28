@@ -1519,21 +1519,33 @@ function renderQBlocksHTML(sec, blocks, sectionLabel) {
         html += `<div style="background:var(--paper2);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem;color:var(--ink2);white-space:pre-line">${escH(b.instr)}</div>`;
       }
 
-      // Options box
+      // Map/Plan/Diagram image (Map Labeling variant of Matching) — shown
+      // above the Choice Box so candidates can see the picture alongside
+      // the A-H legend before answering.
+      if (b.mapImgURL) {
+        html += `<img src="${escH(b.mapImgURL)}" style="width:100%;max-height:360px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:14px;background:var(--paper2)" onerror="this.style.display='none'">`;
+      }
+
+      // Options box — only shown if at least one choice actually has text.
+      // When the map/plan image already shows the labels (A, B, C... drawn
+      // directly on it), the admin leaves matchChoices blank and this box
+      // is skipped so it doesn't repeat what's already on the picture.
       if (prompt) html += `<div style="font-size:0.88rem;color:var(--ink2);margin-bottom:10px;line-height:1.6">${prompt.replace(/\n/g,'<br>')}</div>`;
-      if (choices.length) {
+      const filledChoices = choices.filter(c => (c||'').trim());
+      if (filledChoices.length) {
         html += `<div class="matching-options-box" style="margin-bottom:14px">`;
         choices.forEach((c, i) => {
-          html += `<div><strong>${letters[i]}</strong> &nbsp; ${escH(c)}</div>`;
+          if ((c||'').trim()) html += `<div><strong>${letters[i]}</strong> &nbsp; ${escH(c)}</div>`;
         });
         html += `</div>`;
       }
       // Question rows
       items.forEach(item => {
         const n = parseInt(item.num)||0;
+        const maxLtr = filledChoices.length ? (letters[choices.length-1]||'H') : 'H'; // no filled choices = labels are on the image itself, so just hint the general A-H range
         html += `<div class="q-block">
           <div class="q-text"><span class="q-num">${item.num}</span>${escH(item.label||'')}</div>
-          <input class="q-input" type="text" maxlength="2" placeholder="A–${letters[choices.length-1]||'H'}" style="text-transform:uppercase;width:80px" oninput="markQ('${sec}',${n},this)">
+          <input class="q-input" type="text" maxlength="2" placeholder="A–${maxLtr}" style="text-transform:uppercase;width:80px" oninput="markQ('${sec}',${n},this)">
         </div>`;
       });
       return;
