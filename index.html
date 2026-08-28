@@ -8,28 +8,33 @@
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@300;400;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  html{font-size:100%}
+  html{font-size:100%;transition:font-size 0.08s linear}
   :root{
     --ink:#1a1a2e;--ink2:#4a4a6a;--ink3:#8888aa;
     --paper:#faf9f7;--paper2:#f2f0ec;--paper3:#e8e5df;
     --blue:#002f5f;--blue2:#1a5fa8;--gold:#c8a84b;
     --green:#2e7d4f;--red:#c0392b;--border:rgba(0,0,0,0.12);
+    --input-bg:#fff;--input-bg-focus:#f5f9ff;
   }
   body.dark-mode{
     --ink:#e8e8f0;--ink2:#b8b8d0;--ink3:#8888aa;
     --paper:#1c1d2b;--paper2:#23243a;--paper3:#33344a;
     --blue:#1a5fa8;--blue2:#3a7fd8;--gold:#d8b85f;
     --green:#4caf6e;--red:#e05858;--border:rgba(255,255,255,0.12);
+    --input-bg:#23243a;--input-bg-focus:#2a2c46;
   }
   body.dark-mode{background:#15161f}
-  body.dark-mode input,body.dark-mode select{background:#23243a;color:var(--ink)}
   .a11y-bar{position:fixed;top:16px;right:16px;z-index:5;display:flex;gap:6px;align-items:center}
   .a11y-bar .fs-btn,.a11y-bar #dark-mode-toggle{background:var(--paper);border:1px solid var(--border);color:var(--ink2)}
   .a11y-bar .fs-btn:hover,.a11y-bar #dark-mode-toggle:hover{background:var(--paper2)}
-  .font-size-ctrl{display:flex;gap:2px;align-items:center}
+  .font-size-ctrl{display:flex;gap:8px;align-items:center;background:var(--paper);border:1px solid var(--border);border-radius:5px;padding:6px 10px}
+  .fs-icon{font-family:'DM Sans',sans-serif;font-weight:700;color:var(--ink2);line-height:1;user-select:none}
+  .fs-icon-sm{font-size:0.68rem}
+  .fs-icon-lg{font-size:1rem}
+  .fs-slider{width:80px;height:4px;-webkit-appearance:none;appearance:none;background:var(--paper3);border-radius:2px;outline:none;cursor:pointer}
+  .fs-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+  .fs-slider::-moz-range-thumb{width:14px;height:14px;border-radius:50%;background:var(--blue);cursor:pointer;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,0.3);border:none}
   .fs-btn{padding:6px 12px;border-radius:5px;font-size:0.78rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;line-height:1}
-  .fs-btn:first-child{border-radius:5px 0 0 5px}
-  .fs-btn:last-child{border-radius:0 5px 5px 0;border-left:none}
   body{font-family:'DM Sans',sans-serif;background:var(--paper2);min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--ink)}
   body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--paper3) 1px,transparent 1px),linear-gradient(90deg,var(--paper3) 1px,transparent 1px);background-size:32px 32px;opacity:0.5;pointer-events:none;z-index:0}
   .card{position:relative;z-index:1;width:420px;background:var(--paper);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 4px 32px rgba(0,0,0,0.08)}
@@ -45,8 +50,8 @@
   .step-desc{font-size:0.83rem;color:var(--ink3);margin-bottom:20px;line-height:1.5}
   .field{margin-bottom:14px}
   .field label{display:block;font-size:0.78rem;font-weight:600;color:var(--ink2);margin-bottom:5px}
-  .field input,.field select{width:100%;padding:9px 13px;border:1px solid var(--paper3);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--ink);background:#fff;transition:all 0.15s}
-  .field input:focus,.field select:focus{outline:none;border-color:var(--blue2);background:#f5f9ff;box-shadow:0 0 0 3px rgba(26,95,168,0.08)}
+  .field input,.field select{width:100%;padding:9px 13px;border:1px solid var(--paper3);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:0.9rem;color:var(--ink);background:var(--input-bg,#fff);transition:all 0.15s}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--blue2);background:var(--input-bg-focus,#f5f9ff);box-shadow:0 0 0 3px rgba(26,95,168,0.08)}
   .field input:disabled{background:var(--paper2);color:var(--ink3)}
   .field select{cursor:pointer}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -86,9 +91,11 @@
 <body>
 
 <div class="a11y-bar">
-  <div class="font-size-ctrl">
-    <button class="fs-btn" onclick="changeFontSize(-1)">A−</button>
-    <button class="fs-btn" onclick="changeFontSize(1)">A+</button>
+  <div class="font-size-ctrl" title="Adjust text size">
+    <span class="fs-icon fs-icon-sm">A</span>
+    <input type="range" class="fs-slider" id="fs-slider" min="85" max="145" step="1" value="100"
+           oninput="setFontSize(this.value)" aria-label="Text size">
+    <span class="fs-icon fs-icon-lg">A</span>
   </div>
   <button class="fs-btn" id="dark-mode-toggle" onclick="toggleDarkMode()" title="Toggle dark mode">🌙</button>
 </div>
@@ -325,16 +332,17 @@ const COUNTRIES = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua
 // ACCESSIBILITY — FONT SIZE & DARK MODE
 // Shared preference keys across the whole site.
 // ══════════════════════════════════════
-const FONT_SCALE_STEPS = [85, 100, 115, 130, 145];
-let fontScaleIndex = 1;
+const FONT_SCALE_MIN = 85, FONT_SCALE_MAX = 145; // percent — shared with simulation.html/profile.html/tests.html
+let fontScalePct = 100;
 
 function initAccessibilityPrefs() {
   const savedScale = parseInt(localStorage.getItem('ielts_font_scale'));
-  if (!isNaN(savedScale)) {
-    const idx = FONT_SCALE_STEPS.indexOf(savedScale);
-    fontScaleIndex = idx >= 0 ? idx : 1;
+  if (!isNaN(savedScale) && savedScale >= FONT_SCALE_MIN && savedScale <= FONT_SCALE_MAX) {
+    fontScalePct = savedScale;
   }
   applyFontScale();
+  const slider = document.getElementById('fs-slider');
+  if (slider) slider.value = fontScalePct;
   const darkOn = localStorage.getItem('ielts_dark_mode') === '1';
   if (darkOn) {
     document.body.classList.add('dark-mode');
@@ -343,13 +351,13 @@ function initAccessibilityPrefs() {
   }
 }
 function applyFontScale() {
-  document.documentElement.style.fontSize = FONT_SCALE_STEPS[fontScaleIndex] + '%';
-  localStorage.setItem('ielts_font_scale', FONT_SCALE_STEPS[fontScaleIndex]);
+  document.documentElement.style.fontSize = fontScalePct + '%';
+  localStorage.setItem('ielts_font_scale', fontScalePct);
 }
-function changeFontSize(direction) {
-  const newIndex = fontScaleIndex + direction;
-  if (newIndex < 0 || newIndex >= FONT_SCALE_STEPS.length) return;
-  fontScaleIndex = newIndex;
+function setFontSize(pct) {
+  const val = parseInt(pct, 10);
+  if (isNaN(val) || val < FONT_SCALE_MIN || val > FONT_SCALE_MAX) return;
+  fontScalePct = val;
   applyFontScale();
 }
 function toggleDarkMode() {
