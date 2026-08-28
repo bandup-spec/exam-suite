@@ -1086,25 +1086,48 @@ function qmTypeChange(existing) {
   if (type === 'fc') {
     const fcHtml = q.fcHtml || '';
     const fcImgURL = q.fcImgURL || '';
+    // Default to Easy Builder unless this question was authored with raw
+    // HTML before (has fcHtml but no saved fcLines) — then open in
+    // Advanced mode so we never silently mangle someone's hand-written HTML.
+    const startMode = (q.fcLines && q.fcLines.length) ? 'easy' : (fcHtml ? 'advanced' : 'easy');
     area.innerHTML = `
       <div class="qm-field">
         <label>Instructions <span style="font-weight:400;color:var(--ink3)">(e.g. Write ONE WORD AND/OR A NUMBER)</span></label>
         <input type="text" id="qm-fc-instr" value="${escH(q.instr||q.fcInstr||'')}" placeholder="Complete the notes below. Write ONE WORD AND/OR A NUMBER for each answer.">
       </div>
-      <div class="qm-field">
-        <label>HTML Template
-          <span style="font-weight:400;color:var(--ink3)"> — use <code style="background:var(--paper2);padding:1px 5px;border-radius:3px">{{1}}</code> for blanks</span>
-        </label>
-        <div style="background:var(--paper2);border-radius:6px;padding:10px 12px;font-size:0.78rem;color:var(--ink2);margin-bottom:8px;line-height:1.8;border:1px solid var(--border)">
-          <b>How to use:</b> Type your form HTML below. Put <code>{{1}}</code>, <code>{{2}}</code>, etc. where the blanks should appear.<br>
-          <b>Example:</b><br>
-          <code>&lt;h3&gt;Transport Survey&lt;/h3&gt;</code><br>
-          <code>&lt;p&gt;&lt;strong&gt;Postcode:&lt;/strong&gt; {{1}}&lt;/p&gt;</code><br>
-          <code>&lt;p&gt;Got on bus at {{5}} Street&lt;/p&gt;</code><br>
-          <code>&lt;p&gt;Bus was {{6}} today&lt;/p&gt;</code>
+
+      <div class="qm-field" style="margin-bottom:8px">
+        <div style="display:flex;gap:6px">
+          <button type="button" id="qm-fc-mode-easy" class="qm-add-opt" onclick="qmFCSetMode('easy')" style="font-weight:700"></button>
+          <button type="button" id="qm-fc-mode-adv" class="qm-add-opt" onclick="qmFCSetMode('advanced')" style="font-weight:700"></button>
         </div>
-        <textarea id="qm-fc-html" style="min-height:220px;font-family:monospace;font-size:0.83rem;resize:vertical;line-height:1.6;width:100%;padding:10px;border:1px solid var(--paper3);border-radius:7px" placeholder="Paste or type your HTML here...">${escH(fcHtml)}</textarea>
       </div>
+
+      <div id="qm-fc-easy-wrap">
+        <div style="font-size:0.78rem;color:var(--ink3);margin-bottom:8px;line-height:1.6">
+          Build the form line by line — <b>no HTML needed</b>. Add a line, tick <b>"Has a blank"</b> if the candidate needs to type an answer there, and fill in the question number + correct answer.
+        </div>
+        <div id="qm-fc-easy-lines"></div>
+        <button type="button" onclick="qmFCEasyAddLine()" class="qm-add-opt">+ Add Line</button>
+      </div>
+
+      <div id="qm-fc-adv-wrap" style="display:none">
+        <div class="qm-field">
+          <label>HTML Template
+            <span style="font-weight:400;color:var(--ink3)"> — use <code style="background:var(--paper2);padding:1px 5px;border-radius:3px">{{1}}</code> for blanks</span>
+          </label>
+          <div style="background:var(--paper2);border-radius:6px;padding:10px 12px;font-size:0.78rem;color:var(--ink2);margin-bottom:8px;line-height:1.8;border:1px solid var(--border)">
+            <b>How to use:</b> Type your form HTML below. Put <code>{{1}}</code>, <code>{{2}}</code>, etc. where the blanks should appear.<br>
+            <b>Example:</b><br>
+            <code>&lt;h3&gt;Transport Survey&lt;/h3&gt;</code><br>
+            <code>&lt;p&gt;&lt;strong&gt;Postcode:&lt;/strong&gt; {{1}}&lt;/p&gt;</code><br>
+            <code>&lt;p&gt;Got on bus at {{5}} Street&lt;/p&gt;</code><br>
+            <code>&lt;p&gt;Bus was {{6}} today&lt;/p&gt;</code>
+          </div>
+          <textarea id="qm-fc-html" style="min-height:220px;font-family:monospace;font-size:0.83rem;resize:vertical;line-height:1.6;width:100%;padding:10px;border:1px solid var(--paper3);border-radius:7px" placeholder="Paste or type your HTML here...">${escH(fcHtml)}</textarea>
+        </div>
+      </div>
+
       <div class="qm-field">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
           <label>Answer Key <span style="font-weight:400;color:var(--ink3)">— one per blank</span></label>
@@ -1117,7 +1140,16 @@ function qmTypeChange(existing) {
       </div>
       <div id="qm-fc-preview" style="padding:14px;background:#fff;border:1px solid var(--border);border-radius:8px;display:none;font-family:'Source Serif 4',serif;font-size:0.9rem;line-height:2;margin-top:4px"></div>`;
 
-    // Restore existing answers
+    // Restore existing Easy Builder lines if this question was authored that way
+    if (q.fcLines && q.fcLines.length) {
+      const wrap = document.getElementById('qm-fc-easy-lines');
+      q.fcLines.forEach(line => wrap.insertAdjacentHTML('beforeend', qmFCEasyLineRow(line)));
+    } else {
+      qmFCEasyAddLine(); // start with one blank line so the box isn't empty
+    }
+    qmFCApplyMode(startMode);
+
+    // Restore existing answers (works for both modes — Easy Builder syncs into these same fields)
     if (q.fcAnswers && Object.keys(q.fcAnswers).length) {
       const wrap = document.getElementById('qm-fc-answers');
       Object.entries(q.fcAnswers).sort((a,b)=>parseInt(a[0])-parseInt(b[0])).forEach(([num,ans]) => {
@@ -1127,7 +1159,7 @@ function qmTypeChange(existing) {
         row.innerHTML = `<label>${num}</label><input type="text" class="fc-ans" placeholder="Answer for {{${num}}}" value="${escH(ans||'')}">`;
         wrap.appendChild(row);
       });
-    } else if (fcHtml) {
+    } else if (fcHtml && startMode === 'advanced') {
       qmScanFCBlanks();
     }
 
@@ -1386,7 +1418,19 @@ function qmRemoveMatchItem(i) {
 
 // FC HTML TEMPLATE HELPERS
 // ══════════════════════════════════════════════
+// Public button handler: if we're in Easy Builder mode, that mode already
+// keeps blanks/answers in sync on every edit — just re-run the sync. If in
+// Advanced mode, actually parse the raw HTML textarea for {{n}} markers.
 function qmScanFCBlanks() {
+  const area = document.getElementById('qm-type-area');
+  if (area && area.dataset.fcMode === 'easy') { qmFCEasyBuild(); return; }
+  qmScanFCBlanksRaw_();
+}
+
+// Does the actual {{n}} parsing + #qm-fc-answers rebuild from whatever is
+// currently in the raw HTML textarea. Called directly by qmFCEasyBuild()
+// (never via qmScanFCBlanks(), to avoid the two calling each other forever).
+function qmScanFCBlanksRaw_() {
   const tpl  = (document.getElementById('qm-fc-html')||{}).value || '';
   const nums = [...new Set([...tpl.matchAll(/\{\{(\d+)\}\}/g)].map(m=>parseInt(m[1])))].sort((a,b)=>a-b);
   const wrap = document.getElementById('qm-fc-answers');
@@ -1414,6 +1458,8 @@ function qmScanFCBlanks() {
 }
 
 function qmPreviewFC() {
+  const area = document.getElementById('qm-type-area');
+  if (area && area.dataset.fcMode === 'easy') qmFCEasyBuild(); // make sure the preview reflects the latest Easy Builder edits
   const tpl  = (document.getElementById('qm-fc-html')||{}).value || '';
   const wrap = document.getElementById('qm-fc-preview');
   if (!wrap) return;
@@ -1432,17 +1478,154 @@ function qmPreviewFCImg() {
   wrap.innerHTML = `<img src="${escH(url)}" style="max-width:100%;max-height:150px;border-radius:6px;border:1px solid var(--border)" onerror="this.style.display='none';this.nextElementSibling.style.display='block'"><span style="color:var(--red);font-size:0.8rem;display:none">Cannot load image.</span>`;
 }
 
-// Stubs — no longer used but kept to avoid errors
-function qmFCAddLine() {}
-function qmFCAddTextSeg() {}
-function qmFCAddBlankSeg() {}
-function qmFCRemoveBlank() {}
-function qmFCMoveLine() {}
-function qmFCDelLine() {}
-function qmFCAddAnswerRow() {}
-function qmFCUpdatePreview() {}
-function qmFCGetLines() { return []; }
-function qmRebuildFCBlanks() { qmScanFCBlanks(); }
+// ═══════════════════════════════════════
+// FORM COMPLETION — EASY BUILDER (dummy-friendly, no HTML needed)
+// Builds ordinary lines of text with optional blanks. Whatever the admin
+// builds here gets converted into the exact same {{n}}-style HTML template
+// and answer-key rows that the Advanced/raw-HTML mode already produces, so
+// saving, grading, and everything downstream is completely unchanged.
+// ═══════════════════════════════════════
+function qmFCApplyMode(mode) {
+  const area = document.getElementById('qm-type-area');
+  if (!area) return;
+  area.dataset.fcMode = mode;
+  const easyWrap = document.getElementById('qm-fc-easy-wrap');
+  const advWrap  = document.getElementById('qm-fc-adv-wrap');
+  const easyBtn  = document.getElementById('qm-fc-mode-easy');
+  const advBtn   = document.getElementById('qm-fc-mode-adv');
+  if (!easyWrap || !advWrap) return;
+
+  if (mode === 'advanced') {
+    easyWrap.style.display = 'none';
+    advWrap.style.display  = 'block';
+    if (easyBtn) { easyBtn.style.background=''; easyBtn.style.color=''; easyBtn.textContent='🧱 Easy Builder'; }
+    if (advBtn)  { advBtn.style.background='var(--blue)'; advBtn.style.color='#fff'; advBtn.textContent='</> Advanced (HTML) ✓'; }
+  } else {
+    easyWrap.style.display = 'block';
+    advWrap.style.display  = 'none';
+    if (easyBtn) { easyBtn.style.background='var(--blue)'; easyBtn.style.color='#fff'; easyBtn.textContent='🧱 Easy Builder ✓'; }
+    if (advBtn)  { advBtn.style.background=''; advBtn.style.color=''; advBtn.textContent='</> Advanced (HTML)'; }
+  }
+}
+
+// Called from the mode-toggle buttons (a person clicking mid-edit) — unlike
+// qmFCApplyMode, this also carries the Easy Builder's current content over
+// into the raw HTML box the first time someone switches to Advanced, so
+// they get a real starting point instead of a blank textarea.
+function qmFCSetMode(mode) {
+  const area = document.getElementById('qm-type-area');
+  const current = area && area.dataset.fcMode;
+  if (mode === 'advanced' && current === 'easy') {
+    qmFCEasyBuild();
+  }
+  qmFCApplyMode(mode);
+}
+
+
+function qmFCEasyLineRow(line) {
+  line = line || {};
+  const hasBlank = !!line.hasBlank;
+  return `<div class="qm-fc-easy-row" style="border:1px solid var(--paper3);border-radius:8px;padding:10px;margin-bottom:8px;background:#fafbfc">
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:7px">
+      <label style="display:flex;align-items:center;gap:5px;font-size:0.78rem;white-space:nowrap;cursor:pointer">
+        <input type="checkbox" class="fce-blank-chk" ${hasBlank?'checked':''} onchange="qmFCEasyToggleBlank(this)"> Has a blank
+      </label>
+      <button type="button" onclick="qmFCEasyRemoveLine(this)" style="margin-left:auto;background:none;border:none;color:var(--red);cursor:pointer;font-size:0.95rem;line-height:1" title="Remove line">✕</button>
+    </div>
+    <div class="fce-plain-wrap" style="display:${hasBlank?'none':'block'}">
+      <input type="text" class="fce-plain-text" placeholder="e.g. Transport Survey  (a heading or plain line of text)" value="${escH(line.text||'')}" style="width:100%;padding:7px 10px;border:1px solid var(--paper3);border-radius:6px;font-size:0.85rem">
+    </div>
+    <div class="fce-blank-wrap" style="display:${hasBlank?'flex':'none'};gap:6px;flex-wrap:wrap;align-items:center">
+      <input type="text" class="fce-before" placeholder="Text before the blank..." value="${escH(line.before||'')}" style="flex:1;min-width:110px;padding:7px 9px;border:1px solid var(--paper3);border-radius:6px;font-size:0.85rem">
+      <span style="font-size:0.72rem;color:var(--ink3);white-space:nowrap">Q#</span>
+      <input type="number" class="fce-qnum" min="1" max="99" value="${line.qNum||''}" placeholder="e.g. 5" style="width:58px;padding:7px 6px;border:1px solid var(--paper3);border-radius:6px;font-size:0.85rem;text-align:center">
+      <span style="font-size:0.72rem;color:var(--ink3);white-space:nowrap">Answer</span>
+      <input type="text" class="fce-answer" placeholder="correct answer" value="${escH(line.answer||'')}" style="width:130px;padding:7px 9px;border:1px solid var(--paper3);border-radius:6px;font-size:0.85rem;font-weight:600;color:var(--green)">
+      <input type="text" class="fce-after" placeholder="Text after the blank... (optional)" value="${escH(line.after||'')}" style="flex:1;min-width:110px;padding:7px 9px;border:1px solid var(--paper3);border-radius:6px;font-size:0.85rem">
+    </div>
+  </div>`;
+}
+
+function qmFCEasyAddLine() {
+  const wrap = document.getElementById('qm-fc-easy-lines');
+  if (!wrap) return;
+  // Suggest the next question number automatically so the admin doesn't
+  // have to keep track of numbering across lines.
+  const usedNums = [...wrap.querySelectorAll('.fce-qnum')].map(i=>parseInt(i.value)||0);
+  const nextNum = usedNums.length ? Math.max(...usedNums)+1 : '';
+  wrap.insertAdjacentHTML('beforeend', qmFCEasyLineRow({ hasBlank:false, qNum: nextNum }));
+}
+
+function qmFCEasyRemoveLine(btn) {
+  const row = btn.closest('.qm-fc-easy-row');
+  if (row) row.remove();
+}
+
+function qmFCEasyToggleBlank(chk) {
+  const row = chk.closest('.qm-fc-easy-row');
+  if (!row) return;
+  const plain = row.querySelector('.fce-plain-wrap');
+  const blank = row.querySelector('.fce-blank-wrap');
+  if (chk.checked) {
+    plain.style.display = 'none';
+    blank.style.display = 'flex';
+    // auto-fill the next available Q# if this row doesn't have one yet
+    const qnumInput = row.querySelector('.fce-qnum');
+    if (qnumInput && !qnumInput.value) {
+      const wrap = document.getElementById('qm-fc-easy-lines');
+      const usedNums = [...wrap.querySelectorAll('.fce-qnum')].map(i=>parseInt(i.value)||0);
+      qnumInput.value = usedNums.length ? Math.max(...usedNums)+1 : 1;
+    }
+  } else {
+    plain.style.display = 'block';
+    blank.style.display = 'none';
+  }
+}
+
+// Reads the Easy Builder rows, builds the {{n}}-style HTML template + line
+// data, writes it into the (hidden) Advanced textarea, and re-syncs the
+// Answer Key section — all through the exact same functions Advanced mode
+// already uses, so nothing downstream needs to know which mode was used.
+function qmFCEasyBuild() {
+  const rows = [...document.querySelectorAll('#qm-fc-easy-lines .qm-fc-easy-row')];
+  const fcLines = [];
+  const htmlParts = [];
+  const answersByNum = {};
+
+  rows.forEach(row => {
+    const hasBlank = row.querySelector('.fce-blank-chk').checked;
+    if (hasBlank) {
+      const before = row.querySelector('.fce-before').value.trim();
+      const after  = row.querySelector('.fce-after').value.trim();
+      const qNum   = parseInt(row.querySelector('.fce-qnum').value) || null;
+      const answer = row.querySelector('.fce-answer').value.trim();
+      fcLines.push({ hasBlank:true, before, after, qNum, answer });
+      if (qNum) {
+        htmlParts.push(`<p>${escH(before)}${before?' ':''}{{${qNum}}}${after?' ':''}${escH(after)}</p>`);
+        if (answer) answersByNum[qNum] = answer;
+      }
+    } else {
+      const text = row.querySelector('.fce-plain-text').value.trim();
+      fcLines.push({ hasBlank:false, text });
+      if (text) htmlParts.push(`<p>${escH(text)}</p>`);
+    }
+  });
+
+  const html = htmlParts.join('\n');
+  const htmlInput = document.getElementById('qm-fc-html');
+  if (htmlInput) htmlInput.value = html;
+
+  qmScanFCBlanksRaw_(); // rebuilds #qm-fc-answers rows from the {{n}} markers above
+  // qmScanFCBlanks preserves any values already typed directly into the
+  // Answer Key boxes, but our authoritative source is the Easy Builder rows
+  // — write those values in now so the two stay in sync either direction.
+  Object.entries(answersByNum).forEach(([num, ans]) => {
+    const el = document.getElementById('qm-fc-ans-'+num);
+    if (el) { const inp = el.querySelector('input'); if (inp) inp.value = ans; }
+  });
+
+  return { html, fcLines };
+}
 
 // ── SAVE ──
 function qmSave() {
@@ -1454,6 +1637,12 @@ function qmSave() {
   let q = { type, part, instr };
 
   if (type === 'fc') {
+    const area = document.getElementById('qm-type-area');
+    const fcMode = (area && area.dataset.fcMode) || 'easy';
+    let fcLines = null;
+    if (fcMode === 'easy') {
+      fcLines = qmFCEasyBuild().fcLines; // sync Easy Builder rows -> hidden HTML template + answer key, before reading them below
+    }
     const fcHtml   = (document.getElementById('qm-fc-html')||{}).value||'';
     const fcInstr  = (document.getElementById('qm-fc-instr')||{}).value||'';
     // Extract blank numbers from template
@@ -1467,7 +1656,10 @@ function qmSave() {
     });
     const blanks = nums.map(n => ({ num:n, answer: fcAnswers[n]||'' }));
     const fcFrom = nums[0]||1, fcTo = nums[nums.length-1]||fcFrom;
-    Object.assign(q, { fcHtml, fcInstr, fcAnswers, blanks, fcFrom, fcTo, instr: fcInstr||q.instr });
+    // fcLines is only kept when built in Easy mode — if the admin used
+    // Advanced/raw HTML, we don't store a (possibly inaccurate) line
+    // breakdown, so re-editing correctly reopens in Advanced mode instead.
+    Object.assign(q, { fcHtml, fcInstr, fcAnswers, blanks, fcFrom, fcTo, fcLines, instr: fcInstr||q.instr });
     blanks.forEach(b => {
       if (b.answer) {
         config.answerKey[_qmSec][b.num] = b.answer;
