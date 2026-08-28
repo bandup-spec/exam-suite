@@ -164,7 +164,7 @@
           "type": "fc",
           "part": "Part 2",
           "instr": "Questions 15-20 Label the map below. Write the correct letter, A-J, next to Questions 15-20.",
-          "fcHtml": "<img src=\"https://raw.githubusercontent.com/danofthursday99/ielts-sim/refs/heads/main/img/62126/map-ielts16t1listening.png\" alt=\"Stevenson's Map\" style=\"width: 100%; max-width: 600px; height: auto;\">\n<p><strong>15.</strong> coffee room {{15}}</p>\n<p><strong>16.</strong> warehouse {{16}}</p>\n<p><strong>17.</strong> staff canteen {{17}}</p>\n<p><strong>18.</strong> meeting room {{18}}</p>\n<p><strong>19.</strong> meeting room {{19}}</p>\n<p><strong>20.</strong> board room {{20}}</p>",
+          "fcHtml": "<img src=\"https://raw.githubusercontent.com/danofthursday99/ielts-sim/refs/heads/main/img/62126/map-ielts16t1listening.png\" alt=\"Stevenson's Map\" style=\"width: 100%; max-width: 450px; height: auto;\">\n<p><strong>15.</strong> coffee room {{15}}</p>\n<p><strong>16.</strong> warehouse {{16}}</p>\n<p><strong>17.</strong> staff canteen {{17}}</p>\n<p><strong>18.</strong> meeting room {{18}}</p>\n<p><strong>19.</strong> meeting room {{19}}</p>\n<p><strong>20.</strong> board room {{20}}</p>",
           "fcInstr": "Questions 15-20 Label the map below. Write the correct letter, A-J, next to Questions 15-20.",
           "fcAnswers": {},
           "blanks": [
