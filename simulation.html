@@ -314,7 +314,7 @@
           <div class="audio-status" id="audio-status">Loading...</div>
         </div>
         <img id="audio-img" class="audio-img" src="" alt="">
-        <audio id="audio-el" onended="onAudioEnd()" ontimeupdate="updateProgress()" oncontextmenu="return false" style="display:none"></audio>
+        <audio id="audio-el" preload="auto" onended="onAudioEnd()" ontimeupdate="updateProgress()" oncontextmenu="return false" style="display:none"></audio>
         <div id="yt-player-target" style="position:absolute;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden"></div>
       </div>
       <div class="scroll">
@@ -1063,6 +1063,40 @@ function switchLSection(n) {
   loadAudioForSection(sec, n);
 }
 
+// Waits for the browser to actually buffer enough of the audio before
+// telling the candidate it's "Ready to play" — with preload="auto" set on
+// #audio-el, this buffering starts the moment the section loads (well
+// before the candidate would click Play), so by the time they do click,
+// playback should start instantly instead of stalling to buffer first.
+// Falls back to enabling the button after a few seconds regardless, so a
+// slow connection or a server that doesn't estimate buffering well never
+// leaves the candidate stuck unable to click Play at all.
+function armAudioReadyState_(el, btn, status, alreadyDone) {
+  btn.disabled = true;
+  status.innerText = alreadyDone ? 'Recording finished' : 'Loading audio...';
+
+  let settled = false;
+  const settle = () => {
+    if (settled || audioSessionStarted) return;
+    settled = true;
+    btn.disabled = alreadyDone;
+    status.innerText = alreadyDone ? 'Recording finished' : 'Ready to play';
+    el.removeEventListener('canplay', settle);
+    el.removeEventListener('error', onError);
+    clearTimeout(fallback);
+  };
+  const onError = () => {
+    if (settled) return;
+    settled = true;
+    status.innerText = 'Audio failed to load — try refreshing the page';
+    clearTimeout(fallback);
+  };
+  const fallback = setTimeout(settle, 6000); // don't make anyone wait forever on a slow link
+
+  el.addEventListener('canplay', settle);
+  el.addEventListener('error', onError);
+}
+
 function loadAudioForSection(sec, n, autoplay) {
   const btn    = document.getElementById('play-btn');
   const status = document.getElementById('audio-status');
@@ -1088,17 +1122,27 @@ function loadAudioForSection(sec, n, autoplay) {
       currentAudioMode = 'file';
       const el = document.getElementById('audio-el');
       el.src = resolvePlayableAudioURL(sec.audioURL);
-      btn.disabled = alreadyDone;
-      status.innerText = autoplay ? 'Playing — listen carefully' : (alreadyDone ? 'Recording finished' : 'Ready to play');
-      if (autoplay) { el.play(); progressInterval = setInterval(updateProgress, 400); }
+      if (autoplay) {
+        btn.disabled = alreadyDone;
+        status.innerText = 'Playing — listen carefully';
+        el.play();
+        progressInterval = setInterval(updateProgress, 400);
+      } else {
+        armAudioReadyState_(el, btn, status, alreadyDone);
+      }
     }
   } else if (sec && sec.audioData) {
     currentAudioMode = 'file';
     const el = document.getElementById('audio-el');
     el.src = sec.audioData;
-    btn.disabled = alreadyDone;
-    status.innerText = autoplay ? 'Playing — listen carefully' : (alreadyDone ? 'Recording finished' : 'Ready to play');
-    if (autoplay) { el.play(); progressInterval = setInterval(updateProgress, 400); }
+    if (autoplay) {
+      btn.disabled = alreadyDone;
+      status.innerText = 'Playing — listen carefully';
+      el.play();
+      progressInterval = setInterval(updateProgress, 400);
+    } else {
+      armAudioReadyState_(el, btn, status, alreadyDone);
+    }
   } else {
     currentAudioMode = 'none';
     btn.disabled = true;
