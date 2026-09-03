@@ -234,7 +234,8 @@
     </div>
   </div>
   <div class="hdr-center">
-    <div class="timer" id="timer">2:45:00</div>
+    <div class="timer" id="timer" style="display:none">2:00:00</div>
+    <div class="timer-pending" id="timer-pending" style="font-size:0.78rem;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.06em">Listening — untimed</div>
   </div>
   <div class="hdr-right">
     <div class="font-size-ctrl" title="Adjust text size">
@@ -293,7 +294,7 @@
         <button class="rtab locked-tab" id="tab-R" onclick="switchSection('R')">Reading</button>
         <button class="rtab locked-tab" id="tab-W" onclick="switchSection('W')">Writing</button>
       </div>
-      <button class="continue-btn-inline" id="continue-btn" style="display:none" onclick="continueToNextSection()">Done — Continue to Reading →</button>
+      <button class="continue-btn-inline" id="continue-btn" style="display:none" onclick="continueToNextSection()">Done — Continue to Writing →</button>
     </div>
     <!-- LISTENING QS -->
     <div id="L-right" style="display:flex;flex-direction:column;height:100%;overflow:hidden">
@@ -638,15 +639,11 @@ function initUser() {
 
 // ══════════════════════════════════════
 // PERSISTENT TIMER — survives refresh/logout
-// Stores the actual end timestamp (not just a counter), so the
-// remaining time is recalculated from the wall clock every time
-// the page loads, instead of resetting to the full duration.
-// ══════════════════════════════════════
-const TEST_DURATION_SECONDS = 9900; // 2:45:00
-// The "Done — Continue to Reading" button only appears once this much time
-// has passed since the test started (see renderTabLocks()).
-const CONTINUE_BTN_MIN_ELAPSED_SECONDS = 25 * 60; // 25 minutes
-let _continueGateOpened = false; // one-shot flag so the unlock only fires/toasts once
+// Covers Reading + Writing only. Listening has no visible countdown at
+// all — the candidate just listens through to the end, gets a forced
+// 60-second review window, and is then moved into Reading, at which point
+// this timer is created and starts ticking for the first time.
+const TEST_DURATION_SECONDS = 7200; // 2:00:00 — Reading + Writing combined
 
 // ══════════════════════════════════════
 // TOASTS — non-blocking notifications (time reminders, connection issues, etc.)
@@ -703,7 +700,7 @@ function initTimer() {
   let endTime = localStorage.getItem(key);
 
   if (!endTime) {
-    // First time opening this test — start the clock now
+    // First time entering Reading — start the clock now
     endTime = Date.now() + TEST_DURATION_SECONDS * 1000;
     localStorage.setItem(key, String(endTime));
   } else {
@@ -712,8 +709,14 @@ function initTimer() {
 
   timeLeft = Math.max(0, Math.round((endTime - Date.now()) / 1000));
 
+  // Reveal the real countdown now that Reading has actually begun — until
+  // this point the header just shows "Listening — untimed".
+  const pendingEl = document.getElementById('timer-pending');
+  if (pendingEl) pendingEl.style.display = 'none';
+
   // Render immediately so display isn't stale on first tick
   const timerEl = document.getElementById('timer');
+  timerEl.style.display = 'block';
   function renderTimer() {
     let h=Math.floor(timeLeft/3600),m=Math.floor((timeLeft%3600)/60),s=timeLeft%60;
     timerEl.innerText=`${h}:${m<10?'0':''}${m}:${s<10?'0':''}${s}`;
@@ -721,7 +724,7 @@ function initTimer() {
   }
   renderTimer();
   // Evaluate the Continue-button gate immediately too, in case a returning
-  // candidate reloads the page after the 25-minute mark has already passed.
+  // candidate reloads the page after Reading was already unlocked.
   renderTabLocks();
 
   let tickCount = 0;
@@ -735,11 +738,6 @@ function initTimer() {
     timeLeft--;
     renderTimer();
     checkTimeWarnings(timeLeft);
-    // Re-evaluate the Continue-to-next-section gate every tick — this used
-    // to only refresh inside switchSection(), so the "25 minutes elapsed"
-    // button stayed stale until the candidate happened to trigger a section
-    // switch (e.g. clicking a nav square). Now it appears exactly on time,
-    // regardless of what the candidate is doing.
     renderTabLocks();
     tickCount++;
     if (tickCount % 3 === 0) saveAnswersLocal();       // every ~3s — instant local backup
@@ -854,38 +852,18 @@ function renderTabLocks() {
   document.getElementById('tab-R').classList.toggle('locked-tab', !revealed.R);
   document.getElementById('tab-W').classList.toggle('locked-tab', !revealed.W);
 
-  // The Listening → Reading continue button stays hidden until at least
-  // CONTINUE_BTN_MIN_ELAPSED_SECONDS has passed since the test started,
-  // so candidates can't skip ahead before a reasonable chunk of the
-  // Listening section has actually elapsed. Reading → Writing has no such
-  // gate — the candidate has already spent the full Listening duration by
-  // the time they reach it.
-  const elapsedSeconds = TEST_DURATION_SECONDS - timeLeft;
-  const continueGateOpen = elapsedSeconds >= CONTINUE_BTN_MIN_ELAPSED_SECONDS;
-
-  // Fire a one-time toast the moment the gate opens for Listening, so the
-  // candidate notices the new button even if they're not looking at it.
-  if (continueGateOpen && !_continueGateOpened && cur === 'L' && !revealed.R) {
-    _continueGateOpened = true;
-    showToast('✅ You can now continue to the Reading section when ready.', 'info');
-  }
-
-  const showContinue =
-    (cur === 'L' && !revealed.R && continueGateOpen) ||
-    (cur === 'R' && !revealed.W);
+  // Listening → Reading is now fully automatic (forced via the post-audio
+  // review countdown, see startListeningReviewCountdown_ / proceedToReadingNow_)
+  // — there's no manual button for it anymore. Reading → Writing is still a
+  // manual "Continue" click, available as soon as Reading is reached.
+  const showContinue = (cur === 'R' && !revealed.W);
 
   document.getElementById('continue-btn').style.display = showContinue ? 'inline-block' : 'none';
-  document.getElementById('continue-btn').innerText =
-    cur === 'L' ? 'Done — Continue to Reading →' : 'Done — Continue to Writing →';
+  document.getElementById('continue-btn').innerText = 'Done — Continue to Writing →';
 }
 
 function continueToNextSection() {
-  if (cur === 'L' && !revealed.R) {
-    revealed.R = true;
-    saveRevealState();
-    showToast('📖 Reading section unlocked.', 'info');
-    switchSection('R');
-  } else if (cur === 'R' && !revealed.W) {
+  if (cur === 'R' && !revealed.W) {
     revealed.W = true;
     saveRevealState();
     showToast('✍️ Writing section unlocked.', 'info');
@@ -1300,8 +1278,54 @@ function onAudioEnd(){
     return;
   }
 
+  // All sections' audio have played through — this is the real end of
+  // Listening. Give a forced 60-second review window, then move on
+  // automatically. No manual "Continue" button anymore; this is the only
+  // trigger into Reading.
   document.getElementById('audio-status').innerText='Recording finished';
   document.getElementById('audio-prog').style.width='100%';
+  startListeningReviewCountdown_();
+}
+
+// Fired once, right when the very last queued audio track ends ("Recording
+// finished"). Gives the candidate REVIEW_SECONDS to look over/finish their
+// Listening answers — inputs stay fully editable — then force-advances into
+// Reading, at which point the real Reading+Writing countdown starts.
+const REVIEW_SECONDS = 60;
+let _reviewCountdownStarted = false; // guards against double-firing (e.g. a stray duplicate 'ended' event)
+function startListeningReviewCountdown_() {
+  if (_reviewCountdownStarted || revealed.R) return;
+  _reviewCountdownStarted = true;
+
+  let secsLeft = REVIEW_SECONDS;
+  const statusEl = document.getElementById('audio-status');
+
+  showToast('🔊 Recording finished — you have 60 seconds to review your Listening answers before Reading begins.', 'info', 8000);
+
+  const tick = () => {
+    if (statusEl) statusEl.innerText = `Review time — ${secsLeft}s left`;
+    if (secsLeft === 10) showToast('⏳ 10 seconds left to review your Listening answers.', 'warn', 6000);
+    if (secsLeft <= 0) {
+      clearInterval(reviewInterval);
+      proceedToReadingNow_();
+      return;
+    }
+    secsLeft--;
+  };
+  tick();
+  const reviewInterval = setInterval(tick, 1000);
+}
+
+// Forces the transition out of Listening into Reading — the only way this
+// now happens, replacing the old manually-clicked "Continue" button. Starts
+// the real Reading+Writing countdown for the first time here.
+function proceedToReadingNow_() {
+  if (revealed.R) return; // already moved on (e.g. safety-net + real audio both firing)
+  revealed.R = true;
+  saveRevealState();
+  initTimer();
+  showToast('📖 Time’s up — moving to Reading.', 'info');
+  switchSection('R');
 }
 
 function updateProgress(){
@@ -2053,9 +2077,9 @@ function showStartGate() {
     overlay.innerHTML = `
       <div class="stage-gate">
         <h1>${escH(title)}</h1>
-        <p><b>Format:</b> Listening (40 questions) → Reading (40 questions) → Writing (2 tasks). Total time: <b>2 hours 45 minutes</b> — one continuous timer for the whole test, it does not pause between sections.</p>
-        <p>Reading and Writing stay hidden until you finish the section before them — click "Continue" when you're ready to move forward. Once revealed, you can always go back and review or change earlier answers.</p>
-        <p>The Listening audio plays <b>once only</b> and cannot be paused, rewound, or replayed, so make sure your audio is on and working before you begin.</p>
+        <p><b>Format:</b> Listening (40 questions) → Reading (40 questions) → Writing (2 tasks).</p>
+        <p>The Listening audio plays <b>once only</b> and cannot be paused, rewound, or replayed. There is no countdown timer during Listening — once all the audio finishes, you'll get a <b>60-second review window</b> to check your answers, then Reading opens automatically.</p>
+        <p>The <b>2-hour countdown</b> covers Reading and Writing together and starts the moment Reading begins. Writing stays hidden until you finish Reading — click "Continue" when you're ready to move forward. Once revealed, you can always go back and review or change earlier answers.</p>
         <p>Your answers are saved automatically as you go, so a lost connection or a refresh won't lose your progress.</p>
         <label class="ack-row">
           <input type="checkbox" id="ack-check" onchange="document.getElementById('start-test-btn').disabled=!this.checked">
@@ -2070,8 +2094,13 @@ function showStartGate() {
 async function beginTest() {
   document.getElementById('start-gate-overlay').style.display = 'none';
 
-  initTimer();
   loadRevealState();
+  // The Reading+Writing timer only exists once Reading has actually been
+  // reached (see proceedToReadingNow_). A returning candidate who's already
+  // past Listening should see it resume immediately; one still in Listening
+  // sees the "Listening — untimed" label until the review countdown finishes.
+  if (revealed.R) initTimer();
+
   loadCompactWidth();
   const localSavedAt = restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
   await restoreAnswersFromServer(localSavedAt); // may overwrite with a newer server-side copy (different device/cleared storage)
@@ -2087,6 +2116,14 @@ async function beginTest() {
       const sections = config.listening && config.listening.sections || [];
       const firstItem = continuousQueue[0];
       loadAudioForSection(sections[firstItem.idx], firstItem.idx + 1);
+    } else if (!revealed.R) {
+      // No Listening audio configured at all — don't leave the candidate
+      // stuck waiting on an 'ended' event that will never fire. Same forced
+      // review-then-proceed path, just triggered directly.
+      const status = document.getElementById('audio-status');
+      if (status) status.innerText = 'No audio for this section';
+      showToast('⚠️ No Listening audio found for this test — proceeding to a short review before Reading.', 'warn');
+      startListeningReviewCountdown_();
     }
   } catch(e) {
     // If a bad/partial config makes any of the above throw, the audio
