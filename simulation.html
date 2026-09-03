@@ -727,6 +727,22 @@ function initTimer() {
   // candidate reloads the page after Reading was already unlocked.
   renderTabLocks();
 
+  setInterval(()=>{
+    if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); return; }
+    timeLeft--;
+    renderTimer();
+    checkTimeWarnings(timeLeft);
+    renderTabLocks();
+    if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); }
+  },1000);
+}
+
+// Autosave / draft-sync loop — deliberately SEPARATE from initTimer()'s
+// countdown interval. initTimer() only starts once Reading begins, but
+// candidates are answering (and need backing up) all the way through
+// Listening too, so this has to run from the moment the test actually
+// starts, independent of whether the Reading+Writing clock exists yet.
+function startAutosaveLoop() {
   let tickCount = 0;
   // Stagger periodic Sheets syncs across candidates — if a whole batch starts
   // their test within the same minute, everyone's "every 90s" would otherwise
@@ -734,17 +750,12 @@ function initTimer() {
   // browser gets a fixed random offset (0-29s) so syncs spread out instead.
   const syncJitter = getSyncJitter_();
   setInterval(()=>{
-    if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); return; }
-    timeLeft--;
-    renderTimer();
-    checkTimeWarnings(timeLeft);
-    renderTabLocks();
     tickCount++;
     if (tickCount % 3 === 0) saveAnswersLocal();       // every ~3s — instant local backup
     if (tickCount % 90 === syncJitter) syncDraftToSheets(); // every ~90s, staggered — offsite backup, throttled for quota
-    if(timeLeft<=0){ timerEl.innerText='0:00:00'; autoSubmitOnTimeUp(); }
   },1000);
 }
+
 function getSyncJitter_() {
   const key = 'ielts_sync_jitter';
   let j = localStorage.getItem(key);
@@ -2100,6 +2111,7 @@ async function beginTest() {
   // past Listening should see it resume immediately; one still in Listening
   // sees the "Listening — untimed" label until the review countdown finishes.
   if (revealed.R) initTimer();
+  startAutosaveLoop(); // independent of initTimer() — must run through Listening too, not just Reading/Writing
 
   loadCompactWidth();
   const localSavedAt = restoreAnswersLocal(); // must run before buildLQs/buildRQs so restored answers render into the inputs
