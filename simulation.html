@@ -74,6 +74,10 @@
   @media(max-width:900px){
     .hdr-right{gap:8px}
   }
+  .hdr-info-toggle{display:none;align-items:center;gap:4px;background:transparent;border:none;color:rgba(255,255,255,0.8);font-size:0.76rem;cursor:pointer;padding:4px 2px;white-space:nowrap;flex-shrink:0}
+  .hdr-info-arrow{display:inline-block;font-size:0.68rem;transition:transform 0.2s}
+  .hdr-info-toggle.open .hdr-info-arrow{transform:rotate(90deg)}
+  .hdr-info-panel{display:flex;align-items:center;gap:14px;min-width:0}
   @media(max-width:680px){
     .hdr-left{overflow:visible} /* the info panel below is now absolutely positioned — don't let hdr-left's text-truncation clipping cut it off */
     .hdr-info-toggle{display:inline-flex}
@@ -81,10 +85,6 @@
     .hdr-info-panel.open{display:flex}
     .candidate-info{flex-direction:column;align-items:flex-start;gap:4px;white-space:normal}
   }
-  .hdr-info-toggle{display:none;align-items:center;gap:4px;background:transparent;border:none;color:rgba(255,255,255,0.8);font-size:0.76rem;cursor:pointer;padding:4px 2px;white-space:nowrap;flex-shrink:0}
-  .hdr-info-arrow{display:inline-block;font-size:0.68rem;transition:transform 0.2s}
-  .hdr-info-toggle.open .hdr-info-arrow{transform:rotate(90deg)}
-  .hdr-info-panel{display:flex;align-items:center;gap:14px;min-width:0}
   .hdr-logo{font-family:'Source Serif 4',serif;font-size:0.95rem;font-weight:600}.hdr-logo span{color:var(--gold)}
   .hdr-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:2px 8px;font-size:0.7rem;color:rgba(255,255,255,0.8);white-space:nowrap}
   .candidate-info{font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:16px;white-space:nowrap}.candidate-info b{color:#fff}
