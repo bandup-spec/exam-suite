@@ -8,7 +8,7 @@
 <title>BandUp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<script src="https://www.youtube.com/iframe_api"></script>
+<script src="https://www.youtube.com/iframe_api" async defer></script>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
   html{font-size:100%;transition:font-size 0.08s linear} /* base for rem scaling — adjusted by JS via font-size adjuster */
@@ -79,8 +79,8 @@
   .hdr-info-toggle{display:none;align-items:center;gap:4px;background:transparent;border:none;color:rgba(255,255,255,0.8);font-size:0.76rem;cursor:pointer;padding:4px 2px;white-space:nowrap;flex-shrink:0}
   .hdr-info-arrow{display:inline-block;font-size:0.68rem;transition:transform 0.2s}
   .hdr-info-toggle.open .hdr-info-arrow{transform:rotate(90deg)}
-  .hdr-info-panel{display:flex;align-items:center;gap:14px;min-width:0}
-  @media(max-width:680px){
+  .hdr-info-panel{display:flex;align-items:center;gap:14px;min-width:0;overflow:hidden}
+  @media(max-width:780px){
     .hdr-left{overflow:visible} /* the info panel below is now absolutely positioned — don't let hdr-left's text-truncation clipping cut it off */
     .hdr-info-toggle{display:inline-flex}
     .hdr-info-panel{position:absolute;top:40px;left:0;right:0;background:var(--blue);padding:4px 20px 14px;box-shadow:0 8px 20px rgba(0,0,0,0.25);z-index:79;flex-direction:column;align-items:flex-start;gap:6px;display:none}
@@ -89,7 +89,9 @@
   }
   .hdr-logo{font-family:'Source Serif 4',serif;font-size:0.95rem;font-weight:600}.hdr-logo span{color:var(--gold)}
   .hdr-badge{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.2);border-radius:4px;padding:2px 8px;font-size:0.7rem;color:rgba(255,255,255,0.8);white-space:nowrap}
-  .candidate-info{font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:16px;white-space:nowrap}.candidate-info b{color:#fff}
+  .candidate-info{font-size:0.8rem;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:16px;white-space:nowrap;min-width:0;overflow:hidden}
+  .candidate-info span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+  .candidate-info b{color:#fff}
   .btn-profile{padding:5px 14px;border:1px solid rgba(255,255,255,0.3);border-radius:5px;color:rgba(255,255,255,0.85);background:transparent;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;display:inline-flex;align-items:center;gap:5px;line-height:1;transition:all 0.15s}
   .btn-profile:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.5)}
   .timer{background:#fff;color:var(--red);border-radius:6px;padding:3px 14px;font-family:monospace;font-size:0.95rem;font-weight:700;letter-spacing:0.05em}
@@ -217,6 +219,18 @@
   .toast.danger{background:var(--red)}
   @keyframes toastIn{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
   @keyframes toastOut{from{opacity:1}to{opacity:0}}
+  .btn-nav-next{transition:transform 0.15s cubic-bezier(0.16,1,0.3,1),box-shadow 0.15s ease,background-color 0.2s ease}
+  .btn-nav-next:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(0,0,0,0.15)}
+  .btn-nav-next:active{transform:translateY(0) scale(0.98)}
+  @keyframes gentlePulse{0%,100%{box-shadow:0 0 0 0 rgba(46,125,79,0.4)}50%{box-shadow:0 0 0 6px rgba(46,125,79,0)}}
+  .btn-nav-next[style*="1a7a4c"]{animation:gentlePulse 1.8s ease-in-out infinite}
+  .nav-sq:hover{transform:scale(1.12)}
+  .mc-opt,.q-input,.fc-inline-input{transition:border-color 0.15s ease,background-color 0.15s ease,box-shadow 0.15s ease}
+
+  body.no-animations, body.no-animations *, body.no-animations *::before, body.no-animations *::after{
+    animation-duration:0.001s !important; animation-delay:0s !important;
+    transition-duration:0.001s !important; transition-delay:0s !important;
+  }
   .hidden{display:none!important}
   .content-pre{white-space:pre-wrap;font-family:inherit}
   #start-gate-overlay{position:fixed;inset:0;background:var(--paper2);z-index:5000;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px}
@@ -287,7 +301,7 @@
       <div id="w-prompt-1" class="prompt-card">
         <h3>Writing Task 1</h3>
         <div id="prompt-text-1" class="content-pre" style="font-size:0.88rem;line-height:1.7;color:var(--ink2)">Loading...</div>
-        <img id="W-img-1" style="max-width:250%;max-height:500px;margin-top:12px;border-radius:8px;display:none"> <!-- mao ni ang original display:none-->
+        <img id="W-img-1" style="max-width:250%;max-height:500px;margin-top:12px;border-radius:8px;display:none">
       </div>
       <div id="w-prompt-2" class="prompt-card hidden">
         <h3>Writing Task 2</h3>
@@ -336,6 +350,9 @@
         <div id="L-qs-2" class="hidden"></div>
         <div id="L-qs-3" class="hidden"></div>
         <div id="L-qs-4" class="hidden"></div>
+        <div class="section-nav-footer" style="display:flex;justify-content:flex-end;gap:8px;padding:16px 4px 6px;border-top:1px solid var(--paper3,#e0ddd6);margin-top:10px">
+          <button class="btn-nav-next" id="L-next-btn" onclick="goToNextLSection()" style="padding:9px 18px;border:none;border-radius:7px;background:var(--blue,#1a4d8f);color:#fff;font-weight:600;font-size:0.85rem;cursor:pointer">Next Section →</button>
+        </div>
       </div>
     </div>
     <!-- READING QS -->
@@ -348,6 +365,9 @@
       <div class="scroll">
         <div class="section-header" id="r-q-head">Questions 1–13</div>
         <div id="R-qs"></div>
+        <div class="section-nav-footer" style="display:flex;justify-content:flex-end;gap:8px;padding:16px 4px 6px;border-top:1px solid var(--paper3,#e0ddd6);margin-top:10px">
+          <button class="btn-nav-next" id="R-next-btn" onclick="goToNextPassage()" style="padding:9px 18px;border:none;border-radius:7px;background:var(--blue,#1a4d8f);color:#fff;font-weight:600;font-size:0.85rem;cursor:pointer">Next Passage →</button>
+        </div>
       </div>
     </div>
     <!-- WRITING -->
@@ -379,7 +399,7 @@
 </div>
 
 <script>
-let cur='L', curLSec=1;
+let cur='L', curLSec=1, curPassage=1;
 let audioPlayed=[false,false,false,false];
 let writingVals={1:'',2:''};
 let curWriting=1;
@@ -413,6 +433,13 @@ function initAccessibilityPrefs() {
     document.body.classList.add('dark-mode');
     const btn = document.getElementById('dark-mode-toggle');
     if (btn) btn.textContent = '☀️';
+  }
+
+  // Animations — no dedicated toggle button on the exam screen itself (to
+  // avoid clutter during the actual test), but it respects whatever the
+  // candidate set on the login/profile/tests pages.
+  if (localStorage.getItem('ielts_animations_off') === '1') {
+    document.body.classList.add('no-animations');
   }
 }
 
@@ -913,9 +940,18 @@ function getAutosaveStorageKey() {
 
 let lastSyncedSnapshot = ''; // used to skip Sheets sync when nothing changed
 
+// Audio resume state: tracked continuously during playback (see updateProgress),
+// persisted alongside the answers autosave, and applied once on load so an
+// accidental window close doesn't force the candidate to start the listening
+// track over from 0:00 — they resume exactly where they left off (they still
+// can't rewind/replay anything earlier, same exam-integrity rule as before).
+let audioPlaybackState = { queuePos: 0, time: 0, started: false };
+let pendingAudioResume = null;
+let audioSeekOnPlay = 0; // seconds to jump to the moment playback starts, for resume
+
 function saveAnswersLocal() {
   try {
-    localStorage.setItem(getAutosaveStorageKey(), JSON.stringify({ lAnswers, rAnswers, writingVals, savedAt: Date.now() }));
+    localStorage.setItem(getAutosaveStorageKey(), JSON.stringify({ lAnswers, rAnswers, writingVals, audio: audioPlaybackState, savedAt: Date.now() }));
   } catch(e) { /* storage full/unavailable — Layer 2 sync still runs on its own timer */ }
 }
 
@@ -927,6 +963,7 @@ function restoreAnswersLocal() {
     if (draft.lAnswers) Object.assign(lAnswers, draft.lAnswers);
     if (draft.rAnswers) Object.assign(rAnswers, draft.rAnswers);
     if (draft.writingVals) Object.assign(writingVals, draft.writingVals);
+    if (draft.audio && draft.audio.started) pendingAudioResume = draft.audio;
     return draft.savedAt || 0;
   } catch(e) { return 0; /* corrupted draft — ignore, candidate starts blank */ }
 }
@@ -946,7 +983,9 @@ async function restoreAnswersFromServer(localSavedAt) {
     if (serverTime <= (localSavedAt || 0)) return; // local copy is already newer/equal
     Object.assign(lAnswers, JSON.parse(res.lAnswers || '{}'));
     Object.assign(rAnswers, JSON.parse(res.rAnswers || '{}'));
-    Object.assign(writingVals, JSON.parse(res.writingVals || '{}'));
+    const serverWriting = JSON.parse(res.writingVals || '{}');
+    if (serverWriting._audio) { pendingAudioResume = serverWriting._audio; delete serverWriting._audio; }
+    Object.assign(writingVals, serverWriting);
   } catch(e) { /* offline/quota — local copy (if any) still stands */ }
 }
 
@@ -981,10 +1020,11 @@ async function syncDraftToSheets(attempt) {
   const ta = document.getElementById('w-textarea');
   if (ta) writingVals[curWriting] = ta.value;
 
-  const snapshot = JSON.stringify({ lAnswers, rAnswers, writingVals, cur });
+  const snapshot = JSON.stringify({ lAnswers, rAnswers, writingVals, cur, audio: audioPlaybackState });
   if (attempt === 0 && snapshot === lastSyncedSnapshot) return; // nothing new — save the Apps Script quota
 
   const candidateData = JSON.parse(sessionStorage.getItem('candidateData') || '{}');
+  const writingValsOut = Object.assign({}, writingVals, { _audio: audioPlaybackState });
   try {
     const res = await callSheets({
       action: 'saveDraft',
@@ -997,7 +1037,7 @@ async function syncDraftToSheets(attempt) {
       sessionToken: candidateData.sessionToken || '',
       lAnswers: JSON.stringify(lAnswers),
       rAnswers: JSON.stringify(rAnswers),
-      writingVals: JSON.stringify(writingVals),
+      writingVals: JSON.stringify(writingValsOut),
       listeningAnswers: JSON.stringify(lAnswers),
       readingAnswers:   JSON.stringify(rAnswers),
       writingTask1: (writingVals[1]||'').substring(0,2000),
@@ -1057,6 +1097,12 @@ function switchLSection(n) {
   for(let i=1;i<=4;i++) document.getElementById('L-qs-'+i).classList.toggle('hidden', i!==n);
   const ranges=['1–10','11–20','21–30','31–40'];
   document.getElementById('L-q-head').innerText='Questions '+ranges[n-1];
+  const nextBtn = document.getElementById('L-next-btn');
+  if (nextBtn) {
+    if (n < 4) { nextBtn.style.opacity = '1'; }
+    else { nextBtn.textContent = 'Waiting for audio to finish…'; nextBtn.style.opacity = '0.6'; }
+  }
+  refreshSectionNextBtn();
   buildLQs(n);
   const sec=config.listening&&config.listening.sections&&config.listening.sections[n-1];
   const img=document.getElementById('audio-img');
@@ -1207,6 +1253,7 @@ function detectSingleContinuousAudio() {
 }
 
 function syncPassage(n){
+  curPassage = n;
   for(let i=1;i<=3;i++){
     document.getElementById('pass'+i).classList.toggle('hidden',i!==n);
     const lp=document.getElementById('lp'+i);if(lp)lp.classList.toggle('active',i===n);
@@ -1215,6 +1262,24 @@ function syncPassage(n){
   const ranges=['1–13','14–26','27–40'];
   document.getElementById('r-q-head').innerText='Questions '+ranges[n-1];
   document.querySelectorAll('.r-q-group').forEach((g,i)=>g.classList.toggle('hidden',i!==n-1));
+  const nextBtn = document.getElementById('R-next-btn');
+  if (nextBtn) refreshSectionNextBtn();
+}
+
+function goToNextPassage() {
+  if (curPassage < 3) {
+    syncPassage(curPassage + 1);
+  } else {
+    continueToNextSection(); // unlocks Writing and switches to it — same as the header's Continue button
+  }
+}
+
+function goToNextLSection() {
+  if (curLSec < 4) {
+    switchLSection(curLSec + 1);
+  } else {
+    showToast('📻 Keep listening — Reading unlocks automatically once the audio finishes.', 'info');
+  }
 }
 
 function markQ(sec,n,el){
@@ -1228,6 +1293,38 @@ function markQ(sec,n,el){
     if(el.checked)el.closest('.mc-opt').classList.add('sel');
   }
   buildNav(cur);
+  refreshSectionNextBtn();
+}
+
+// Lightweight version of the "update the Next button" logic from
+// switchLSection/syncPassage — used on every answer change, so it must
+// NOT rebuild the question list (that would blow away focus mid-typing).
+function refreshSectionNextBtn() {
+  if (cur === 'L') {
+    const nextBtn = document.getElementById('L-next-btn');
+    if (!nextBtn) return;
+    const ranges=[[1,10],[11,20],[21,30],[31,40]];
+    const [from,to] = ranges[curLSec-1];
+    let done = 0, total = 0;
+    for (let i=from;i<=to;i++) { total++; if (answered.L && answered.L[i]) done++; }
+    const allDone = total > 0 && done === total;
+    if (curLSec < 4) {
+      nextBtn.textContent = (allDone ? '✓ ' : '') + 'Next Section →' + (allDone ? '' : ` (${done}/${total} answered)`);
+      nextBtn.style.background = allDone ? '#1a7a4c' : 'var(--blue,#1a4d8f)';
+    }
+  } else if (cur === 'R') {
+    const nextBtn = document.getElementById('R-next-btn');
+    if (!nextBtn) return;
+    const ranges=[[1,13],[14,26],[27,40]];
+    const [from,to] = ranges[curPassage-1];
+    let done = 0, total = 0;
+    for (let i=from;i<=to;i++) { total++; if (answered.R && answered.R[i]) done++; }
+    const allDone = total > 0 && done === total;
+    nextBtn.textContent = curPassage < 3
+      ? (allDone ? '✓ ' : '') + 'Next Passage →' + (allDone ? '' : ` (${done}/${total} answered)`)
+      : 'Done — Continue to Writing →';
+    if (curPassage < 3) nextBtn.style.background = allDone ? '#1a7a4c' : 'var(--blue,#1a4d8f)';
+  }
 }
 
 function buildNav(s){
@@ -1329,9 +1426,16 @@ function playAudio(){
 
   if (currentAudioMode === 'youtube' && ytReady && ytPlayer && ytPlayer.playVideo) {
     ytPlayer.playVideo();
+    if (audioSeekOnPlay > 0) { ytPlayer.seekTo(audioSeekOnPlay, true); audioSeekOnPlay = 0; }
     progressInterval = setInterval(updateProgress, 400);
   } else if (currentAudioMode === 'file') {
     const el = document.getElementById('audio-el');
+    if (audioSeekOnPlay > 0) {
+      const seekTo = audioSeekOnPlay;
+      audioSeekOnPlay = 0;
+      const doSeek = () => { el.currentTime = seekTo; el.removeEventListener('loadedmetadata', doSeek); };
+      if (el.readyState >= 1) el.currentTime = seekTo; else el.addEventListener('loadedmetadata', doSeek);
+    }
     el.play();
     progressInterval = setInterval(updateProgress, 400);
   }
@@ -1411,9 +1515,11 @@ function updateProgress(){
   if (currentAudioMode === 'youtube' && ytReady && ytPlayer && ytPlayer.getDuration) {
     const dur = ytPlayer.getDuration();
     if (dur > 0) pct = (ytPlayer.getCurrentTime() / dur) * 100;
+    audioPlaybackState = { queuePos, time: ytPlayer.getCurrentTime() || 0, started: audioSessionStarted };
   } else if (currentAudioMode === 'file') {
     const el = document.getElementById('audio-el');
     if (el.duration) pct = (el.currentTime / el.duration) * 100;
+    audioPlaybackState = { queuePos, time: el.currentTime || 0, started: audioSessionStarted };
   }
   document.getElementById('audio-prog').style.width = Math.min(100, pct) + '%';
 }
@@ -2100,8 +2206,22 @@ async function submitTest(autoSubmit){
   }
 
   if (!autoSubmit) {
-    showToast('✅ Answers submitted. Your results will be reviewed and made available on your profile.', 'info', 8000);
+    showToast('✅ Answers submitted. Redirecting to sign-in...', 'info', 4000);
   }
+
+  // PRIVACY: multiple candidates commonly share the same computer/kiosk
+  // window during an exam session without restarting the app between
+  // turns. Without this, the next person to sit down would still see this
+  // candidate's filled-in answers on screen and their session data would
+  // still be active. Clear everything candidate-specific and force a full
+  // page reload (not just a toast) so the next candidate starts from a
+  // completely clean login screen.
+  sessionStorage.removeItem('candidateData');
+  sessionStorage.removeItem('candidateID');
+  sessionStorage.removeItem('candidateName');
+  sessionStorage.removeItem('selectedTestSet');
+  sessionStorage.removeItem('userRole');
+  setTimeout(() => { window.location.href = 'index.html'; }, autoSubmit ? 100 : 3000);
 }
 
 function escH(str){ return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -2193,8 +2313,20 @@ async function beginTest() {
     switchLSection(1);
     if (continuousQueue.length > 0) {
       const sections = config.listening && config.listening.sections || [];
-      const firstItem = continuousQueue[0];
+      // Resume support: if we have a pending resume point from an interrupted
+      // session (accidental close, crash, etc.), jump straight to that queue
+      // item instead of the first one — playAudio() will seek to the saved
+      // timestamp once playback starts. Candidates still can't rewind/replay
+      // anything they'd already finished before the interruption.
+      if (pendingAudioResume && pendingAudioResume.queuePos < continuousQueue.length) {
+        queuePos = pendingAudioResume.queuePos;
+        audioSeekOnPlay = pendingAudioResume.time || 0;
+      }
+      const firstItem = continuousQueue[queuePos];
       loadAudioForSection(sections[firstItem.idx], firstItem.idx + 1);
+      if (audioSeekOnPlay > 0) {
+        document.getElementById('audio-status').innerText = 'Resuming from where you left off — click Play';
+      }
     } else if (!revealed.R) {
       // No Listening audio configured at all — don't leave the candidate
       // stuck waiting on an 'ended' event that will never fire. Same forced
@@ -2215,6 +2347,57 @@ async function beginTest() {
   switchSection('L');
   try { toggleNavFooter(localStorage.getItem('ielts_nav_collapsed')==='1'); } catch(e) {}
 }
+</script>
+<script>
+/* ---- Anti-translation guard ----
+   Page already opts out of translation (translate="no"). Some browsers/extensions ignore that,
+   so this detects a translation, forces the page back to English, and warns the candidate. */
+(function(){
+  var handling = false;
+  function isTranslated(){
+    var h = document.documentElement;
+    return /translated-(ltr|rtl)/.test(h.className) ||
+           /translated-(ltr|rtl)/.test(document.body ? document.body.className : '') ||
+           (h.getAttribute('lang') || 'en').toLowerCase().indexOf('en') !== 0 ||
+           !!document.querySelector('font[style*="vertical-align: inherit"], #google_translate_element, .goog-te-banner-frame, iframe.skiptranslate');
+  }
+  function showBlocker(){
+    if (document.getElementById('translate-blocker')) return;
+    var d = document.createElement('div');
+    d.id = 'translate-blocker';
+    d.setAttribute('translate','no');
+    d.style.cssText = 'position:fixed;inset:0;z-index:100000;background:rgba(10,12,30,.92);display:flex;align-items:center;justify-content:center;padding:24px;font-family:DM Sans,sans-serif';
+    d.innerHTML = '<div style="background:#fff;color:#1a1a2e;max-width:460px;border-radius:12px;padding:28px;text-align:center;line-height:1.5">'
+      + '<h2 style="margin-bottom:10px;color:#002f5f">Translation detected</h2>'
+      + '<p style="margin-bottom:16px">This test must be taken in English. Please turn off your browser\u2019s translation for this page (use the translate icon in the address bar and choose \u201CShow original\u201D / \u201CNever translate this site\u201D), then press the button below.</p>'
+      + '<button id="translate-reload-btn" style="background:#002f5f;color:#fff;border:0;border-radius:8px;padding:10px 20px;font-size:1rem;cursor:pointer">Reload in English</button>'
+      + '<p style="margin-top:12px;font-size:.8rem;color:#666">Your answers and timer are saved.</p></div>';
+    document.body.appendChild(d);
+    document.getElementById('translate-reload-btn').onclick = function(){ location.reload(); };
+  }
+  function revert(){
+    if (handling) return; handling = true;
+    try { if (typeof saveAnswersLocal === 'function') saveAnswersLocal(); } catch(e){}
+    var h = document.documentElement;
+    h.setAttribute('lang','en');
+    h.className = h.className.replace(/\btranslated-(ltr|rtl)\b/g,'').trim();
+    if (document.body) document.body.className = document.body.className.replace(/\btranslated-(ltr|rtl)\b/g,'').trim();
+    // One automatic reload per session to bring the original English text back;
+    // if translation keeps coming back, block the page and explain how to turn it off.
+    var tried = sessionStorage.getItem('translateReloadAt');
+    if (!tried || Date.now() - Number(tried) > 60000) {
+      sessionStorage.setItem('translateReloadAt', String(Date.now()));
+      location.reload();
+    } else {
+      showBlocker();
+      setTimeout(function(){ handling = false; }, 1500);
+    }
+  }
+  function check(){ if (!handling && isTranslated()) revert(); }
+  new MutationObserver(check).observe(document.documentElement, { attributes:true, attributeFilter:['lang','class'], childList:true, subtree:true });
+  setInterval(check, 2000);
+  window.addEventListener('load', check);
+})();
 </script>
 </body>
 </html>
